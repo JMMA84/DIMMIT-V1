@@ -12,9 +12,10 @@ models/*
 runs/
 *.pt
 
-# salidas
+# salidas (los reportes en markdown sí se versionan)
 reports/*
 !reports/.gitkeep
+!reports/*.md
 
 # sistema
 .DS_Store
