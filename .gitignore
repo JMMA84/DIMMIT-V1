@@ -1,0 +1,20 @@
+# entornos
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# datos y pesos (pesados, se regeneran con el pipeline)
+data/*
+!data/*/.gitkeep
+models/*
+!models/.gitkeep
+runs/
+*.pt
+
+# salidas
+reports/*
+!reports/.gitkeep
+
+# sistema
+.DS_Store

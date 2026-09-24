@@ -1,0 +1,12 @@
+torch>=2.2
+torchvision
+git+https://github.com/THU-MIG/yolov10.git
+huggingface-hub  # dependencia no declarada del fork de yolov10
+pandas
+numpy
+pyarrow
+requests
+tqdm
+PyYAML
+scikit-learn
+pytest

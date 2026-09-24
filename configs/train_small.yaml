@@ -1,0 +1,9 @@
+# Iteración pequeña: yolov10n fine-tune sobre el subset de RDD2020
+model: yolov10n.pt          # se descarga de los releases de THU-MIG si no existe en models/
+data: data/processed/data.yaml
+epochs: 3
+imgsz: 640
+batch: 8
+workers: 2
+project: models
+name: yolov10n_small

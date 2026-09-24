@@ -1,0 +1,20 @@
+# Clases del dataset RDD2020 (Mendeley 5ty2wb6gvg).
+# prepare.py genera data/processed/data.yaml con rutas absolutas a partir de esto.
+names:
+  0: D00_grieta_longitudinal
+  1: D10_grieta_transversal
+  2: D20_grieta_cocodrilo
+  3: D40_bache
+
+# etiquetas tal como aparecen en los XML de Pascal VOC
+voc_classes:
+  D00: 0
+  D10: 1
+  D20: 2
+  D40: 3
+
+# subset pequeño para la primera iteración
+country: Japan
+n_images: 300
+val_fraction: 0.2
+seed: 42

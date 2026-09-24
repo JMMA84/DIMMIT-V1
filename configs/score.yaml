@@ -1,0 +1,14 @@
+# Modelo de scores v0 (basado en reglas, según Reporte Técnico V1)
+# score = 100 - suma(w_clase * severidad_clase) - w_sensor * rugosidad_normalizada
+# severidad_clase = n_detecciones * (1 + 10 * area_relativa_promedio)
+class_weights:
+  D00_grieta_longitudinal: 4.0
+  D10_grieta_transversal: 4.0
+  D20_grieta_cocodrilo: 8.0
+  D40_bache: 12.0
+sensor_weight: 25.0          # peso de la rugosidad (RMS de aceleración vertical, normalizada 0-1)
+conf_threshold: 0.25         # descartar detecciones por debajo
+categories:                  # límites inferiores de cada categoría
+  bueno: 75
+  regular: 50
+  malo: 0
