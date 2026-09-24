@@ -3,7 +3,7 @@ import argparse
 import urllib.request
 from pathlib import Path
 
-from dimmit.utils.io import REPO_ROOT, load_yaml, patch_torch_load
+from dimmit.utils.io import REPO_ROOT, apply_compat_patches, load_yaml
 
 WEIGHTS_URL = "https://github.com/THU-MIG/yolov10/releases/download/v1.1/{name}"
 
@@ -28,7 +28,7 @@ def main():
     args = ap.parse_args()
     cfg = load_yaml(args.config)
 
-    patch_torch_load()
+    apply_compat_patches()
     from ultralytics import YOLOv10
 
     model = YOLOv10(str(ensure_weights(cfg["model"])))
