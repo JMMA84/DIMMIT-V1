@@ -3,7 +3,7 @@ import argparse
 
 import pandas as pd
 
-from dimmit.utils.io import REPO_ROOT, load_yaml, patch_torch_load
+from dimmit.utils.io import REPO_ROOT, apply_compat_patches, load_yaml
 
 
 def main():
@@ -11,14 +11,15 @@ def main():
     ap.add_argument("--weights", default="models/yolov10n_small/weights/best.pt")
     ap.add_argument("--source", default="data/processed/images/val")
     ap.add_argument("--out", default="reports/detections.csv")
+    ap.add_argument("--conf", type=float, default=0.01, help="umbral bajo: el modelo v0 apenas entrena 3 épocas")
     args = ap.parse_args()
 
-    patch_torch_load()
+    apply_compat_patches()
     from ultralytics import YOLOv10
 
     names = load_yaml("configs/data_rdd2020.yaml")["names"]
     model = YOLOv10(str(REPO_ROOT / args.weights))
-    results = model.predict(source=str(REPO_ROOT / args.source), verbose=False)
+    results = model.predict(source=str(REPO_ROOT / args.source), conf=args.conf, verbose=False)
 
     rows = []
     for res in results:

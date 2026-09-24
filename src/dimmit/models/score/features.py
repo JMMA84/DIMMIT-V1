@@ -24,7 +24,9 @@ def detection_features(detections: pd.DataFrame, segments: pd.DataFrame, class_n
     feats = pd.DataFrame(rows, columns=cols)
     # segmentos sin ninguna detección también cuentan (severidad 0)
     all_segs = segments[["segment_id"]].drop_duplicates()
-    return all_segs.merge(feats, on="segment_id", how="left").fillna(0.0)
+    merged = all_segs.merge(feats, on="segment_id", how="left").fillna(0.0)
+    merged[cols[1:]] = merged[cols[1:]].astype(float)
+    return merged
 
 
 def sensor_features(sensors: pd.DataFrame):
