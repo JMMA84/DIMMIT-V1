@@ -1,0 +1,54 @@
+columna,descripcion,unidad,fuente
+ranking_prioridad,Índice del segmento: posición en el orden de intervención (1 = más prioritario),rango,geo/priority.py
+segmento_id,Identificador del segmento (pseudo-ruta de hasta 10 fotogramas),,data/splits.py
+conjunto,"test (con verdad de referencia) o despliegue (test1/test2 de RDD2020, sin anotaciones)",,data/splits.py
+pais_imagenes,País de origen de las imágenes RDD2020,,RDD2020
+n_fotogramas,Fotogramas del segmento,conteo,data/splits.py
+civ,Código de identificación vial de la calzada de Bogotá asignada (ruta simulada),,UMV
+lat,Latitud del centro del segmento,grados,UMV
+lon,Longitud del centro del segmento,grados,UMV
+geohash7,Celda geohash de 7 caracteres (~150 m),,geo/geohash.py
+longitud_m,Longitud recorrida del segmento,m,UMV
+fecha_captura,Fecha y hora de captura (simulada),,simulador de sensores
+fuente_sensor,sim_gt: sensores simulados desde anotaciones; sim_pred: desde el detector,,simulador de sensores
+n_grieta_longitudinal,Detecciones D00 (grieta longitudinal) sobre el umbral por clase,conteo,YOLOv10
+n_grieta_transversal,Detecciones D10 (grieta transversal),conteo,YOLOv10
+n_piel_cocodrilo,Detecciones D20 (piel de cocodrilo),conteo,YOLOv10
+n_baches,Detecciones D40 (baches),conteo,YOLOv10
+area_danada_pct,Porcentaje medio de la imagen cubierto por daños detectados,%,YOLOv10
+score_grieta_longitudinal,Sub-score por grietas longitudinales (100 - valor deducido),0-100,red de fusión
+score_grieta_transversal,Sub-score por grietas transversales,0-100,red de fusión
+score_piel_cocodrilo,Sub-score por piel de cocodrilo,0-100,red de fusión
+score_baches,Sub-score por baches,0-100,red de fusión
+score_visual_pci,Índice visual tipo PCI (ASTM D6433 simplificado),0-100,red de fusión
+iri_m_km,Rugosidad estimada (Índice de Rugosidad Internacional),m/km,red de fusión
+score_rugosidad,Índice de rodadura desde el IRI,0-100,red de fusión
+score_condicion,ÍNDICE DE CONDICIÓN VIAL FINAL (ICV) = 0.65 visual + 0.35 rodadura,0-100,red de fusión
+score_condicion_p05,Límite inferior del intervalo conformal 90 %,0-100,red de fusión
+score_condicion_p95,Límite superior del intervalo conformal 90 %,0-100,red de fusión
+estado,bueno (86-100) / satisfactorio (71-85) / regular (56-70) / malo (41-55) / muy_malo (0-40),,red de fusión
+confianza_estado,Probabilidad del estado entregado,0-1,red de fusión
+prob_malo_o_peor,Probabilidad de que el segmento esté malo o muy malo,0-1,red de fusión
+incertidumbre,Desviación estándar del ensamble de redes,puntos ICV,red de fusión
+score_social,"Percentil de la dimensión social UMV (población, peticiones, colegios/salud, uso)",0-100,UMV
+score_movilidad,Percentil de malla vial + rutas de transporte UMV,0-100,UMV
+score_seguridad_vial,Percentil de siniestros ponderados por gravedad a 250 m (3 años),0-100,SDM
+score_clima,Percentil de lluvia acumulada 30 días,0-100,Open-Meteo
+score_importancia,"Importancia ponderada (social, movilidad, seguridad vial)",0-100,geo/priority.py
+score_prioridad,Prioridad de intervención = 0.6 necesidad + 0.4 importancia + bonificaciones,0-100,geo/priority.py
+nivel_prioridad,alta (>= 60) / media (>= 40) / baja,,geo/priority.py
+dist_colegio_m,Distancia al colegio más cercano,m,SED Bogotá
+colegios_500m,Colegios a 500 m,conteo,SED Bogotá
+dist_hospital_m,Distancia al hospital/ESE más cercano,m,SDS Bogotá
+siniestros_250m,Siniestros viales a 250 m (3 años),conteo,SDM Bogotá
+lluvia_30d_mm,Lluvia acumulada 30 días antes de la captura,mm,Open-Meteo
+pendiente_pct,Pendiente longitudinal aproximada,%,Open-Meteo elevación
+ip_umv,Índice de priorización oficial UMV 2020 de la calzada,puntos,UMV
+descripcion,Descripción en español del segmento,texto,plantilla o Claude
+accion_recomendada,Acción de mantenimiento sugerida,,reglas + plantilla/Claude
+urgencia,Ventana de intervención sugerida,,reglas
+fuente_descripcion,plantilla (determinista) o modelo de Claude usado,,llm/describe.py
+version_modelo,Detector y red usados en la corrida,,pipeline
+run_id,Identificador de la corrida,,pipeline
+score_condicion_real,ICV de referencia (anotaciones humanas + IRI del simulador); solo test,0-100,labels
+estado_real,Estado de referencia; solo test,,labels

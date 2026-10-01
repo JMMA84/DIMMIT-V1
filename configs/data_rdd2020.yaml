@@ -1,5 +1,4 @@
 # Clases del dataset RDD2020 (Mendeley 5ty2wb6gvg).
-# prepare.py genera data/processed/data.yaml con rutas absolutas a partir de esto.
 names:
   0: D00_grieta_longitudinal
   1: D10_grieta_transversal
@@ -13,8 +12,26 @@ voc_classes:
   D20: 2
   D40: 3
 
-# subset pequeño para la primera iteración
+# v1: dataset completo (los 3 países, train + test1/test2 sin anotaciones)
+countries: [Japan, India, Czech]
+sources: [train, test1, test2]
+labeled_source: train
+
+# Los nombres de archivo de RDD2020 no siguen el recorrido (ver data/index/audit.json), así que
+# los segmentos son "pseudo-rutas": se encadenan fotogramas visualmente vecinos (dHash 256 bits)
+# y se cortan cada 10. Bloques = 5 segmentos consecutivos de la cadena (unidad de split).
+segment_max_frames: 10
+block_segments: 5
+dup_hamming: 16                # dHash 256 bits: <= 16 bits => casi-duplicado
+n_folds: 20
+folds_train: 13                # ~65% detector
+folds_fusion: 4                # ~20% conjunto F (red de fusión)
+folds_test: 3                  # ~15% conjunto T (evaluación final)
+val_subset_frames: 1000        # validación por época del detector (subconjunto fijo de F)
+max_negative_share: 0.15       # tope de imágenes sin daño en el train del detector
+seed: 42
+
+# subset pequeño de la iteración v0 (se conserva para la prueba de humo)
 country: Japan
 n_images: 300
 val_fraction: 0.2
-seed: 42

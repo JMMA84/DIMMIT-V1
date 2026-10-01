@@ -1,12 +1,20 @@
-torch>=2.2
+# torch/torchvision se instalan desde el índice CPU en `make setup` (evita ~3 GB de CUDA)
+torch>=2.6
 torchvision
-git+https://github.com/THU-MIG/yolov10.git
-huggingface-hub  # dependencia no declarada del fork de yolov10
+ultralytics==8.3.253  # incluye YOLOv10 (reemplaza al fork THU-MIG)
 pandas
-numpy
+numpy>=2
 pyarrow
 requests
 tqdm
 PyYAML
 scikit-learn
+scipy
+shapely
+h5py
+py7zr
+matplotlib
+jinja2
+anthropic
+kaggle
 pytest

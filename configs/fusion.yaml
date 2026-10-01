@@ -1,0 +1,16 @@
+# Red de fusión (condición vial). Se entrena solo con el conjunto F (fuera de muestra para el
+# detector) y se evalúa en T.
+folds: 5
+seeds: [11, 22]              # ensamble = folds x semillas (ablaciones: 1 semilla)
+max_epochs: 200
+patience: 25
+batch: 256
+lr: 0.002
+weight_decay: 0.001
+modality_dropout: 0.15
+loss_weights:
+  rho: 1.0
+  d40: 1.5
+  iri: 1.0
+  icv: 2.0
+  corn: 0.2

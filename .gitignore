@@ -7,15 +7,27 @@ __pycache__/
 # datos y pesos (pesados, se regeneran con el pipeline)
 data/*
 !data/*/.gitkeep
+!data/index/
+data/index/*
+!data/index/splits.csv
 models/*
 !models/.gitkeep
+!models/release/
 runs/
 *.pt
+!models/release/**/*.pt
 
-# salidas (los reportes en markdown sí se versionan)
+# artefactos locales
+build/
+logs/
+
+# salidas: se versionan los entregables (markdown, CSV de salida/evaluación y el HTML)
 reports/*
 !reports/.gitkeep
 !reports/*.md
+!reports/*.html
+!reports/output/
+!reports/evaluation/
 
 # sistema
 .DS_Store

@@ -1,0 +1,23 @@
+# Contexto geográfico (Bogotá). Fuentes abiertas con caché en data/external/.
+urls:
+  umv: https://datosabiertos.bogota.gov.co/dataset/22bbbe63-2197-4b44-aa9e-418d6a08764d/resource/d044adc5-43c2-4531-93d0-ae9017b3db03/download/modelo_de_priorizaci_n_u
+  idu_estado: https://datosabiertos.bogota.gov.co/dataset/a7b9d2f1-c68d-4c58-a225-e2b1450f95fb/resource/da423fdb-350f-4230-8367-53b71c4204e2/download/estado.7z
+  colegios: https://datosabiertos.bogota.gov.co/dataset/d451b52f-e30c-43b3-9066-3a7816638fea/resource/157d4822-d1d5-4d71-8c3e-1ac27e7421cb/download/colegios122025.geojson
+  ips: https://datosabiertos.bogota.gov.co/dataset/fc66362f-ba91-4d7a-af9c-d0b3d3a60106/resource/0e432b79-8c0f-4a0c-a592-43330712fe03/download/ips.geojson
+  siniestros: https://datosabiertos.bogota.gov.co/dataset/8624f916-1db2-4c17-b669-19a19b35d1ca/resource/f5862aaa-4e1c-463e-94d5-f04db8164360/download/historico_siniestros_bog
+  meteo_archive: https://archive-api.open-meteo.com/v1/archive
+  elevation: https://api.open-meteo.com/v1/elevation
+
+# fechas simuladas de captura (una pasada por ruta) y ventana de clima
+survey_start: "2026-06-01"
+survey_end: "2026-09-25"
+weather_history_days: 365
+weather_geohash_precision: 5
+
+radii_m:
+  colegios: [300, 500]
+  salud: [500, 1000]
+  siniestros: [100, 250]
+crash_years: 3
+min_carriageway_length_m: 40     # calzadas más cortas no alcanzan para 10 fotogramas
+seed: 42

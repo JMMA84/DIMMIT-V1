@@ -1,0 +1,10 @@
+fuente,pais,imagenes,con_dano,cajas_D00,cajas_D10,cajas_D20,cajas_D40,cajas_otras_clases,ancho_mediano
+test1,Czech,349,,,,,,,600
+test1,India,969,,,,,,,720
+test1,Japan,1313,,,,,,,600
+test2,Czech,360,,,,,,,600
+test2,India,990,,,,,,,720
+test2,Japan,1314,,,,,,,600
+train,Czech,2829,1072.0,988.0,399.0,161.0,197.0,0.0,600
+train,India,7706,3223.0,1555.0,68.0,2021.0,3187.0,1372.0,720
+train,Japan,10506,7900.0,4049.0,3979.0,6199.0,2243.0,8284.0,600

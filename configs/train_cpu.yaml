@@ -1,0 +1,17 @@
+# Detector de humo en CPU (provisional, mientras entrena el de Kaggle) y ruta de respaldo.
+# Reanudable: cada corrida dura a lo sumo max_minutes y continúa desde last.pt.
+model: yolov10n.pt
+data: data/processed/data.yaml
+epochs: 2
+patience: 0
+imgsz: 416
+batch: 16
+workers: 3
+cache: false
+cos_lr: true
+close_mosaic: 1
+fraction: 0.25              # fracción del train (humo); 1.0 en la ruta de respaldo
+seed: 42
+max_minutes: 105
+project: models
+name: yolov10n_cpu_smoke
