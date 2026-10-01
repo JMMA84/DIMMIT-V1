@@ -1,0 +1,30 @@
+# Objetivos (verdad de referencia) a partir de las cajas anotadas por humanos en RDD2020.
+# Pseudo-PCI inspirado en ASTM D6433: densidad por clase -> valor deducido (DV) -> CDV -> PCI.
+# Densidad por caja (%), con un área de referencia por fotograma de ~50 m^2:
+density:
+  D00: {var: h, k: 30.0}        # grieta longitudinal: largo ~ alto de la caja (15 m por unidad de alto)
+  D10: {var: w, k: 12.0}        # grieta transversal: largo ~ ancho de la caja (6 m por unidad de ancho)
+  D20: {var: wh, k: 117.0}      # piel de cocodrilo: área (factor de llenado 0.7 / zona de vía 0.6)
+  D40: {var: one, k: 2.0}       # bache: 2 % por bache
+# severidad L/M/H por percentiles (50/85) del tamaño aparente corregido por perspectiva
+severity_percentiles: [50, 85]
+severity_kappa: {L: 0.33, M: 1.0, H: 3.0}
+horizon_y: 0.40
+# DV = clip(a + b*log10(densidad_ponderada), 0, dv_max)
+deduct:
+  D00: {a: 8.0, b: 15.0, dv_max: 60.0}
+  D10: {a: 8.0, b: 15.0, dv_max: 60.0}
+  D20: {a: 22.0, b: 23.0, dv_max: 85.0}
+  D40: {a: 55.0, b: 30.0, dv_max: 95.0}
+cdv_rest_weight: 0.35           # CDV = min(100, DVmax + 0.35*(sum(DV) - DVmax))
+# índice de rodadura desde IRI (m/km): RI = 100*exp(-k*max(0, IRI - iri0))
+ride: {k: 0.18, iri0: 1.0}
+# índice de condición vial final (ICV)
+icv_weights: {visual: 0.65, ride: 0.35}
+# estados (límite inferior de cada uno, ASTM simplificado a 5 niveles)
+states:
+  bueno: 86
+  satisfactorio: 71
+  regular: 56
+  malo: 41
+  muy_malo: 0

@@ -1,0 +1,16 @@
+# YOLOv10n sobre RDD2020 completo en GPU de Kaggle (T4). Validación por época = 1000
+# fotogramas fijos del conjunto F; el test (T) solo se usa al final.
+model: yolov10n.pt          # pesos COCO de ultralytics/assets
+data: data/processed/data.yaml
+epochs: 120
+patience: 25
+imgsz: 640
+batch: 32
+workers: 4
+cache: ram                  # ultralytics lo desactiva solo si no cabe en RAM
+cos_lr: true
+close_mosaic: 10
+seed: 42
+time: 9.0                   # horas; tope duro para no pasar el límite de 12 h de Kaggle
+project: models
+name: yolov10n_rdd2020
