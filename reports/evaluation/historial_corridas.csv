@@ -1,0 +1,2 @@
+run_id,fecha,detector,detector_map50,vision_pci_spearman,icv_mae,icv_spearman,estado_qwk,estado_recall_malo_o_peor,n_ok,n_alerta,n_falla
+20260930-2219,2026-09-30 22:30,detector_cpu,0.033,0.571,9.0393,0.8958,0.8062,0.5786,17,4,8

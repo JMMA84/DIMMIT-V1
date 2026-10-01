@@ -166,7 +166,8 @@ def eval_fusion(col, truth, blocks, cfg_lab, conf_rows):
         if name == "C1_canario_contexto":
             col.add("control", name, "r2", r["r2"], objetivo="icv", umbral="canario_contexto_r2", notas="contexto de Bogotá sobre imágenes de otro país: debe ser ~0")
         if name == "etiquetas_permutadas":
-            col.add("control", name, "spearman", r["spearman"], objetivo="icv", umbral="permutadas_icv_spearman", notas="entrenada con etiquetas barajadas: debe ser ~0")
+            col.add("control", name, "r2", r["r2"], objetivo="icv", umbral="permutadas_icv_r2",
+                    notas="entrenada con etiquetas barajadas: sin capacidad predictiva (R2 <= 0); su salida es casi constante, por eso la correlación de rangos no es un criterio válido")
     # mundo nulo: sensores sin relación con el daño no deben predecir el PCI visual
     pn = PRED / "mundo_nulo_solo_sensores__test_segmento.parquet"
     if pn.exists():
@@ -252,12 +253,13 @@ def eval_drift(col, frame, cfg):
         for v, p in vals.items():
             rows.append({"lote": name, "variable": v, "psi": round(p, 4), "estado": M.status(p, 0.10, 0.25, "menor")})
         mx = max([p for p in vals.values() if np.isfinite(p)], default=np.nan)
-        col.add("deriva", "monitor PSI", "psi_maximo", mx, conjunto=name, nivel="fotograma", umbral="psi", n=len(b), notas=f"variable con mayor PSI: {max(vals, key=lambda k: vals[k] if np.isfinite(vals[k]) else -1)}")
+        rol = "control positivo: se ESPERA ALERTA/FALLA (prueba que el monitor detecta deriva)" if name.startswith("control_positivo") else "control negativo: se espera OK"
+        col.add("deriva", "monitor PSI", "psi_maximo", mx, conjunto=name, nivel="fotograma", umbral="psi", n=len(b), notas=f"{rol}; variable con mayor PSI: {max(vals, key=lambda k: vals[k] if np.isfinite(vals[k]) else -1)}")
         if emb and all(c in b for c in emb) and len(b) > 50:
             X = pd.concat([r[emb], b[emb]]).fillna(0).to_numpy()
             yy = np.r_[np.zeros(len(r)), np.ones(len(b))]
             p = cross_val_predict(LogisticRegression(max_iter=500, class_weight="balanced"), X, yy, cv=5, method="predict_proba")[:, 1]
-            col.add("deriva", "clasificador de dominio (PCA embedding)", "auroc", roc_auc_score(yy, p), conjunto=name, nivel="fotograma", umbral="dominio_auroc", n=len(b))
+            col.add("deriva", "clasificador de dominio (PCA embedding)", "auroc", roc_auc_score(yy, p), conjunto=name, nivel="fotograma", umbral="dominio_auroc", n=len(b), notas=rol)
     pd.DataFrame(rows).to_csv(EVAL / "drift_psi.csv", index=False)
 
 

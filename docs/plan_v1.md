@@ -44,3 +44,5 @@ El simulador produce el esquema definitivo de `data/simulated/sensors.parquet`
 Arduino/Raspberry Pi en ese esquema; las features de IMU no dependen de la orientación del
 sensor. La verdad latente (`sensors_truth.parquet`) deja de existir: los objetivos de rugosidad
 pasarán a ser mediciones de IRI de referencia (perfilómetro o IDU).
+
+Reporte publicado (Artifact privado): https://claude.ai/artifact/HbLoM9aeC2N5putgBeHpn2 — para actualizarlo desde otra sesión, publicar con ese url.

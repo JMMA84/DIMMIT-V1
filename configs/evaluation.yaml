@@ -21,7 +21,7 @@ umbrales:
   importancia_spearman:        {ok: 0.50, alerta: 0.30, direccion: mayor}
   canario_contexto_r2:         {ok: 0.05, alerta: 0.10, direccion: menor}
   mundo_nulo_pci_r2:           {ok: 0.05, alerta: 0.10, direccion: menor}
-  permutadas_icv_spearman:     {ok: 0.10, alerta: 0.20, direccion: menor}
+  permutadas_icv_r2:           {ok: 0.05, alerta: 0.10, direccion: menor}
   llm_json_valido:             {ok: 1.0, alerta: 0.99, direccion: mayor}
   llm_fidelidad:               {ok: 0.98, alerta: 0.95, direccion: mayor}
   psi:                         {ok: 0.10, alerta: 0.25, direccion: menor}

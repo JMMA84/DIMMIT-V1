@@ -75,6 +75,8 @@ svg .t-strong { fill: var(--ink); font-weight: 600; }
 .controls input, .controls select { font: inherit; padding: 6px 8px; border: 1px solid var(--axis); border-radius: 6px; background: var(--surface); color: var(--ink); }
 .controls input:focus-visible, .controls select:focus-visible, th button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 th button { all: unset; cursor: pointer; } th button:hover { color: var(--ink); }
+.tablebox { max-height: 640px; overflow: auto; }
+.tablebox thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
 .desc { min-width: 260px; max-width: 420px; color: var(--ink-2); }
 footer { font-size: .8rem; color: var(--muted); display: grid; gap: 6px; border-top: 1px solid var(--grid); padding-top: 16px; }
 .hover:hover { opacity: .75; }
@@ -211,7 +213,9 @@ def table(df, cols, nd=3):
         tds = []
         for c in cols:
             v = r[c]
-            if c == "estado" and v in ICON:
+            if v is None or (isinstance(v, float) and np.isnan(v)):
+                tds.append("<td></td>")
+            elif c == "estado" and v in ICON:
                 tds.append(f"<td>{pill(v)}</td>")
             elif isinstance(v, (float, int, np.floating, np.integer)) and not isinstance(v, bool):
                 tds.append(f'<td class="n">{fmt(float(v), nd)}</td>')
@@ -249,7 +253,7 @@ def build():
     health = met[met["umbral_ok"].notna()].copy()
     health["IC 95 %"] = [f"{a:.3f}–{b:.3f}" if pd.notna(a) else "" for a, b in zip(health["ic95_inf"], health["ic95_sup"])]
     health = health.rename(columns={"etapa": "área", "metrica": "métrica", "subgrupo": "subgrupo", "valor": "valor", "umbral_ok": "umbral OK"})
-    health_html = table(health, ["área", "modelo", "métrica", "objetivo", "conjunto", "valor", "IC 95 %", "umbral OK", "estado"])
+    health_html = table(health, ["área", "modelo", "métrica", "objetivo", "subgrupo", "conjunto", "valor", "IC 95 %", "umbral OK", "estado"])
 
     comp = met[(met["metrica"] == "mae") & (met["objetivo"] == "icv") & (met["etapa"].isin(["fusion", "linea_base", "ablacion"]))]
     rows = [(r["modelo"], r["valor"], r["ic95_inf"] if pd.notna(r["ic95_inf"]) else None, r["ic95_sup"] if pd.notna(r["ic95_sup"]) else None) for _, r in comp.sort_values("valor").iterrows()]
@@ -324,7 +328,7 @@ def build():
   <p>Los controles prueban que la evaluación es honesta: el contexto de Bogotá no debe predecir la condición de imágenes de otros
   países, unos sensores sin relación con el daño no deben predecir el índice visual, y etiquetas barajadas deben rendir como azar.
   La validación con datos reales (Zenodo 4386256) compara el estimador de rugosidad con perfiles láser.</p>
-  <div class="card">{table(controls, ["etapa", "modelo", "metrica", "objetivo", "conjunto", "subgrupo", "valor", "estado", "notas"])}</div>
+  <div class="card tablebox">{table(controls, ["etapa", "modelo", "metrica", "objetivo", "conjunto", "subgrupo", "valor", "estado", "notas"])}</div>
 </section>
 
 <section aria-labelledby="s-deriva">
@@ -352,7 +356,7 @@ def build():
     <label for="fc">Conjunto</label><select id="fc"><option value="">todos</option><option>test</option><option>despliegue</option></select>
     <span id="cnt" style="color:var(--muted);font-size:.85rem"></span>
   </div>
-  <div class="card scroll"><table id="tbl"><thead><tr>
+  <div class="card tablebox"><table id="tbl"><thead><tr>
     <th><button data-k="ranking_prioridad">#</button></th><th><button data-k="segmento_id">segmento</button></th><th><button data-k="conjunto">conjunto</button></th>
     <th><button data-k="score_condicion">ICV</button></th><th><button data-k="estado_txt">estado</button></th><th><button data-k="score_visual_pci">PCI visual</button></th>
     <th><button data-k="iri_m_km">IRI m/km</button></th><th><button data-k="score_baches">baches</button></th><th><button data-k="score_prioridad">prioridad</button></th>
