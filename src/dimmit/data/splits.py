@@ -11,6 +11,8 @@
    test1/test2 (sin anotaciones) -> despliegue.
 Salidas: data/index/splits.csv, data/index/targets_frame.parquet, data/index/split_report.json
 """
+import argparse
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedGroupKFold
@@ -54,7 +56,7 @@ def build_segments(df, cfg):
         order = greedy_chain(g[HASH_COLS].to_numpy(dtype=np.uint64))
         g = g.iloc[order].reset_index(drop=True)
         seg_size = cfg["segment_max_frames"]
-        prefix = f"{source[:2].upper()}-{country[:2].upper()}"
+        prefix = f"{ {'train': 'TR', 'test1': 'T1', 'test2': 'T2'}.get(source, source[:2].upper())}-{country[:2].upper()}"
         g["chain_pos"] = np.arange(len(g))
         g["segment_id"] = [f"{prefix}-{k // seg_size:04d}" for k in range(len(g))]
         n_seg = (len(g) + seg_size - 1) // seg_size
@@ -77,6 +79,9 @@ def merge_blocks_by_duplicates(df):
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--force", action="store_true", help="regenera splits.csv (está congelado en git)")
+    args = ap.parse_args()
     cfg = load_yaml("configs/data_rdd2020.yaml")
     cfg_lab = pp.load_cfg()
     images = pd.read_parquet(INDEX / "images.parquet")
@@ -85,6 +90,9 @@ def main():
     dups = pd.read_parquet(INDEX / "dup_clusters.parquet")
 
     tgt = frame_targets(images, boxes, cfg_lab)
+    if (INDEX / "splits.csv").exists() and not args.force:
+        print("[skip] data/index/splits.csv congelado (usar --force para regenerarlo)")
+        return
     df = images.merge(hashes, on="image_id").merge(dups, on="image_id")
     df = build_segments(df, cfg)
     df["group_id"] = merge_blocks_by_duplicates(df)

@@ -7,6 +7,9 @@ __pycache__/
 # datos y pesos (pesados, se regeneran con el pipeline)
 data/*
 !data/*/.gitkeep
+!data/index/
+data/index/*
+!data/index/splits.csv
 models/*
 !models/.gitkeep
 !models/release/
