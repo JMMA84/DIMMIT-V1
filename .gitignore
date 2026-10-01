@@ -15,7 +15,7 @@ models/*
 !models/release/
 runs/
 *.pt
-!models/release/*.pt
+!models/release/**/*.pt
 
 # artefactos locales
 build/
