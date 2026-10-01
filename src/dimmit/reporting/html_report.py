@@ -235,6 +235,14 @@ def build():
     version = seg["version_modelo"].iloc[0]
     det = met.loc[met["etapa"] == "detector", "modelo"].iloc[0] if (met["etapa"] == "detector").any() else "—"
     provisional = "cpu" in str(version) or "cpu" in str(det)
+    det_dir = REPO_ROOT / (FEATURES / "detector_source.txt").read_text().strip()
+    lat = json.loads((det_dir / "latency.json").read_text()) if (det_dir / "latency.json").exists() else {}
+    epochs = len(pd.read_csv(det_dir / "results.csv")) if (det_dir / "results.csv").exists() else None
+    note = (
+        '<p class="note"><b>Corrida provisional.</b> El detector es la versión de humo entrenada en CPU (2 épocas); el entrenamiento completo reemplaza estos números.</p>'
+        if provisional
+        else f'<p class="note"><b>Detector entrenado en Kaggle sin GPU</b> ({epochs} épocas a {lat.get("imgsz", "?")} px en CPU, porque la cuenta no tiene el teléfono verificado). Con GPU a 640 px y más épocas se espera un detector bastante mejor; el resto del pipeline no cambia.</p>'
+    )
     g = lambda e, m, k, obj=None, sub="todos": met.query("etapa==@e and modelo==@m and metrica==@k and subgrupo==@sub" + (" and objetivo==@obj" if obj else ""))["valor"]  # noqa: E731
     val = lambda *a, **k: (float(g(*a, **k).iloc[0]) if len(g(*a, **k)) else float("nan"))  # noqa: E731
     test = seg[seg["conjunto"] == "test"]
@@ -288,7 +296,7 @@ def build():
   <span class="eyebrow">DIMMIT v1 · Evaluación y resultados</span>
   <h1>Condición de la malla vial: YOLOv10 + sensores + contexto de Bogotá</h1>
   <div class="meta"><span>corrida {esc(run)}</span><span>{esc(version)}</span><span>RDD2020 completo: 26 336 imágenes</span></div>
-  {'<p class="note"><b>Corrida provisional.</b> El detector es la versión de humo entrenada en CPU (2 épocas); el entrenamiento completo en GPU reemplaza estos números. Las métricas de la red y de las líneas base son comparables entre sí.</p>' if provisional else ''}
+  {note}
 </header>
 
 <section aria-labelledby="s-resumen">

@@ -51,7 +51,7 @@ class Collector:
 def eval_detector(col, frame, splits, boxes):
     det_dir = REPO_ROOT / (FEATURES / "detector_source.txt").read_text().strip()
     mfile = det_dir / "detector_metrics.json"
-    modelo = det_dir.name
+    modelo = det_dir.parent.name if det_dir.name == "outputs" else det_dir.name
     if mfile.exists():
         dm = json.loads(mfile.read_text())
         for key, res in dm.items():

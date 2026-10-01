@@ -63,6 +63,7 @@ def gbm_frame(frame, cols, target="icv"):
 def main():
     cfg_lab = pp.load_cfg()
     frame = build_tables()
+    frame = frame[frame["split"] != "train"]  # sin sensores ni objetivos de fusión en el train del detector
     groups = feature_groups(frame)
     ensure_dir(OUT)
     res = {}

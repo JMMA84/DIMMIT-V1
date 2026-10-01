@@ -86,7 +86,8 @@ def build(run=None, use_llm=None):
     ctx = pd.read_parquet(FEATURES / "context_segment.parquet")
     truth = segment_truth(frame)
     det_src = (FEATURES / "detector_source.txt").read_text().strip()
-    version = f"det={det_src.split('/')[-1]};fusion=ensamble{len(json.loads((DATA.parent / 'models/release/fusion/fusion_meta.json').read_text())['miembros'])}"
+    det_name = det_src.rstrip("/").split("/")[-2] if det_src.rstrip("/").endswith("outputs") else det_src.split("/")[-1]
+    version = f"det={det_name};fusion=ensamble{len(json.loads((DATA.parent / 'models/release/fusion/fusion_meta.json').read_text())['miembros'])}"
     parts = []
     for split in ("test", "despliegue"):
         seg = pd.read_parquet(PRED / f"principal__{split}_segmento.parquet")
