@@ -1,0 +1,59 @@
+# Simulador de sensores v2 (físico). La rugosidad latente solo se acopla PARCIALMENTE al daño
+# visual (r ~ -0.55); la etiqueta de rugosidad es el IRI REALIZADO (Golden Car) sobre el perfil
+# generado. La verdad latente se guarda aparte (sensors_truth.parquet) y ninguna feature la lee.
+hz_internal: 500
+hz_output: 50                # MPU-6050 vía Arduino -> Raspberry Pi
+dx_profile_m: 0.05
+lead_m: 12.0                 # tramo de entrada/salida alrededor de la calzada
+camera_lookahead_m: 8.0      # el fotograma se toma ~8 m antes de pasar sobre lo que ve
+imu_window_s: [-0.5, 2.5]    # ventana de features por fotograma relativa a su captura
+
+speed_kmh: [15, 50]          # velocidad de crucero por segmento (uniforme)
+speed_ou: {theta: 0.5, sigma_kmh: 3.0}
+
+latent:
+  ln_iri_base: 0.788         # ln(2.2 m/km)
+  pci_coupling: 1.5          # ln IRI += coupling * (1 - PCI_vis/100)
+  country_offset: {Japan: -0.10, Czech: 0.0, India: 0.25}
+  segment_sigma: 0.30
+  frame_ar_phi: 0.6
+  frame_ar_sigma: 0.20
+
+events:
+  pothole_depth_m: {L: 0.025, M: 0.05, H: 0.08}
+  pothole_length_m: [0.4, 1.2]
+  pothole_hit_prob_center: 0.75   # |cx-0.5| <= 0.3
+  pothole_hit_prob_side: 0.15
+  alligator_gain: [1.5, 2.5]
+  alligator_length_m: [2.0, 6.0]
+  alligator_prob: 0.6
+  speed_bump_prob: 0.08          # por segmento; excluido del IRI
+  speed_bump: {height_m: 0.07, length_m: 3.5, speed_kmh: 12}
+  manhole_per_100m: 1.0          # excluido del IRI
+  manhole_amp_m: 0.015
+  manhole_hit_prob: 0.3
+
+vehicle:                       # rangos por viaje (cuarto de vehículo)
+  ms_kg: [240, 450]
+  mu_kg: [30, 55]
+  ks_n_m: [14000, 32000]
+  cs_ns_m: [1000, 2600]
+  kt_n_m: [160000, 260000]
+  wheelbase_m: 2.6
+  track_m: 1.5
+  tire_patch_m: 0.15
+  track_coherence: 0.8
+
+imu:
+  mount_freq_hz: [12, 25]
+  mount_damping: [0.08, 0.3]
+  tilt_deg: 15
+  accel_noise_ms2: [0.03, 0.06]
+  accel_bias_sigma: 0.05
+  gyro_noise_rads: 0.005
+  accel_range_g: 2
+  lsb_per_g: 16384
+  gps_sigma_m: 3.0
+  gps_ar_phi: 0.8
+
+seed: 42

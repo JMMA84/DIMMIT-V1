@@ -1,11 +1,13 @@
 # Objetivos (verdad de referencia) a partir de las cajas anotadas por humanos en RDD2020.
 # Pseudo-PCI inspirado en ASTM D6433: densidad por clase -> valor deducido (DV) -> CDV -> PCI.
-# Densidad por caja (%), con un área de referencia por fotograma de ~50 m^2:
+# Densidad por caja (%) respecto al área de vía visible por fotograma (~143 m^2: de 3 a 25 m
+# delante del vehículo x ~7 m de calzada). Con este área los 5 estados quedan entre 14 % y 26 %
+# de los segmentos (con 50 m^2 el 38 % caía en "muy malo").
 density:
-  D00: {var: h, k: 30.0}        # grieta longitudinal: largo ~ alto de la caja (15 m por unidad de alto)
-  D10: {var: w, k: 12.0}        # grieta transversal: largo ~ ancho de la caja (6 m por unidad de ancho)
-  D20: {var: wh, k: 117.0}      # piel de cocodrilo: área (factor de llenado 0.7 / zona de vía 0.6)
-  D40: {var: one, k: 2.0}       # bache: 2 % por bache
+  D00: {var: h, k: 10.5}        # grieta longitudinal: largo ~ alto de la caja (15 m por unidad de alto)
+  D10: {var: w, k: 4.2}         # grieta transversal: largo ~ ancho de la caja (6 m por unidad de ancho)
+  D20: {var: wh, k: 41.0}       # piel de cocodrilo: área (factor de llenado 0.7 / zona de vía 0.6)
+  D40: {var: one, k: 0.7}       # bache: ~1 m^2 por bache
 # severidad L/M/H por percentiles (50/85) del tamaño aparente corregido por perspectiva
 severity_percentiles: [50, 85]
 severity_kappa: {L: 0.33, M: 1.0, H: 3.0}

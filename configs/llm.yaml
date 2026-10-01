@@ -1,0 +1,13 @@
+# Capa de lenguaje: descripción + acción recomendada por segmento.
+# enabled: false -> solo plantilla determinista (corrida actual, sin ANTHROPIC_API_KEY).
+# Con la clave en el entorno, poner enabled: true (o --llm) para usar Claude por Message Batches.
+enabled: false
+model: claude-opus-5-5
+effort: low
+max_tokens: 2000
+max_words: 80
+batch_poll_seconds: 30
+prompt_version: v1
+juez:                        # línea base opcional: Claude estima el estado sin la red
+  enabled: false
+  n_segmentos: 300

@@ -1,0 +1,43 @@
+# Marco de evaluación: umbrales iniciales (OK / ALERTA). Se congelan antes de mirar el test y se
+# recalibran solo entre versiones. direccion: mayor = más alto es mejor; menor; rango.
+bootstrap: 1000
+umbrales:
+  detector_map50:              {ok: 0.35, alerta: 0.25, direccion: mayor}
+  detector_ap50_D40:           {ok: 0.30, alerta: 0.20, direccion: mayor}
+  presencia_auroc:             {ok: 0.85, alerta: 0.75, direccion: mayor}
+  presencia_f1:                {ok: 0.70, alerta: 0.60, direccion: mayor}
+  latencia_p95_ms:             {ok: 250, alerta: 500, direccion: menor}
+  vision_pci_spearman:         {ok: 0.70, alerta: 0.55, direccion: mayor}
+  icv_mae:                     {ok: 8.0, alerta: 12.0, direccion: menor}
+  icv_spearman:                {ok: 0.75, alerta: 0.60, direccion: mayor}
+  estado_qwk:                  {ok: 0.70, alerta: 0.55, direccion: mayor}
+  estado_mas_menos_1:          {ok: 0.90, alerta: 0.80, direccion: mayor}
+  estado_recall_malo_o_peor:   {ok: 0.80, alerta: 0.65, direccion: mayor}
+  estado_f1_macro:             {ok: 0.50, alerta: 0.40, direccion: mayor}
+  estado_ece:                  {ok: 0.05, alerta: 0.10, direccion: menor}
+  cobertura_90:                {ok: [0.87, 0.94], alerta: [0.80, 0.97], direccion: rango}
+  iri_r2:                      {ok: 0.70, alerta: 0.50, direccion: mayor}
+  iri_spearman_real:           {ok: 0.70, alerta: 0.50, direccion: mayor}
+  importancia_spearman:        {ok: 0.50, alerta: 0.30, direccion: mayor}
+  canario_contexto_r2:         {ok: 0.05, alerta: 0.10, direccion: menor}
+  mundo_nulo_pci_r2:           {ok: 0.05, alerta: 0.10, direccion: menor}
+  permutadas_icv_spearman:     {ok: 0.10, alerta: 0.20, direccion: menor}
+  llm_json_valido:             {ok: 1.0, alerta: 0.99, direccion: mayor}
+  llm_fidelidad:               {ok: 0.98, alerta: 0.95, direccion: mayor}
+  psi:                         {ok: 0.10, alerta: 0.25, direccion: menor}
+  dominio_auroc:               {ok: 0.60, alerta: 0.70, direccion: menor}
+
+# índice de prioridad (geo/priority.py)
+prioridad:
+  peso_necesidad: 0.6
+  pesos_importancia: {social: 0.4, movilidad: 0.35, seguridad_vial: 0.25}
+  bono_colegio_300m: 5
+  bono_hospital_1km: 5
+  bono_lluvia: 3
+  niveles: {alta: 60, media: 40}
+
+# deriva: variables monitoreadas (fotograma) y control positivo sintético
+deriva:
+  variables: [brillo, contraste, nitidez, jpeg_kb, max_conf, n_D00, n_D10, n_D20, n_D40, pci_det,
+              emb_pc00, emb_pc01, emb_pc02, emb_pc03, emb_pc04]
+  degradacion_n: 300

@@ -20,6 +20,7 @@ from dimmit.utils.io import INDEX, REPO_ROOT, ensure_dir
 BUILD = REPO_ROOT / "build" / "kaggle"
 KERNEL_SLUG = "dimmit-yolov10-rdd2020"
 BUNDLE_SLUG = "dimmit-bundle"
+RAW_SLUG = "rdd2020-raw"
 KAGGLE = [str(Path(sys.executable).parent / "kaggle")]
 
 
@@ -49,6 +50,12 @@ def build_bundle():
                 if p.is_file() and "__pycache__" not in p.parts:
                     z.write(p, p.relative_to(REPO_ROOT))
         z.write(INDEX / "splits.csv", "data/index/splits.csv")
+        # sin internet en el kernel: wheels de ultralytics y pesos preentrenados van en el bundle
+        for whl in (BUILD / "wheels").glob("*.whl"):
+            z.write(whl, f"wheels/{whl.name}")
+        for w in ("yolov10n.pt", "yolo11n.pt"):
+            if (REPO_ROOT / "models" / w).exists():
+                z.write(REPO_ROOT / "models" / w, f"models/{w}")
     return d
 
 
@@ -80,7 +87,7 @@ def push():
         "enable_gpu": True,
         "enable_internet": True,
         "machine_shape": "NvidiaTeslaT4",
-        "dataset_sources": [f"{user}/{BUNDLE_SLUG}"],
+        "dataset_sources": [f"{user}/{BUNDLE_SLUG}", f"{user}/{RAW_SLUG}"],
         "competition_sources": [],
         "kernel_sources": [],
         "model_sources": [],
