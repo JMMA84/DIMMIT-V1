@@ -57,14 +57,19 @@ pasarán a ser mediciones de IRI de referencia (perfilómetro o IDU).
    `DIMMIT_MODE=infer`); `make campo-status`; `make campo-pull` deja `detections.parquet`, `latency.json`
    y `resumen.json` en `reports/campo/kaggle/outputs/`. `make campo-local` corre lo mismo en CPU para la
    paridad.
-4. `make campo`: `campo.scores` (features acotadas de YOLO, pseudo-PCI, etiqueta, profundidad alineada,
-   score secundario de la red de fusión en modo solo visión), `campo.calidad` (calidad de imagen,
-   confianza, PSI y AUROC de dominio frente a F ∪ T, correlación sensor ↔ YOLO con IC bootstrap),
-   `campo.salidas` (CSV/JSON) y `reporting.presentacion_campo` (HTML por diapositivas).
+4. `make campo-local` (416/640/832 px para paridad y consenso multi-escala) y `make campo`:
+   `campo.scores` (modo campo: filtros de `campo/filtros.py`, línea base autocalibrada del ultrasónico,
+   severidad de bache por profundidad ASTM D6433; modo RDD2020 como columnas `*_tau_rdd2020` para el
+   antes/después; score secundario de la red de fusión en modo solo visión), `campo.calidad` (calidad
+   de imagen, confianza, PSI y AUROC de dominio frente a F ∪ T, correlación sensor ↔ YOLO con IC
+   bootstrap, validación visual de 31 fotos), `campo.salidas` (CSV/JSON) y
+   `reporting.presentacion_campo` (HTML por diapositivas, v2). `python -m dimmit.campo.umbrales`
+   recalcula los umbrales de campo (precisión por caja ≥ 50 % en el test de RDD2020).
 5. Cuando lleguen nuevas tomas: misma estructura de carpetas en el Drive (`grabacion_*_Prueba_N/` con
    fotos `captura_YYYYMMDD_HHMMSS_mmm_n.jpg` y un GPX; `tomadedatos/*Profundidad*.txt`), actualizar el
    mapa `ultrasonico.mapa` en `configs/campo.yaml` y repetir 1–4.
 
 Reportes publicados (Artifacts privados): evaluación v1 https://claude.ai/artifact/HbLoM9aeC2N5putgBeHpn2 ·
-presentación de campo https://claude.ai/artifact/Qqo4QtPrQ9g95c3sLPPN8p — para actualizarlos desde otra
-sesión, publicar con ese url.
+presentación de campo v1 https://claude.ai/artifact/Qqo4QtPrQ9g95c3sLPPN8p · presentación de campo v2
+(diagnóstico y modo campo) https://claude.ai/artifact/Q4AwJ9xcwWSBk4A39pQPjU — para actualizarlos desde otra sesión,
+publicar con ese url.

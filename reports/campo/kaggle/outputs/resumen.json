@@ -3,6 +3,6 @@
   "fotos": 191,
   "pesos": "yolov10n_rdd2020.pt",
   "gpu": false,
-  "imgsz": 416,
-  "segundos": 115.2
+  "imgsz": 640,
+  "segundos": 114.7
 }

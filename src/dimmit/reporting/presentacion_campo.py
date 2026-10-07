@@ -139,10 +139,10 @@ def bars_scores(t):
     """Barras horizontales por tramo: score con umbral RDD2020 (tau) vs score con conf >= 0.25."""
     t = t.sort_values("score_calidad")
     n = len(t)
-    rh, gap, top, left, w = 20, 10, 24, 150, 560
+    rh, gap, top, left, w = 20, 10, 24, 150, 500
     hgt = top + n * (2 * rh + gap) + 40
     sx = lambda v: left + v / 100 * w
-    o = [f'<svg viewBox="0 0 {left + w + 90} {hgt}" class="chart" role="img" aria-label="Score por tramo">']
+    o = [f'<svg viewBox="0 0 {left + w + 230} {hgt}" class="chart" role="img" aria-label="Score por tramo, antes y después">']
     for v in (0, 25, 50, 75, 100):
         o.append(f'<line x1="{sx(v):.0f}" y1="{top - 6}" x2="{sx(v):.0f}" y2="{hgt - 36}" class="grid"/><text x="{sx(v):.0f}" y="{hgt - 18}" text-anchor="middle">{v}</text>')
     for lim, name in ((41, "malo"), (56, "regular"), (71, "satisf."), (86, "bueno")):
@@ -151,10 +151,10 @@ def bars_scores(t):
     for _, r in t.iterrows():
         o.append(f'<text x="{left - 10}" y="{y + rh + 4}" text-anchor="end" class="t-strong">{r.prueba.replace("_", " ")} · T{int(r.tramo)}</text>')
         o.append(f'<text x="{left - 10}" y="{y + rh + 18}" text-anchor="end" class="mono small">{r.id_via}</text>')
-        o.append(f'<rect x="{left}" y="{y}" width="{max(r.score_calidad / 100 * w, 2):.0f}" height="{rh - 3}" rx="3" class="b-tau"/>')
-        o.append(f'<text x="{sx(r.score_calidad) + 6:.0f}" y="{y + rh - 7}" class="t-strong">{fmt(r.score_calidad)} · {ESTADO_TXT[r.estado]}</text>')
-        o.append(f'<rect x="{left}" y="{y + rh}" width="{max(r.score_calidad_conf25 / 100 * w, 2):.0f}" height="{rh - 3}" rx="3" class="b-25"/>')
-        o.append(f'<text x="{sx(r.score_calidad_conf25) + 6:.0f}" y="{y + 2 * rh - 7}">{fmt(r.score_calidad_conf25)} · {ESTADO_TXT[r.estado_conf25]}</text>')
+        o.append(f'<rect x="{left}" y="{y}" width="{max(r.score_calidad_tau_rdd2020 / 100 * w, 2):.0f}" height="{rh - 3}" rx="3" class="b-tau"/>')
+        o.append(f'<text x="{sx(r.score_calidad_tau_rdd2020) + 6:.0f}" y="{y + rh - 7}">{fmt(r.score_calidad_tau_rdd2020)} · {ESTADO_TXT[r.estado_tau_rdd2020]} · {ETIQ_TXT[r.etiqueta_tau_rdd2020]}</text>')
+        o.append(f'<rect x="{left}" y="{y + rh}" width="{max(r.score_calidad / 100 * w, 2):.0f}" height="{rh - 3}" rx="3" class="b-25"/>')
+        o.append(f'<text x="{sx(r.score_calidad) + 6:.0f}" y="{y + 2 * rh - 7}" class="t-strong">{fmt(r.score_calidad)} · {ESTADO_TXT[r.estado]} · {ETIQ_TXT[r.etiqueta]}</text>')
         y += 2 * rh + gap
     o.append("</svg>")
     return "".join(o)
@@ -195,11 +195,13 @@ def scatter_depth(t, rs, lo, hi, ctrl):
     sy = lambda v: top + h - v / ymax * h
     o = [f'<svg viewBox="0 0 {left + w + 30} {top + h + 70}" class="chart" role="img" aria-label="Profundidad medida frente a baches detectados">']
     for v in np.arange(0, xmax + 1, 5 if xmax <= 30 else 10):
+        if v > xmax:
+            break
         o.append(f'<line x1="{sx(v):.0f}" y1="{top}" x2="{sx(v):.0f}" y2="{top + h}" class="grid"/><text x="{sx(v):.0f}" y="{top + h + 18}" text-anchor="middle">{fmt(v)}</text>')
     for v in np.arange(0, ymax + 1, ystep):
         o.append(f'<line x1="{left}" y1="{sy(v):.0f}" x2="{left + w}" y2="{sy(v):.0f}" class="grid"/><text x="{left - 8}" y="{sy(v) + 4:.0f}" text-anchor="end">{fmt(v)}</text>')
-    o.append(f'<text x="{left + w / 2:.0f}" y="{top + h + 40}" text-anchor="middle">profundidad máxima medida por el sensor (cm)</text>')
-    o.append(f'<text transform="translate(14 {top + h / 2:.0f}) rotate(-90)" text-anchor="middle">cajas de bache detectadas (conf ≥ 0,07)</text>')
+    o.append(f'<text x="{left + w / 2:.0f}" y="{top + h + 40}" text-anchor="middle">profundidad máxima del sensor, línea base autocalibrada (cm)</text>')
+    o.append(f'<text transform="translate(14 {top + h / 2:.0f}) rotate(-90)" text-anchor="middle">cajas de bache conservadas (modo campo)</text>')
     shapes = {"Prueba_2": "circle", "Prueba_3": "rect", "Prueba_4": "tri"}
     for _, r in t.iterrows():
         x, y = sx(r.profundidad_max_cm), sy(r.n_baches)
@@ -211,7 +213,7 @@ def scatter_depth(t, rs, lo, hi, ctrl):
         else:
             o.append(f'<polygon points="{x:.0f},{y - 8:.0f} {x - 8:.0f},{y + 6:.0f} {x + 8:.0f},{y + 6:.0f}" class="pt"/>')
         o.append(f'<text x="{x + 10:.0f}" y="{y - 8:.0f}" class="small">T{int(r.tramo)}</text>')
-    o.append(f'<text x="{left}" y="{top + h + 60}" class="t-strong">Spearman {fmt(rs, 2)} · IC 95 % [{fmt(lo, 2)}, {fmt(hi, 2)}] · n = {len(t)} tramos · control (grieta longitudinal): {fmt(ctrl, 2)}</text>')
+    o.append(f'<text x="{left}" y="{top + h + 60}" class="t-strong">Spearman {fmt(rs, 2)} · IC 95 % [{fmt(lo, 2)}, {fmt(hi, 2)}] · n = {len(t)} tramos</text>')
     o.append("</svg>")
     return "".join(o)
 
@@ -272,42 +274,61 @@ def build():
     pr = vias[vias["nivel"] == "prueba"].copy()
     L = lambda m, via="LOTE": float(largo[(largo["metrica"] == m) & (largo["id_via"] == via)]["valor"].iloc[0]) if ((largo["metrica"] == m) & (largo["id_via"] == via)).any() else float("nan")
     row = largo[(largo["metrica"] == "spearman_profundidad_max_cm__n_baches") & (largo["nivel"] == "tramo")].iloc[0]
+    row40 = largo[(largo["metrica"] == "spearman_profundidad_max_cm_base40__n_baches") & (largo["nivel"] == "tramo")].iloc[0]
+    tau_campo = json.loads((FEAT / "umbrales_campo.json").read_text())["tau_campo"]
+    # resumen de filtros (cajas descartadas por capa) y validación visual
+    res = pd.read_csv(FEAT / "filtros_resumen.csv").set_index("cls")
+    cols_f = [c for c in ("1_confianza", "2_banda", "2_fuera_de_via", "3_sin_persistencia", "4_sin_consenso_escala", "conservada") if c in res]
+    names_f = {"1_confianza": "1 · confianza < umbral de campo", "2_banda": "2 · banda ancha y baja (junta/bordillo)", "2_fuera_de_via": "2 · fuera de la calzada",
+               "3_sin_persistencia": "3 · sin persistencia entre fotos", "4_sin_consenso_escala": "4 · sin consenso a otra escala", "conservada": "conservadas"}
+    filtros_html = "".join(f'<tr><td>{names_f[c]}</td>' + "".join(f'<td class="n">{int(res.loc[k, c]) if k in res.index else 0}</td>' for k in CLASS_KEYS) + f'<td class="n">{int(res[c].sum())}</td></tr>' for c in cols_f)
+    V = lambda m: L(m, "MUESTRA")
+    valid_html = "".join(f'<tr><td>{n}</td><td class="n">{fmt(100 * V(f"precision_{k}_tau_rdd2020"))} %</td><td class="n">{fmt(100 * V(f"recall_{k}_tau_rdd2020"))} %</td>'
+                         f'<td class="n us">{fmt(100 * V(f"precision_{k}_campo"))} %</td><td class="n us">{fmt(100 * V(f"recall_{k}_campo"))} %</td></tr>'
+                         for k, n in (("piel_cocodrilo", "Piel de cocodrilo"), ("bache", "Bache"), ("cualquier_dano", "Cualquier daño")))
+    parches_pct = fmt(100 * V("parches_marcados_como_piel_cocodrilo_campo"))
     ctrl = L("spearman_profundidad_max_cm__n_grieta_longitudinal")
 
-    # miniaturas: la foto de mayor confianza por tramo, con cajas >= tau
+    det_f = pd.read_parquet(FEAT / "detecciones_filtradas.parquet")
+    keep = det_f[det_f["conservada"]]
+    # miniaturas: la foto con la caja conservada de mayor confianza por tramo (o la de mayor confianza bruta si no hay)
     thumbs = {}
     for _, r in t.iterrows():
         g = fr[fr["id_via"] == r.id_via]
-        best = g.loc[g["max_conf"].idxmax()]
-        b = det[(det["image_id"] == best.image_id) & (det["conf"] >= det["tau"])]
-        thumbs[r.id_via] = (thumb(best.path, b), best.image_id, int(len(b)), float(best.max_conf))
-    # foto para la animación de YOLO: la de mayor confianza global
-    best_all = fr.loc[fr["max_conf"].idxmax()]
+        best = g.loc[g["max_conf_campo"].idxmax()] if g["max_conf_campo"].max() > 0 else g.loc[g["max_conf"].idxmax()]
+        b = keep[keep["image_id"] == best.image_id]
+        n_antes = int(((det["image_id"] == best.image_id) & (det["conf"] >= det["tau"])).sum())
+        thumbs[r.id_via] = (thumb(best.path, b), best.image_id, int(len(b)), n_antes)
+    # foto para la animación de YOLO: la de mayor confianza conservada
+    best_all = fr.loc[fr["max_conf_campo"].idxmax()]
     yolo_boxes = det[det["image_id"] == best_all.image_id].sort_values("conf", ascending=False)
+    yolo_keep = keep[keep["image_id"] == best_all.image_id]
     yolo_img = thumb(best_all.path, yolo_boxes.iloc[0:0], width=800, quality=78)
-    yolo_json = json.dumps([{"c": r.cls, "p": round(float(r.conf), 3), "x": round(float(r.cx), 4), "y": round(float(r.cy), 4), "w": round(float(r.w), 4), "h": round(float(r.h), 4)}
-                            for _, r in yolo_boxes.head(60).iterrows()])
+    yolo_json = json.dumps([{"c": r.cls, "p": round(float(r.conf), 3), "x": round(float(r.cx), 4), "y": round(float(r.cy), 4), "w": round(float(r.w), 4), "h": round(float(r.h), 4),
+                             "k": bool(((yolo_keep["cx"] - r.cx).abs() < 1e-6).any())} for _, r in yolo_boxes.head(60).iterrows()])
     # tramo de ejemplo para el flujo de score (el de la foto de YOLO)
     ex = t[t["id_via"] == best_all.id_via].iloc[0]
 
     n_fotos, n_tramos = len(fr), len(t)
     etq = t["etiqueta"].value_counts().to_dict()
+    etq_antes = t["etiqueta_tau_rdd2020"].value_counts().to_dict()
     kpis = (tile(n_tramos, "tramos evaluados", "3 recorridos · 5-oct-2026") + tile(n_fotos, "fotos procesadas", f"{fmt(lat['ms_por_imagen_lote'])} ms por foto en Kaggle (CPU)")
-            + tile(fmt(t["score_calidad"].mean()), "score medio (umbral RDD2020)", f"{fmt(t['score_calidad_conf25'].mean())} con confianza ≥ 0,25")
-            + tile(f"{etq.get('intervencion', 0)} / {etq.get('mantenimiento', 0)} / {etq.get('prevencion', 0)}", "intervención / mantenimiento / prevención", "etiqueta operativa por tramo")
-            + tile(fmt(fr["max_conf"].mean(), 2), "confianza máxima media por foto", f"{fmt(100 * (fr['max_conf'] >= 0.25).mean())} % de fotos con una caja ≥ 0,25"))
+            + tile(fmt(t["score_calidad"].mean()), "score medio (modo campo)", f"antes, con el umbral de RDD2020: {fmt(t['score_calidad_tau_rdd2020'].mean())}")
+            + tile(f"{etq.get('intervencion', 0)} / {etq.get('mantenimiento', 0)} / {etq.get('prevencion', 0)}", "intervención / mantenimiento / prevención", f"antes: {etq_antes.get('intervencion', 0)} / {etq_antes.get('mantenimiento', 0)} / {etq_antes.get('prevencion', 0)}")
+            + tile(fmt(fr.loc[fr["max_conf_campo"] > 0, "max_conf_campo"].mean(), 2), "confianza media de las cajas conservadas", f"{int((fr['n_detecciones_campo'] > 0).sum())} de {n_fotos} fotos con alguna caja que pasa los filtros"))
 
     gallery = "".join(
         f'<figure><img src="{thumbs[r.id_via][0]}" alt="Foto de mayor confianza del tramo {r.id_via}" loading="lazy">'
-        f'<figcaption><b class="mono">{r.id_via}</b> · {r.prueba.replace("_", " ")} T{int(r.tramo)}<br>score {fmt(r.score_calidad)} ({ESTADO_TXT[r.estado]}) · conf ≥ 0,25: {fmt(r.score_calidad_conf25)} ({ESTADO_TXT[r.estado_conf25]})<br>'
-        f'<span class="pill et-{r.etiqueta}">{ETIQ_TXT[r.etiqueta]}</span> · {thumbs[r.id_via][2]} cajas · {fmt(r.lat, 5)}, {fmt(r.lon, 5)}</figcaption></figure>'
+        f'<figcaption><b class="mono">{r.id_via}</b> · {r.prueba.replace("_", " ")} T{int(r.tramo)}<br>score {fmt(r.score_calidad)} ({ESTADO_TXT[r.estado]}) · antes: {fmt(r.score_calidad_tau_rdd2020)} ({ESTADO_TXT[r.estado_tau_rdd2020]})<br>'
+        f'<span class="pill et-{r.etiqueta}">{ETIQ_TXT[r.etiqueta]}</span> · {thumbs[r.id_via][2]} cajas conservadas de {thumbs[r.id_via][3]} · {fmt(r.lat, 5)}, {fmt(r.lon, 5)}</figcaption></figure>'
         for _, r in t.sort_values(["prueba", "tramo"]).iterrows())
 
     table_rows = "".join(
         f'<tr><td class="mono">{r.id_via}</td><td>{r.prueba.replace("_", " ")}</td><td class="n">{int(r.tramo)}</td><td class="n">{int(r.n_fotogramas)}</td>'
         f'<td class="n">{fmt(r.lat, 5)}</td><td class="n">{fmt(r.lon, 5)}</td><td>{", ".join(SLUG_TXT[s] for s in str(r.danos_detectados).split(";") if s and s != "nan")}</td>'
-        f'<td class="n">{fmt(r.score_calidad)}</td><td>{ESTADO_TXT[r.estado]}</td><td class="n">{fmt(r.score_calidad_conf25)}</td><td>{ESTADO_TXT[r.estado_conf25]}</td>'
-        f'<td><span class="pill et-{r.etiqueta}">{ETIQ_TXT[r.etiqueta]}</span></td><td class="n">{fmt(r.profundidad_max_cm, 1)}</td><td class="n">{fmt(r.max_conf, 2)}</td></tr>'
+        f'<td class="n">{fmt(r.score_calidad_tau_rdd2020)}</td><td>{ESTADO_TXT[r.estado_tau_rdd2020]}</td><td><span class="pill et-{r.etiqueta_tau_rdd2020}">{ETIQ_TXT[r.etiqueta_tau_rdd2020]}</span></td>'
+        f'<td class="n">{fmt(r.score_calidad)}</td><td>{ESTADO_TXT[r.estado]}</td><td><span class="pill et-{r.etiqueta}">{ETIQ_TXT[r.etiqueta]}</span></td>'
+        f'<td class="n">{fmt(r.profundidad_max_cm_base40, 1)}</td><td class="n">{fmt(r.profundidad_max_cm, 1)}</td><td class="n">{fmt(r.confianza_modelo, 2)}</td></tr>'
         for _, r in t.sort_values(["prueba", "tramo"]).iterrows())
 
     cal_rows = "".join(
@@ -316,9 +337,7 @@ def build():
         for _, r in t.sort_values(["prueba", "tramo"]).iterrows())
     corr_rows = ""
     for _, p in pr.iterrows():
-        a = L("spearman_foto_profundidad_cm__maxconf_D40", p.id_via)
-        b = L("spearman_foto_profundidad_cm__maxconf_D00", p.id_via)
-        corr_rows += f'<tr><td>{p.prueba.replace("_", " ")}</td><td class="n">{fmt(p.profundidad_max_cm, 1)}</td><td class="n">{fmt(p.profundidad_media_cm, 1)}</td><td class="n">{int(p.n_baches)}</td><td class="n">{fmt(a, 2)}</td><td class="n">{fmt(b, 2)}</td></tr>'
+        corr_rows += f'<tr><td>{p.prueba.replace("_", " ")}</td><td class="n">{fmt(p.linea_base_cm)}</td><td class="n">{fmt(p.profundidad_max_cm_base40, 1)}</td><td class="n">{fmt(p.profundidad_max_cm, 1)}</td><td>{p.severidad_bache_astm if isinstance(p.severidad_bache_astm, str) else "—"}</td><td class="n">{int(p.n_baches)}</td></tr>'
 
     depth_frames = fr[fr["profundidad_cm"] >= 3]
     psi_vals = {v: L(f"psi_{v}") for v in ("brillo", "contraste", "nitidez", "jpeg_kb", "max_conf", "pci_det")}
@@ -328,31 +347,35 @@ def build():
         "BOGOTA": bogota_svg(), "KPIS": kpis, "GALERIA": gallery, "TABLA": table_rows, "CALIDAD": cal_rows, "CORR": corr_rows,
         "BARRAS": bars_scores(t), "DANOS": bars_damage(t), "DISPERSION": scatter_depth(t, row["valor"], row["ic95_inf"], row["ic95_sup"], ctrl),
         "CALLE": street_map(fr, t, depth_frames), "PSI": psi_html,
-        "YOLO_IMG": yolo_img, "YOLO_JSON": yolo_json, "YOLO_ID": best_all.image_id, "YOLO_N": str(int((yolo_boxes["conf"] >= yolo_boxes["tau"]).sum())),
+        "YOLO_IMG": yolo_img, "YOLO_JSON": yolo_json, "YOLO_ID": best_all.image_id, "YOLO_N": str(int(len(yolo_keep))), "YOLO_N_TAU": str(int((yolo_boxes["conf"] >= yolo_boxes["tau"]).sum())), "PARCHES": parches_pct,
         "EX_ID": ex.id_via, "EX_N": str(int(ex.n_fotogramas)), "EX_SCORE": fmt(ex.score_calidad), "EX_ESTADO": ESTADO_TXT[ex.estado], "EX_ETIQ": ETIQ_TXT[ex.etiqueta],
         "EX_PROF": fmt(ex.profundidad_max_cm, 1), "EX_LAT": fmt(ex.lat, 5), "EX_LON": fmt(ex.lon, 5),
         "EX_RHO": " · ".join(f"{SLUG_TXT[CLASS_SLUGS[c]].split()[0]} {fmt(100 - ex[f'sub_score_{CLASS_SLUGS[c]}'])}" for c in CLASS_KEYS),
         "EX_N_CAJAS": " · ".join(f"{int(ex[f'n_{CLASS_SLUGS[c]}'])} {SLUG_TXT[CLASS_SLUGS[c]].lower()}" for c in CLASS_KEYS),
         "N_FOTOS": str(n_fotos), "N_TRAMOS": str(n_tramos), "MS": fmt(lat["ms_por_imagen_lote"]), "AUROC": fmt(L("dominio_auroc"), 2),
-        "CONF_MED": fmt(fr["max_conf"].mean(), 2), "PCT25": fmt(100 * (fr["max_conf"] >= 0.25).mean()), "PCT_BORR": fmt(100 * fr["borrosa"].mean()),
+        "CONF_MED": fmt(fr["max_conf"].mean(), 2), "PCT_BORR": fmt(100 * fr["borrosa"].mean()),
         "PCT_SOBRE": fmt(100 * fr["sobreexpuesta"].mean()), "PCT_DET": fmt(100 * (fr["n_detecciones_tau"] > 0).mean()),
         "RS": fmt(row["valor"], 2), "RS_LO": fmt(row["ic95_inf"], 2), "RS_HI": fmt(row["ic95_sup"], 2),
-        "SCORE_TAU": fmt(t["score_calidad"].mean()), "SCORE_25": fmt(t["score_calidad_conf25"].mean()),
-        "N_INT": str(etq.get("intervencion", 0)), "LONG": fmt(t["longitud_m"].sum()),
+        "RS40": fmt(row40["valor"], 2), "RS40_LO": fmt(row40["ic95_inf"], 2), "RS40_HI": fmt(row40["ic95_sup"], 2),
+        "SCORE_TAU": fmt(t["score_calidad_tau_rdd2020"].mean()), "SCORE_CAMPO": fmt(t["score_calidad"].mean()),
+        "N_INT": str(etq.get("intervencion", 0)), "N_INT_ANTES": str(etq_antes.get("intervencion", 0)), "LONG": fmt(t["longitud_m"].sum()),
+        "N_CONSERVADAS": str(int(len(keep))), "N_BRUTAS": str(int(len(det))), "N_TAU": str(int((det["conf"] >= det["tau"]).sum())),
+        "FILTROS": filtros_html, "VALID": valid_html, "PCT_CAMPO": fmt(100 * (fr["n_detecciones_campo"] > 0).mean()), "CONF_CAMPO": fmt(fr.loc[fr["max_conf_campo"] > 0, "max_conf_campo"].mean(), 2),
+        "TAU_CAMPO": " · ".join(f"{ {'D00': 'long.', 'D10': 'transv.', 'D20': 'piel', 'D40': 'bache'}[c]} {fmt(v, 2)}" for c, v in tau_campo.items()),
     }
     page = TEMPLATE
     for k, v in ctx.items():
         page = page.replace("{{" + k + "}}", str(v))
     assert "{{" not in page, "placeholder sin reemplazar"
-    out = OUT_CAMPO / "dimmit_presentacion.html"
+    out = OUT_CAMPO / "dimmit_presentacion_v2.html"
     out.write_text(page)
-    art = ensure_dir(REPO_ROOT / "build/artifact") / "dimmit_presentacion.html"
+    art = ensure_dir(REPO_ROOT / "build/artifact") / "dimmit_presentacion_v2.html"
     art.write_text(page)
     print(f"[ok] presentación {len(page) / 1e6:.1f} MB -> {out}")
     return out
 
 
-TEMPLATE = r"""<title>DIMMIT en La Candelaria</title>
+TEMPLATE = r"""<title>DIMMIT en La Candelaria v2</title>
 <meta name="description" content="Presentación de la primera toma de datos de campo del prototipo DIMMIT V1 en Bogotá.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
@@ -452,7 +475,9 @@ th { position: sticky; top: 0; background: var(--paper); font: 600 .7rem var(--f
 th:focus-visible { outline: 2px solid var(--accent); }
 td.n { text-align: right; font-family: var(--f-mono); }
 .cmp th:first-child, .cmp td:first-child { white-space: normal; min-width: 150px; }
-.cmp td { white-space: normal; }
+.cmp td { white-space: normal; } .cmp th { white-space: normal; }
+.compact table { font-size: .76rem; } .compact th, .compact td { padding: 4px 8px; }
+.stack { grid-template-columns: 1fr; }
 .cmp td.us { color: var(--ink); font-weight: 600; background: color-mix(in oklab, var(--accent) 10%, transparent); }
 .psis { display: grid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .psi { display: flex; justify-content: space-between; align-items: center; gap: 8px; border: 1px solid var(--ring); border-radius: 6px; padding: 6px 10px; font: .8rem var(--f-mono); }
@@ -580,7 +605,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
      <li data-s="1"><b>Se divide en una cuadrícula</b>Cada celda es responsable de lo que cae en ella.</li>
      <li data-s="2"><b>Cada celda produce un vector</b>Posición y tamaño de una caja + probabilidad de cada una de las 4 clases.</li>
      <li data-s="3"><b>Los vectores se vuelven cajas candidatas</b>Muchas, cada una con su confianza. YOLOv10 aprende a dar una sola caja por daño, sin el filtro NMS clásico.</li>
-     <li data-s="4"><b>Quedan las que superan el umbral</b>Umbral por clase elegido en RDD2020 (0,04–0,09). Aquí quedaron {{YOLO_N}} cajas.</li>
+     <li data-s="4"><b>Quedan las que superan el umbral y los filtros</b>Umbral de campo por clase ({{TAU_CAMPO}}: la confianza a la que el 50 % de las cajas acierta en RDD2020) más geometría, persistencia entre fotos y consenso de escala. Con el umbral de RDD2020 quedaban {{YOLO_N_TAU}}; aquí quedan {{YOLO_N}}.</li>
     </ol>
     <div class="ctrl"><button id="yprev">‹ paso</button><button id="ynext">paso ›</button><span id="ylab"></span></div>
     <p style="font-size:.8rem">YOLOv10n: 2,3 millones de parámetros, 12 épocas sobre RDD2020. Las cajas y confianzas de esta animación son las detecciones reales de la foto.</p>
@@ -625,16 +650,47 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
 <section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · resultados">
  <div class="sheet">
   <div class="eyebrow">Qué encontró el detector</div>
-  <h2>Dos lecturas del mismo tramo: con el umbral de RDD2020 y con confianza ≥ 0,25</h2>
-  <div class="legend"><span><span class="sw" style="background:var(--st-muy_malo)"></span>score con umbral por clase de RDD2020 (0,04–0,09)</span><span><span class="sw" style="background:var(--st-bueno)"></span>score solo con cajas de confianza ≥ 0,25</span></div>
+  <h2>Antes y después: umbral de RDD2020 frente al modo campo</h2>
+  <div class="legend"><span><span class="sw" style="background:var(--st-muy_malo)"></span>antes: umbral de RDD2020 (0,04–0,09), sin filtros, sensor con base fija de 40 cm</span><span><span class="sw" style="background:var(--st-bueno)"></span>modo campo: umbral de precisión 50 %, 4 filtros, sensor autocalibrado, severidad ASTM</span></div>
   <div class="chartbox">{{BARRAS}}</div>
-  <div class="note">La brecha entre las dos barras es el hallazgo: fuera del dominio de entrenamiento (fotos a pie, cámara baja, 1920×1080) el detector produce muchas cajas de baja confianza. El umbral calibrado en RDD2020 no se transfiere; el score necesita calibración con datos de campo.</div>
+  <div class="note">Antes, los 9 tramos salían en intervención ({{N_INT_ANTES}}/9); ahora {{N_INT}}/9, concentrados en la Prueba 3, donde el sensor sí midió un hueco real. De {{N_BRUTAS}} cajas brutas, {{N_TAU}} pasaban el umbral de RDD2020 y {{N_CONSERVADAS}} pasan los cuatro filtros del modo campo. El precio: el modo campo es conservador y deja pasar daño real (ver validación).</div>
+ </div>
+</section>
+
+<section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.0" data-lm="candelaria" data-place="La Candelaria · diagnóstico">
+ <div class="sheet">
+  <div class="eyebrow">Diagnóstico: ¿modelo, sensores o contexto? Las tres cosas, y se puede medir cuánto cada una</div>
+  <div class="tablebox" style="max-height:none"><table class="cmp"><thead><tr><th>Evidencia</th><th>Causa</th><th>Corrección aplicada</th><th>Estado</th></tr></thead><tbody>
+   <tr><td>La Prueba 2 marcaba 10 cm de profundidad <b>constantes</b> durante 35 s; la Prueba 4, 17–25 cm. La distancia más frecuente del sensor era 50 y 61 cm, no los 40 cm del firmware.</td><td><b>Sensor: línea base mal puesta</b> (altura del montaje). Fabricó baches en 2 de 3 pruebas y disparó "intervención" en los 9 tramos.</td><td>Línea base autocalibrada = distancia más frecuente de cada serie (el pavimento sano). Severidad del bache por profundidad según ASTM D6433.</td><td><span class="pill et-prevencion">Corregido</span></td></tr>
+   <tr><td>183 "grietas transversales" con ancho mediano 0,52 de la imagen y altura 0,11 (área 4× la de RDD2020): juntas, sombra del bordillo y andén. Áreas de piel de cocodrilo y bache 1,4–2× las de RDD2020.</td><td><b>Dominio / encuadre</b>: cámara a 1,3 m del suelo mirando hacia abajo, a pie, frente a dashcam sobre la vía. El pseudo-PCI usa % de área: densidades infladas → "muy malo".</td><td>Umbral de campo por clase (precisión ≥ 50 % en RDD2020), filtro de bandas y de región de vía, persistencia entre fotos consecutivas, consenso a dos escalas.</td><td><span class="pill et-mantenimiento">Mitigado</span></td></tr>
+   <tr><td>En el propio test de RDD2020 la confianza máxima media por foto es 0,17 y solo el 23 % de las fotos tiene una caja ≥ 0,25. En campo: 0,13 y 10 %.</td><td><b>Modelo</b>: YOLOv10n de 12 épocas en CPU a 416 px (mAP50 0,28). La caída por dominio existe pero es moderada; la base ya era débil.</td><td>Inferencia a 640 px (confianza media 0,13 → 0,15). Lo demás requiere datos: fotos propias anotadas desde el vehículo y GPU.</td><td><span class="pill et-intervencion">Pendiente</span></td></tr>
+   <tr><td>Los 6 parches rectangulares de asfalto de la muestra: el detector marca la mitad como piel de cocodrilo con confianza 0,29–0,36.</td><td><b>Modelo</b>: confusión parche ↔ piel de cocodrilo (textura). RDD2020 casi no tiene parches anotados.</td><td>Se reporta; no se filtra a mano (sería inventar una regla). Entra al plan de anotación propia.</td><td><span class="pill et-intervencion">Pendiente</span></td></tr>
+   <tr><td>"Bogotá tiene más huecos": los daños reales de la cuadra (piel de cocodrilo junto al bordillo, el hueco de la Prueba 3) el modelo sí los ve.</td><td><b>No es el contexto</b> lo que falla; es el encuadre y la calibración.</td><td>—</td><td><span class="pill et-prevencion">Descartado</span></td></tr>
+  </tbody></table></div>
+ </div>
+</section>
+
+<section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.0" data-lm="candelaria" data-place="La Candelaria · filtros">
+ <div class="sheet">
+  <div class="eyebrow">Cómo no dejarnos meter falsos positivos: cuatro capas y una validación</div>
+  <div class="cols compact">
+   <div>
+    <h3>Cajas descartadas por capa (640 px; {{N_BRUTAS}} brutas)</h3>
+    <div class="tablebox" style="max-height:none"><table class="cmp"><thead><tr><th>Capa</th><th>grieta long.</th><th>grieta transv.</th><th>piel coc.</th><th>bache</th><th>total</th></tr></thead><tbody>{{FILTROS}}</tbody></table></div>
+    <p style="font-size:.82rem">Umbral de campo = confianza a la que la precisión por caja en el test de RDD2020 llega al 50 %: {{TAU_CAMPO}}. Persistencia: a 2 Hz un daño real sale en fotos consecutivas; una sombra parpadea.</p>
+   </div>
+   <div>
+    <h3>Validación en 31 fotos revisadas a ojo (presencia por clase)</h3>
+    <div class="tablebox" style="max-height:none"><table class="cmp"><thead><tr><th>Clase</th><th>precisión antes</th><th>recall antes</th><th>precisión campo</th><th>recall campo</th></tr></thead><tbody>{{VALID}}</tbody></table></div>
+    <p style="font-size:.82rem">Revisión rápida del equipo, no anotación experta. El modo campo gana precisión y pierde recall: deja pasar piel de cocodrilo de baja confianza y las juntas transversales deterioradas que el filtro de bandas elimina. El {{PARCHES}} % de los parches de asfalto siguen marcados como piel de cocodrilo.</p>
+   </div>
+  </div>
  </div>
 </section>
 
 <section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · daños">
  <div class="sheet">
-  <div class="eyebrow">Daños detectados por tramo (cajas con confianza ≥ umbral)</div>
+  <div class="eyebrow">Daños detectados por tramo (cajas que pasan los cuatro filtros)</div>
   <div class="legend"><span><span class="sw" style="background:var(--c1)"></span>grieta longitudinal</span><span><span class="sw" style="background:var(--c2)"></span>grieta transversal</span><span><span class="sw" style="background:var(--c3)"></span>piel de cocodrilo</span><span><span class="sw" style="background:var(--c4)"></span>bache</span></div>
   <div class="chartbox">{{DANOS}}</div>
  </div>
@@ -642,7 +698,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
 
 <section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · fotos">
  <div class="sheet">
-  <div class="eyebrow">Una foto por tramo: la de mayor confianza, con las cajas que superaron el umbral</div>
+  <div class="eyebrow">Una foto por tramo: la de mayor confianza conservada, con las cajas que pasaron los filtros</div>
   <div class="gallery">{{GALERIA}}</div>
  </div>
 </section>
@@ -652,10 +708,10 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   <div class="eyebrow">¿Coincide el sensor con lo que ve YOLO?</div>
   <div class="cols">
    <div>{{DISPERSION}}<div class="legend"><span>● Prueba 2</span><span>■ Prueba 3</span><span>▲ Prueba 4</span></div></div>
-   <div style="display:grid;gap:12px">
-    <p class="lead">Todavía no. Spearman {{RS}} con IC [{{RS_LO}}, {{RS_HI}}] sobre 9 tramos: el intervalo cubre desde una correlación fuerte negativa hasta una positiva.</p>
-    <table class="cmp"><thead><tr><th>Prueba</th><th>prof. máx (cm)</th><th>prof. media</th><th>baches YOLO</th><th>ρ foto a foto</th><th>control (grieta long.)</th></tr></thead><tbody>{{CORR}}</tbody></table>
-    <p style="font-size:.85rem">Por qué: el Arduino no tiene reloj, así que la alineación foto–lectura es por tiempo normalizado (supuesto); el sensor midió tres baches puntuales, no la cuadra completa; y la línea base de 40 cm no coincide con la altura real del montaje (la Prueba 2 marca 10 cm constantes). Con 3 pruebas el resultado es descriptivo, no estadístico.</p>
+   <div style="display:grid;gap:12px;min-width:0">
+    <p class="lead">Débil y sin significancia: Spearman {{RS}} con IC [{{RS_LO}}, {{RS_HI}}] sobre 9 tramos. Con la línea base fija del firmware salía {{RS40}} [{{RS40_LO}}, {{RS40_HI}}], una correlación fabricada por el montaje, no por los baches.</p>
+    <div class="tablebox compact" style="max-height:none"><table class="cmp"><thead><tr><th>Prueba</th><th>línea base (moda, cm)</th><th>prof. máx con base 40</th><th>prof. máx autocalibrada</th><th>severidad ASTM</th><th>baches (modo campo)</th></tr></thead><tbody>{{CORR}}</tbody></table></div>
+    <p style="font-size:.85rem">La línea base se autocalibra con la distancia más frecuente de cada serie (el pavimento sano): 50, 37 y 61 cm, no los 40 cm del firmware. Con eso la Prueba 2 y la Prueba 4 dejan de "tener" baches de 10–25 cm y la Prueba 3 conserva su evento real (p95 11,5 cm, severidad alta según ASTM D6433). El Arduino no tiene reloj: la alineación foto–lectura es por tiempo normalizado (supuesto). Con 3 pruebas, descriptivo.</p>
    </div>
   </div>
  </div>
@@ -666,7 +722,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   <div class="eyebrow">Calidad de las fotos y confianza del modelo</div>
   <div class="tiles">
    <div class="tile"><div class="v">{{CONF_MED}}</div><div class="l">confianza máxima media por foto</div><div class="s">en RDD2020 test el detector llega a 0,5 en piel de cocodrilo</div></div>
-   <div class="tile"><div class="v">{{PCT25}} %</div><div class="l">fotos con alguna caja ≥ 0,25</div><div class="s">{{PCT_DET}} % con alguna caja ≥ umbral</div></div>
+   <div class="tile"><div class="v">{{PCT_CAMPO}} %</div><div class="l">fotos con alguna caja que pasa los filtros</div><div class="s">{{PCT_DET}} % tenían alguna caja con el umbral de RDD2020</div></div>
    <div class="tile"><div class="v">{{PCT_BORR}} %</div><div class="l">fotos borrosas</div><div class="s">bajo el p05 de nitidez de RDD2020</div></div>
    <div class="tile"><div class="v">{{PCT_SOBRE}} %</div><div class="l">fotos sobreexpuestas</div><div class="s">sobre el p98 de brillo de RDD2020</div></div>
    <div class="tile"><div class="v">{{AUROC}}</div><div class="l">AUROC de dominio</div><div class="s">0,5 = igual a RDD2020 · 1,0 = otro mundo</div></div>
@@ -681,7 +737,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
 <section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · tabla">
  <div class="sheet">
   <div class="eyebrow">Salida 1 · vias_clasificacion.csv (clic en un encabezado para ordenar)</div>
-  <div class="tablebox"><table id="tvias"><thead><tr><th>id_via</th><th>prueba</th><th>tramo</th><th>fotos</th><th>lat</th><th>lon</th><th>daños detectados</th><th>score</th><th>estado</th><th>score ≥0,25</th><th>estado ≥0,25</th><th>etiqueta</th><th>prof. máx cm</th><th>conf. máx</th></tr></thead><tbody>{{TABLA}}</tbody></table></div>
+  <div class="tablebox"><table id="tvias"><thead><tr><th>id_via</th><th>prueba</th><th>tramo</th><th>fotos</th><th>lat</th><th>lon</th><th>daños (modo campo)</th><th>score antes</th><th>estado antes</th><th>etiqueta antes</th><th>score</th><th>estado</th><th>etiqueta</th><th>prof. base 40</th><th>prof. autocal.</th><th>conf. modelo</th></tr></thead><tbody>{{TABLA}}</tbody></table></div>
   <p style="font-size:.82rem">La salida 2 (calidad, confianza, deriva y correlación) está en <span class="mono">calidad_confianza_correlacion.csv</span>, en formato largo, con sus intervalos de confianza.</p>
  </div>
 </section>
@@ -717,9 +773,9 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
  <div class="sheet">
   <div class="eyebrow">Qué aprendimos y qué sigue</div>
   <div class="cards">
-   <div class="card"><div class="k">funciona</div><h3>El flujo completo, en la nube</h3><p>Drive → Kaggle → ID por tramo → score, etiqueta y GPS, con paridad exacta entre la inferencia en Kaggle y la local.</p></div>
-   <div class="card"><div class="k">hay que calibrar</div><h3>El umbral y el score en campo</h3><p>Montar la cámara a la altura del vehículo, como en RDD2020, y fijar umbrales con fotos propias anotadas.</p></div>
-   <div class="card"><div class="k">hay que sincronizar</div><h3>El sensor de profundidad</h3><p>Reloj del Arduino alineado al GPS, línea base medida en el montaje y lecturas continuas sobre toda la cuadra.</p></div>
+   <div class="card"><div class="k">funciona</div><h3>El flujo completo, en la nube</h3><p>Drive → Kaggle → ID por tramo → score, etiqueta y GPS, con paridad exacta entre la inferencia en Kaggle y la local, y un diagnóstico que separa modelo, sensor y encuadre con números.</p></div>
+   <div class="card"><div class="k">corregido esta semana</div><h3>Sensor autocalibrado y filtros</h3><p>La línea base sale de los datos, la severidad del bache sigue la norma ASTM y cuatro capas frenan los falsos positivos. El precio es recall: el modo campo es conservador.</p></div>
+   <div class="card"><div class="k">hay que anotar</div><h3>200–300 fotos propias</h3><p>Desde el vehículo, a la altura del dashcam. Con eso se fijan umbrales y escala del score en campo y se reentrena el detector con parches y juntas.</p></div>
    <div class="card"><div class="k">siguiente</div><h3>Más recorridos y GPU</h3><p>Decenas de cuadras en varias localidades, detector a 640 px en GPU y calibración frente al PCI del IDU.</p></div>
   </div>
   <h2>Un hueco tapado cuesta lo que cuesta. Una fisura vista a tiempo, mucho menos.</h2>
@@ -776,7 +832,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
     if (ys >= 1) { for (let i = 1; i < 13; i++) ov.appendChild(el('line', { x1: i * 1000 / 13, y1: 0, x2: i * 1000 / 13, y2: 562, class: 'cell' })); for (let j = 1; j < 8; j++) ov.appendChild(el('line', { x1: 0, y1: j * 562 / 8, x2: 1000, y2: j * 562 / 8, class: 'cell' })); }
     if (ys === 2) { boxes.slice(0, 8).forEach((b, i) => { const gx = Math.floor(b.x * 13) * 1000 / 13 + 4, gy = Math.floor(b.y * 8) * 562 / 8 + 4; const grp = el('g', { class: 'vec' }); grp.appendChild(el('rect', { x: gx, y: gy, width: 62, height: 40, class: 'bg', rx: 2 })); const vals = [b.x, b.y, b.w, b.h, b.c === 'D00' ? b.p : b.p * .3, b.c === 'D10' ? b.p : b.p * .3, b.c === 'D20' ? b.p : b.p * .3, b.c === 'D40' ? b.p : b.p * .3]; vals.forEach((v, k) => { const h = Math.max(2, Math.min(1, v) * 32); const r = el('rect', { x: gx + 3 + k * 7.4, y: gy + 36 - h, width: 5.5, height: h, fill: k < 4 ? 'var(--c1)' : COL[['D00', 'D10', 'D20', 'D40'][k - 4]] }); r.style.animation = `grow .6s ${i * 60}ms both`; grp.appendChild(r); }); ov.appendChild(grp); }); }
     if (ys === 3) boxes.forEach(b => ov.appendChild(el('rect', { x: (b.x - b.w / 2) * 1000, y: (b.y - b.h / 2) * 562, width: b.w * 1000, height: b.h * 562, class: 'cand', style: 'opacity:' + (0.25 + b.p) })));
-    if (ys === 4) boxes.filter(b => b.p >= TAU[b.c]).forEach(b => { ov.appendChild(el('rect', { x: (b.x - b.w / 2) * 1000, y: (b.y - b.h / 2) * 562, width: b.w * 1000, height: b.h * 562, class: 'keep', stroke: COL[b.c], rx: 3 })); const t = el('text', { x: (b.x - b.w / 2) * 1000 + 4, y: Math.max(12, (b.y - b.h / 2) * 562 - 4), class: 'lbl' }); t.textContent = NAME[b.c] + ' ' + b.p.toFixed(2); ov.appendChild(t); });
+    if (ys === 4) boxes.filter(b => b.k).forEach(b => { ov.appendChild(el('rect', { x: (b.x - b.w / 2) * 1000, y: (b.y - b.h / 2) * 562, width: b.w * 1000, height: b.h * 562, class: 'keep', stroke: COL[b.c], rx: 3 })); const t = el('text', { x: (b.x - b.w / 2) * 1000 + 4, y: Math.max(12, (b.y - b.h / 2) * 562 - 4), class: 'lbl' }); t.textContent = NAME[b.c] + ' ' + b.p.toFixed(2); ov.appendChild(t); });
   }
   function yoloStep(d) { const n = ys + d; if (n < 0 || n > 4) return false; ys = n; render(); return true; }
   document.getElementById('ynext').onclick = () => yoloStep(1); document.getElementById('yprev').onclick = () => yoloStep(-1);

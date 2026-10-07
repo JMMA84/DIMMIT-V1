@@ -11,7 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import roc_auc_score
 
-from dimmit.campo import load_cfg
+from dimmit.campo import INDEX_CAMPO, load_cfg
 from dimmit.campo.scores import FEAT
 from dimmit.evaluation.metrics import psi
 from dimmit.utils.io import CLASS_KEYS, CLASS_SLUGS, FEATURES, INDEX
@@ -77,6 +77,9 @@ def build(fr, vias, cfg):
             add(key, nivel, "confianza_modelo", "frac_fotos_con_deteccion_tau", float((g["n_detecciones_tau"] > 0).mean()), len(g))
             add(key, nivel, "confianza_modelo", "frac_fotos_con_deteccion_conf25", float((g[[f"n25_{c}" for c in CLASS_KEYS]].sum(axis=1) > 0).mean()), len(g))
             add(key, nivel, "confianza_modelo", "n_detecciones_por_foto_tau", float(g["n_detecciones_tau"].mean()), len(g))
+            add(key, nivel, "confianza_modelo", "frac_fotos_con_deteccion_campo", float((g["n_detecciones_campo"] > 0).mean()), len(g), "cajas que pasan las 4 capas de filtros")
+            add(key, nivel, "confianza_modelo", "n_detecciones_por_foto_campo", float(g["n_detecciones_campo"].mean()), len(g))
+            add(key, nivel, "confianza_modelo", "conf_media_detecciones_campo", float(g.loc[g["max_conf_campo"] > 0, "max_conf_campo"].mean()) if (g["max_conf_campo"] > 0).any() else float("nan"), len(g))
     # --- deriva vs RDD2020 (lote completo y por prueba) --------------------------------------
     dv = cfg["deriva"]["variables"]
     for key, g in [("LOTE", fr)] + list(fr.groupby("id_prueba")):
@@ -91,11 +94,12 @@ def build(fr, vias, cfg):
     t = vias[(vias["nivel"] == "tramo") & vias["profundidad_max_cm"].notna()]
     pairs = [("profundidad_max_cm", "n_baches"), ("profundidad_max_cm", "maxconf_baches"), ("profundidad_media_cm", "n_baches"),
              ("profundidad_frac_bache", "frac_fotos_baches"), ("profundidad_max_cm", "score_calidad"),
-             ("profundidad_max_cm", "n_grieta_longitudinal")]  # última = control negativo
+             ("profundidad_max_cm", "n_grieta_longitudinal"),  # control negativo
+             ("profundidad_max_cm_base40", "n_baches")]  # con la línea base fija del firmware (antes)
     for a, b in pairs:
         if len(t) >= 4:
             rs, lo, hi = spearmanr(t[a], t[b])[0], *boot_ci(t[a], t[b], spearmanr)
-            nota = "control negativo: no debería correlacionar" if "longitudinal" in b else "por tramo; n pequeño, IC bootstrap"
+            nota = "control negativo: no debería correlacionar" if "longitudinal" in b else ("línea base fija 40 cm (antes)" if "base40" in a else "por tramo; línea base autocalibrada; n pequeño, IC bootstrap")
             add("LOTE", "tramo", "correlacion_sensor", f"spearman_{a}__{b}", float(rs), len(t), nota, lo, hi)
             add("LOTE", "tramo", "correlacion_sensor", f"pearson_{a}__{b}", float(pearsonr(t[a], t[b])[0]), len(t), nota)
     p = vias[(vias["nivel"] == "prueba") & vias["profundidad_max_cm"].notna()]
@@ -106,13 +110,32 @@ def build(fr, vias, cfg):
     for key, g in fr.groupby("id_prueba"):
         g = g[g["profundidad_cm"].notna()]
         if len(g) >= 10:
-            for b in ("maxconf_D40", "n_D40", "maxconf_D00"):
+            for b in ("maxconfcampo_D40", "ncampo_D40", "maxconf_D40", "maxconf_D00"):
                 nota = "supuesto: alineación por tiempo normalizado 0-1" + (" (control negativo)" if b == "maxconf_D00" else "")
                 add(key, "prueba", "correlacion_sensor", f"spearman_foto_profundidad_cm__{b}", float(spearmanr(g["profundidad_cm"], g[b])[0]), len(g), nota)
+    # --- validación mínima: revisión visual de una muestra de fotos (presencia por clase) ---------
+    rev_path = INDEX_CAMPO / "revision_visual_31.csv"
+    if rev_path.exists():
+        rev = pd.read_csv(rev_path).merge(fr, on="image_id")
+        nota = "revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto"
+        for modo, cols in (("tau_rdd2020", {"piel_cocodrilo": "n_D20", "bache": "n_D40", "cualquier_dano": None}),
+                           ("campo", {"piel_cocodrilo": "ncampo_D20", "bache": "ncampo_D40", "cualquier_dano": None})):
+            for clase, col in cols.items():
+                if col is None:
+                    pred = (rev[[f"{'ncampo' if modo == 'campo' else 'n'}_{c}" for c in CLASS_KEYS]].sum(axis=1) > 0)
+                    truth = (rev[["piel_cocodrilo", "bache", "grieta"]].sum(axis=1) > 0)
+                else:
+                    pred, truth = rev[col] > 0, rev[clase] == 1
+                tp, fp, fn = int((pred & truth).sum()), int((pred & ~truth).sum()), int((~pred & truth).sum())
+                add("MUESTRA", "foto", "validacion_visual", f"precision_{clase}_{modo}", tp / max(tp + fp, 1), len(rev), f"{nota}; TP={tp} FP={fp} FN={fn}")
+                add("MUESTRA", "foto", "validacion_visual", f"recall_{clase}_{modo}", tp / max(tp + fn, 1), len(rev), f"{nota}; TP={tp} FP={fp} FN={fn}")
+        parches = rev[rev["parche"] == 1]
+        add("MUESTRA", "foto", "validacion_visual", "parches_marcados_como_piel_cocodrilo_campo", float((parches["ncampo_D20"] > 0).mean()) if len(parches) else np.nan, len(parches),
+            "fracción de parches de asfalto (reparaciones) que el modo campo clasifica como piel de cocodrilo: confusión conocida del detector")
     largo = pd.DataFrame(rows)
     # columnas resumidas para vias.parquet
     piv = largo[largo["bloque"].isin(["calidad_imagen", "confianza_modelo"])].pivot_table(index="id_via", columns="metrica", values="valor")
-    keep = ["brillo_media", "nitidez_media", "frac_fotos_borrosa", "frac_fotos_sobreexpuesta", "max_conf_media", "conf_media_detecciones_tau", "frac_fotos_con_deteccion_conf25"]
+    keep = ["brillo_media", "nitidez_media", "frac_fotos_borrosa", "frac_fotos_sobreexpuesta", "max_conf_media", "conf_media_detecciones_tau", "frac_fotos_con_deteccion_conf25", "conf_media_detecciones_campo"]
     vias = vias.drop(columns=[c for c in keep if c in vias], errors="ignore").merge(piv[keep], left_on="id_via", right_index=True, how="left")
     return fr, vias, largo
 

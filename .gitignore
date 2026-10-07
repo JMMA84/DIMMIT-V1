@@ -16,6 +16,7 @@ data/campo/*
 data/campo/index/*
 !data/campo/index/manifiesto.csv
 !data/campo/index/tramos.parquet
+!data/campo/index/revision_visual_31.csv
 models/*
 !models/.gitkeep
 !models/release/

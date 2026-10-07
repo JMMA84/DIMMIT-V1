@@ -98,14 +98,17 @@ para las descripciones con Claude (`make describe LLM=1`).
 
 Toma del 5-oct-2026 en La Candelaria: fotos a ~2 Hz, GPX del teléfono y un sensor ultrasónico de
 profundidad de bache (Arduino). La etapa de campo no usa el simulador ni la rama de sensores: el
-score sale solo de visión (pseudo-PCI con los umbrales por clase de RDD2020) y la profundidad se
-reporta como evidencia y puede subir la etiqueta operativa (prevención / mantenimiento / intervención).
+score sale solo de visión en **modo campo** (umbral por clase con precisión ≥ 50 % en RDD2020, filtro
+de bandas y de región de vía, persistencia entre fotos y consenso multi-escala), la línea base del
+ultrasónico se autocalibra con la distancia más frecuente de cada serie y la profundidad fija la
+severidad del bache (ASTM D6433) y puede subir la etiqueta (prevención / mantenimiento / intervención).
+El modo RDD2020 (umbral original, sin filtros) se conserva como columnas `*_tau_rdd2020`.
 
 ```bash
 make campo-ingest                       # Drive público -> data/campo/raw + manifiesto sha1 + tramos de 10 m con id_via
 make kaggle-bundle campo-dataset        # bundle con los pesos release + dataset privado dimmit-campo
 make campo-infer && make campo-pull     # kernel de solo inferencia en Kaggle -> reports/campo/kaggle/outputs
-make campo                              # scores + calidad/deriva/correlación + salidas + presentación
+make campo-local && make campo          # detecciones a 416/640/832 px + scores, calidad, salidas y presentación v2
 ```
 
 Salidas en `reports/campo/`: `vias_clasificacion.{csv,json}` (ID por tramo, daños, score, estado,

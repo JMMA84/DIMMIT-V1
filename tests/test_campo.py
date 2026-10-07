@@ -5,7 +5,8 @@ import pandas as pd
 from dimmit.campo.gpx import interpolate, read_gpx, smooth_track
 from dimmit.campo.scores import etiqueta
 from dimmit.campo.tramos import cut_tramos, prueba_id, via_id
-from dimmit.campo.ultrasonico import align_normalized, depth_features, read_depth
+from dimmit.campo.filtros import apply as apply_filters, in_road
+from dimmit.campo.ultrasonico import align_normalized, astm_severity, baseline_mode, depth_features, read_depth
 
 GPX = """<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.0" xmlns="http://www.topografix.com/GPX/1/0"><trk><trkseg>
@@ -77,3 +78,34 @@ def test_fusion_release_loader_matches_saved_members():
     members, meta = load_release(path)
     assert len(members) == len(meta["miembros"]) and set(members[0]["model"].groups) == set(meta["grupos"])
     assert all(len(m["pres"][g].cols) == len(meta["miembros"][0]["pre"][g]["cols"]) for m in members for g in meta["grupos"])
+
+
+def test_baseline_mode_and_astm_severity():
+    # 30 lecturas de pavimento a 52 cm y un hueco de 9 cm: la moda es el pavimento, no el firmware
+    d = np.r_[np.full(30, 52.0) + np.linspace(-0.4, 0.4, 30), [58.0, 61.0, 60.5]]
+    base, fuente = baseline_mode(d, min_n=20, fallback=40.0)
+    assert base == 52.0 and fuente == "moda"
+    assert baseline_mode(d[:5], min_n=20, fallback=40.0) == (40.0, "fija")
+    assert astm_severity(1.0) == "L" and astm_severity(3.0) == "M" and astm_severity(9.0) == "H" and astm_severity(float("nan")) is None
+
+
+def test_filters_band_road_persistence_and_scales():
+    frames = pd.DataFrame({"image_id": ["a", "b", "c"], "prueba": "P", "timestamp": pd.to_datetime(["2026-10-05T14:00:00.000Z", "2026-10-05T14:00:00.500Z", "2026-10-05T14:00:01.000Z"])})
+    det = pd.DataFrame([
+        ("a", 2, 0.40, 0.50, 0.60, 0.20, 0.20),  # D20 real: reaparece en b
+        ("b", 2, 0.35, 0.50, 0.62, 0.20, 0.20),
+        ("a", 1, 0.30, 0.50, 0.50, 0.70, 0.10),  # D10 banda ancha y baja -> 2_banda
+        ("a", 3, 0.30, 0.02, 0.40, 0.10, 0.10),  # fuera de la calzada -> 2_fuera_de_via
+        ("c", 3, 0.30, 0.50, 0.70, 0.10, 0.10),  # sin pareja -> 3_sin_persistencia
+        ("b", 2, 0.10, 0.50, 0.50, 0.20, 0.20),  # bajo el umbral -> 1_confianza
+    ], columns=["image_id", "class_id", "conf", "cx", "cy", "w", "h"])
+    cfg = {"tau_campo": {"D00": 0.25, "D10": 0.15, "D20": 0.2, "D40": 0.2}, "banda": {"clase": "D10", "w_min": 0.5, "h_max": 0.15},
+           "via": {"cy_min": 0.35, "half_w0": 0.38, "half_w_slope": 0.12}, "persistencia": {"vecinos": 2, "iou_min": 0.3, "dy_tol": 0.15},
+           "escalas": {"imgsz": [832], "iou_min": 0.5, "minimo": 1}}
+    out, resumen = apply_filters(det, frames, cfg)
+    assert out["motivo_descarte"].tolist() == ["", "", "2_banda", "2_fuera_de_via", "3_sin_persistencia", "1_confianza"]
+    assert in_road(np.array([0.5, 0.05]), np.array([0.6, 0.4])).tolist() == [True, False]
+    # consenso: la otra escala solo ve la caja de "a"
+    other = pd.DataFrame([("a", 2, 0.30, 0.50, 0.60, 0.20, 0.20)], columns=det.columns)
+    out2, _ = apply_filters(det, frames, cfg, {"832": other})
+    assert out2["motivo_descarte"].tolist()[:2] == ["", "4_sin_consenso_escala"]

@@ -97,8 +97,11 @@ def push(infer=False):
     slug = INFER_SLUG if infer else KERNEL_SLUG
     d = ensure_dir(BUILD / ("kernel_infer" if infer else "kernel"))
     code = (REPO_ROOT / "src/dimmit/cloud/kaggle_kernel.py").read_text()
-    if infer:  # el kernel no recibe variables de entorno: se fija el modo al inicio del script
-        code = code.replace("import glob\n", "import os\nos.environ['DIMMIT_MODE'] = 'infer'\nimport glob\n", 1)
+    if infer:  # el kernel no recibe variables de entorno: se fijan modo y escala al inicio del script
+        from dimmit.utils.io import load_yaml
+
+        imgsz = int(load_yaml("configs/campo.yaml")["inferencia"]["imgsz"])
+        code = code.replace("import glob\n", f"import os\nos.environ['DIMMIT_MODE'] = 'infer'\nos.environ['DIMMIT_IMGSZ'] = '{imgsz}'\nimport glob\n", 1)
     (d / "kaggle_kernel.py").write_text(code)
     meta = {
         "id": f"{user}/{slug}",

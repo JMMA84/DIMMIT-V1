@@ -12,7 +12,8 @@ gps_sat_min: 12                # con menos satélites se duplica la incertidumbr
 
 # sensor ultrasónico: ProfundidadBache_cm = Distancia_cm - linea_base_cm
 ultrasonico:
-  linea_base_cm: 40.0
+  linea_base_cm: 40.0         # valor fijo de respaldo (firmware)
+  linea_base: auto            # auto = moda de la distancia de cada serie (pavimento sano); fija = linea_base_cm
   umbral_bache_cm: 3.0         # lectura >= umbral cuenta como bache
   mapa:                        # archivo del sensor <-> prueba (confirmado por el equipo)
     Prueba_2: ProfundidadB1
@@ -23,7 +24,7 @@ ultrasonico:
 # inferencia del detector (pesos de models/release)
 inferencia:
   pesos: models/release/yolov10n_rdd2020.pt
-  imgsz: 416                   # el detector se entrenó a 416 px
+  imgsz: 640                   # escala principal en campo: a 640 la confianza sube (416 = escala de entrenamiento, se usa en el consenso)
   conf: 0.01
   max_det: 100
   batch: 16
@@ -38,6 +39,16 @@ etiqueta:
     estados: [regular]
     profundidad_cm: 3.0
   # el resto -> prevencion
+
+# defensa contra falsos positivos en el encuadre a pie (cada capa cuenta lo que descarta)
+filtros:
+  # capa 1: confianza mínima por clase = la menor a la que la precisión por caja (IoU >= 0.5) en el test
+  # de RDD2020 llega al 50 % (data/campo/features/umbrales_campo.json lo documenta)
+  tau_campo: {D00: 0.25, D10: 0.15, D20: 0.20, D40: 0.20}
+  banda: {clase: D10, w_min: 0.5, h_max: 0.15}   # capa 2a: bandas anchas y bajas = juntas / sombra de bordillo
+  via: {cy_min: 0.35, half_w0: 0.38, half_w_slope: 0.12}   # capa 2b: trapecio de la calzada (|cx-0.5| < half_w0 + slope*cy)
+  persistencia: {vecinos: 2, iou_min: 0.30, dy_tol: 0.15}  # capa 3: pareja en las 2 fotos anteriores/siguientes
+  escalas: {imgsz: [416, 832], iou_min: 0.5, minimo: 1}   # capa 4: la caja debe aparecer en >= `minimo` de las otras escalas
 
 # features de YOLO que SÍ se usan en campo (el embedding de 448-d no aportó en la ablación v1)
 features_yolo: [clase, confianza, cx, cy, w, h]
