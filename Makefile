@@ -6,7 +6,7 @@ IMGSZ ?= 640
 
 .PHONY: setup data labels validate-data train-cpu kaggle-bundle kaggle-train kaggle-status kaggle-pull \
         predict-all features sensors context importance fusion baselines zenodo drift describe \
-        evaluate report v1 test
+        evaluate report v1 test campo-ingest campo-dataset campo-infer campo-status campo-pull campo-local campo-scores campo-report campo
 
 setup:
 	uv venv --python 3.11 --seed .venv
@@ -69,6 +69,28 @@ report:
 	$(ENV) $(PY) -m dimmit.reporting.html_report
 
 v1: features sensors context fusion baselines drift describe evaluate report
+
+# --- datos de campo propios (Drive -> Kaggle -> salidas) ------------------------------------
+campo-ingest:    ## descarga la carpeta de Drive y arma fotogramas/tramos con id_via
+	$(ENV) $(PY) -m dimmit.campo.ingest
+	$(ENV) $(PY) -m dimmit.campo.tramos
+campo-dataset:   ## sube data/campo/raw como dataset privado de Kaggle (dimmit-campo)
+	$(ENV) $(PY) -m dimmit.cloud.kaggle_job campo-dataset -m "$(or $(MSG),toma de campo)"
+campo-infer:     ## kernel de solo inferencia en Kaggle (requiere kaggle-bundle y campo-dataset)
+	$(ENV) $(PY) -m dimmit.cloud.kaggle_job infer-push
+campo-status:
+	$(ENV) $(PY) -m dimmit.cloud.kaggle_job infer-status
+campo-pull:      ## descarga detecciones de Kaggle a reports/campo/kaggle/outputs
+	$(ENV) $(PY) -m dimmit.cloud.kaggle_job infer-pull
+campo-local:     ## mismas detecciones en CPU local (paridad / respaldo)
+	$(ENV) $(PY) -m dimmit.models.detector.predict --weights $(WEIGHTS) --list data/campo/index/campo.txt --out data/campo/det_local --imgsz 416 --no-embeddings
+campo-scores:    ## score, etiqueta, calidad, correlación y las dos salidas finales
+	$(ENV) $(PY) -m dimmit.campo.scores
+	$(ENV) $(PY) -m dimmit.campo.calidad
+	$(ENV) $(PY) -m dimmit.campo.salidas
+campo-report:    ## presentación HTML (reports/campo/dimmit_presentacion.html)
+	$(ENV) $(PY) -m dimmit.reporting.presentacion_campo
+campo: campo-scores campo-report
 
 test:
 	$(ENV) $(PY) -m pytest -q

@@ -1,0 +1,58 @@
+columna,descripcion
+id_via,ID único del tramo (VIA-<sha1 de fecha|prueba|tramo|centroide>) o de la prueba (PRU-…)
+nivel,tramo (~10 m) o prueba (recorrido completo)
+id_prueba,ID de la prueba a la que pertenece
+prueba,nombre de la carpeta de grabación
+tramo,índice del tramo dentro de la prueba (-1 = fila de prueba)
+fecha,fecha de captura
+hora_ini,hora local de la primera foto
+hora_fin,hora local de la última foto
+lat,latitud del centroide (WGS84)
+lon,longitud del centroide
+geohash7,geohash de 7 caracteres (~150 m)
+longitud_m,longitud recorrida según GPS suavizado
+gps_incertidumbre_m,incertidumbre nominal de posición
+n_fotogramas,fotos del tramo
+danos_detectados,clases presentes en ≥ 20 % de las fotos (conf ≥ tau)
+dano_dominante,clase con mayor valor deducido
+n_grieta_longitudinal,cajas de grieta_longitudinal con conf ≥ tau (suma sobre fotos)
+n_grieta_transversal,cajas de grieta_transversal con conf ≥ tau (suma sobre fotos)
+n_piel_cocodrilo,cajas de piel_cocodrilo con conf ≥ tau (suma sobre fotos)
+n_baches,cajas de baches con conf ≥ tau (suma sobre fotos)
+n25_grieta_longitudinal,cajas de grieta_longitudinal con conf ≥ 0.25
+n25_grieta_transversal,cajas de grieta_transversal con conf ≥ 0.25
+n25_piel_cocodrilo,cajas de piel_cocodrilo con conf ≥ 0.25
+n25_baches,cajas de baches con conf ≥ 0.25
+maxconf_grieta_longitudinal,confianza máxima de grieta_longitudinal en el tramo
+maxconf_grieta_transversal,confianza máxima de grieta_transversal en el tramo
+maxconf_piel_cocodrilo,confianza máxima de piel_cocodrilo en el tramo
+maxconf_baches,confianza máxima de baches en el tramo
+area_danada_pct,porcentaje medio de la imagen cubierto por cajas (conf ≥ tau)
+sub_score_grieta_longitudinal,100 − valor deducido de grieta_longitudinal
+sub_score_grieta_transversal,100 − valor deducido de grieta_transversal
+sub_score_piel_cocodrilo,100 − valor deducido de piel_cocodrilo
+sub_score_baches,100 − valor deducido de baches
+score_calidad,pseudo-PCI visual 0–100 (100 = sin daño) con umbrales tau
+estado,bueno/satisfactorio/regular/malo/muy_malo según score_calidad
+score_calidad_conf25,mismo score usando solo cajas con conf ≥ 0.25 (sensibilidad)
+estado_conf25,estado con score_calidad_conf25
+score_red_fusion_vision,score de la red de fusión v1 en modo solo visión (secundario)
+etiqueta,prevencion / mantenimiento / intervencion (regla en configs/campo.yaml)
+accion_recomendada,acción por regla v1 según estado y daño dominante
+profundidad_max_cm,profundidad máxima del sensor ultrasónico asociada
+profundidad_media_cm,profundidad media
+profundidad_frac_bache,fracción de lecturas ≥ umbral de bache
+fuente_profundidad,cómo se asoció la profundidad (prueba completa / alineación por tiempo normalizado / sin sensor)
+confianza_modelo,confianza máxima media por foto de la clase dominante
+max_conf,confianza máxima en el tramo
+frac_fotos_con_deteccion,fotos con alguna caja ≥ tau
+brillo_media,brillo medio (0–255)
+nitidez_media,varianza de bordes (mayor = más nítida)
+frac_fotos_borrosa,fotos bajo el p05 de nitidez de RDD2020
+frac_fotos_sobreexpuesta,fotos sobre el p98 de brillo de RDD2020
+max_conf_media,confianza máxima media por foto
+conf_media_detecciones_tau,confianza media de las cajas ≥ tau
+frac_fotos_con_deteccion_conf25,fotos con alguna caja ≥ 0.25
+hash_imagenes,sha1 (12) de los hashes ordenados de sus fotos
+version_detector,detector usado
+run_id,identificador de la corrida

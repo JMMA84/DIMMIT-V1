@@ -9,6 +9,8 @@
    (detecciones + embeddings) y deja todo en /kaggle/working/outputs.
 Con --smoke (o DIMMIT_SMOKE=N) corre la misma ruta con N imágenes por lista y 1 época, para
 probarlo localmente antes de subirlo.
+Con DIMMIT_MODE=infer (kernel dimmit-campo-inferencia) NO entrena: toma los pesos de
+models/release del bundle y las imágenes del dataset dimmit-campo, y deja solo detecciones.
 """
 import glob
 import os
@@ -112,17 +114,58 @@ def download(env):
         shutil.copy(p, raw / name)
 
 
+def find_campo_images():
+    """Carpeta con las fotos de campo: DIMMIT_CAMPO (prueba local) o el dataset dimmit-campo."""
+    if os.environ.get("DIMMIT_CAMPO"):
+        return Path(os.environ["DIMMIT_CAMPO"])
+    hits = glob.glob("/kaggle/input/**/grabacion_*/", recursive=True)
+    if not hits:
+        raise FileNotFoundError("no encontré carpetas grabacion_* en /kaggle/input")
+    return Path(hits[0]).parent
+
+
+def infer(env, t0):
+    """Modo inferencia: detecciones del detector ya entrenado sobre las fotos de campo."""
+    import json
+
+    weights = ROOT / "models/release/yolov10n_rdd2020.pt"
+    campo = find_campo_images()
+    paths = sorted(str(p) for p in campo.glob("grabacion_*/*.jpg"))
+    if SMOKE:
+        paths = paths[:SMOKE]
+    (ROOT / "campo.txt").write_text("\n".join(paths) + "\n")
+    log(f"inferencia: {len(paths)} fotos de {campo} con {weights.name}")
+    try:
+        import torch
+
+        gpu = torch.cuda.is_available()
+    except ImportError:
+        gpu = False
+    log(f"GPU disponible: {gpu}")
+    sh([sys.executable, "-m", "dimmit.models.detector.predict", "--weights", str(weights), "--list", "campo.txt", "--out", str(OUT),
+        "--imgsz", os.environ.get("DIMMIT_IMGSZ", "416"), "--batch", "16", "--conf", "0.01", "--no-embeddings"], env=env)
+    (OUT / "resumen.json").write_text(json.dumps({"modo": "infer", "fotos": len(paths), "pesos": weights.name, "gpu": gpu,
+                                                  "imgsz": int(os.environ.get("DIMMIT_IMGSZ", "416")), "segundos": round(time.time() - t0, 1)}, indent=2))
+    log(f"inferencia lista en {time.time() - t0:.0f} s")
+
+
 def main():
     global LOG
     OUT.mkdir(parents=True, exist_ok=True)
     LOG = open(OUT / "kernel_log.txt", "a")
     t0 = time.time()
     bundle = find_bundle() if not os.environ.get("DIMMIT_BUNDLE") else Path(os.environ["DIMMIT_BUNDLE"])
-    log(f"bundle: {bundle}  smoke={SMOKE}")
+    mode = os.environ.get("DIMMIT_MODE", "train")
+    log(f"bundle: {bundle}  smoke={SMOKE}  modo={mode}")
     unpack(bundle)
     if not SMOKE:
         wheels = sorted(glob.glob(str(ROOT / "wheels/*.whl")))
         sh([sys.executable, "-m", "pip", "install", "-q", "--no-index", "--no-deps", *wheels], check=False)
+    if mode == "infer":
+        infer({**os.environ, "DIMMIT_ROOT": str(ROOT), "PYTHONPATH": str(ROOT / "src")}, t0)
+        LOG.close()
+        shutil.rmtree(ROOT, ignore_errors=True)
+        return
     for w in ("yolo11n.pt", "yolov10n.pt"):  # chequeo AMP de ultralytics y pesos base, sin red
         if (ROOT / "models" / w).exists():
             shutil.copy(ROOT / "models" / w, ROOT / w)

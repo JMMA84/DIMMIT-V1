@@ -21,6 +21,8 @@ BUILD = REPO_ROOT / "build" / "kaggle"
 KERNEL_SLUG = "dimmit-yolov10-rdd2020"
 BUNDLE_SLUG = "dimmit-bundle"
 RAW_SLUG = "rdd2020-raw"
+CAMPO_SLUG = "dimmit-campo"                 # fotos de campo (privado)
+INFER_SLUG = "dimmit-campo-inferencia"      # kernel de solo inferencia
 KAGGLE = [str(Path(sys.executable).parent / "kaggle")]
 
 
@@ -56,30 +58,51 @@ def build_bundle():
         for w in ("yolov10n.pt", "yolo11n.pt"):
             if (REPO_ROOT / "models" / w).exists():
                 z.write(REPO_ROOT / "models" / w, f"models/{w}")
+        rel = REPO_ROOT / "models/release/yolov10n_rdd2020.pt"  # detector entrenado: lo usa el modo infer
+        if rel.exists():
+            z.write(rel, "models/release/yolov10n_rdd2020.pt")
     return d
 
 
-def bundle(message="actualización"):
+def upload_dataset(slug, d, message):
     user = username()
-    d = build_bundle()
-    meta = {"title": BUNDLE_SLUG, "id": f"{user}/{BUNDLE_SLUG}", "licenses": [{"name": "CC0-1.0"}]}
+    meta = {"title": slug, "id": f"{user}/{slug}", "licenses": [{"name": "CC0-1.0"}]}
     (d / "dataset-metadata.json").write_text(json.dumps(meta, indent=2))
-    exists = BUNDLE_SLUG in kaggle("datasets", "list", "--mine", capture=True)
+    exists = slug in kaggle("datasets", "list", "--mine", capture=True)
     if exists:
-        rc = kaggle("datasets", "version", "-p", str(d), "-m", message, "-q")
+        rc = kaggle("datasets", "version", "-p", str(d), "-m", message, "-q", "--dir-mode", "zip")
     else:
-        rc = kaggle("datasets", "create", "-p", str(d), "-q")
-    print(kaggle("datasets", "status", f"{user}/{BUNDLE_SLUG}", capture=True))
+        rc = kaggle("datasets", "create", "-p", str(d), "-q", "--dir-mode", "zip")
+    print(kaggle("datasets", "status", f"{user}/{slug}", capture=True))
     return rc
 
 
-def push():
+def bundle(message="actualización"):
+    return upload_dataset(BUNDLE_SLUG, build_bundle(), message)
+
+
+def campo_dataset(message="toma de campo"):
+    """Sube data/campo/raw (fotos, GPX, KML y lecturas) como dataset privado dimmit-campo."""
+    src = REPO_ROOT / "data/campo/raw"
+    if not src.exists():
+        raise SystemExit("primero: make campo-ingest")
+    d = BUILD / "campo"
+    shutil.rmtree(d, ignore_errors=True)
+    shutil.copytree(src, d)
+    return upload_dataset(CAMPO_SLUG, d, message)
+
+
+def push(infer=False):
     user = username()
-    d = ensure_dir(BUILD / "kernel")
-    shutil.copy(REPO_ROOT / "src/dimmit/cloud/kaggle_kernel.py", d / "kaggle_kernel.py")
+    slug = INFER_SLUG if infer else KERNEL_SLUG
+    d = ensure_dir(BUILD / ("kernel_infer" if infer else "kernel"))
+    code = (REPO_ROOT / "src/dimmit/cloud/kaggle_kernel.py").read_text()
+    if infer:  # el kernel no recibe variables de entorno: se fija el modo al inicio del script
+        code = code.replace("import glob\n", "import os\nos.environ['DIMMIT_MODE'] = 'infer'\nimport glob\n", 1)
+    (d / "kaggle_kernel.py").write_text(code)
     meta = {
-        "id": f"{user}/{KERNEL_SLUG}",
-        "title": KERNEL_SLUG,
+        "id": f"{user}/{slug}",
+        "title": slug,
         "code_file": "kaggle_kernel.py",
         "language": "python",
         "kernel_type": "script",
@@ -87,7 +110,7 @@ def push():
         "enable_gpu": True,
         "enable_internet": True,
         "machine_shape": "NvidiaTeslaT4",
-        "dataset_sources": [f"{user}/{BUNDLE_SLUG}", f"{user}/{RAW_SLUG}"],
+        "dataset_sources": [f"{user}/{BUNDLE_SLUG}", f"{user}/{CAMPO_SLUG}" if infer else f"{user}/{RAW_SLUG}"],
         "competition_sources": [],
         "kernel_sources": [],
         "model_sources": [],
@@ -96,23 +119,28 @@ def push():
     return kaggle("kernels", "push", "-p", str(d))
 
 
-def status():
-    out = kaggle("kernels", "status", f"{username()}/{KERNEL_SLUG}", capture=True)
+def status(infer=False):
+    out = kaggle("kernels", "status", f"{username()}/{INFER_SLUG if infer else KERNEL_SLUG}", capture=True)
     print(out.strip())
     return out
 
 
-def pull():
+def pull(infer=False):
+    if infer:
+        dest = ensure_dir(REPO_ROOT / "reports" / "campo" / "kaggle")
+        return kaggle("kernels", "output", f"{username()}/{INFER_SLUG}", "-p", str(dest), "-o")
     dest = ensure_dir(REPO_ROOT / "models" / "kaggle" / KERNEL_SLUG)
     return kaggle("kernels", "output", f"{username()}/{KERNEL_SLUG}", "-p", str(dest), "-o")
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("cmd", choices=["build", "bundle", "push", "status", "pull"])
+    ap.add_argument("cmd", choices=["build", "bundle", "push", "status", "pull", "campo-dataset", "infer-push", "infer-status", "infer-pull"])
     ap.add_argument("-m", "--message", default="actualización")
     args = ap.parse_args()
-    fn = {"build": build_bundle, "bundle": lambda: bundle(args.message), "push": push, "status": status, "pull": pull}[args.cmd]
+    fn = {"build": build_bundle, "bundle": lambda: bundle(args.message), "push": push, "status": status, "pull": pull,
+          "campo-dataset": lambda: campo_dataset(args.message), "infer-push": lambda: push(infer=True),
+          "infer-status": lambda: status(infer=True), "infer-pull": lambda: pull(infer=True)}[args.cmd]
     rc = fn()
     sys.exit(rc if isinstance(rc, int) else 0)
 

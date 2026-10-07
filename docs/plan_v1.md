@@ -45,4 +45,26 @@ Arduino/Raspberry Pi en ese esquema; las features de IMU no dependen de la orien
 sensor. La verdad latente (`sensors_truth.parquet`) deja de existir: los objetivos de rugosidad
 pasarán a ser mediciones de IRI de referencia (perfilómetro o IDU).
 
-Reporte publicado (Artifact privado): https://claude.ai/artifact/HbLoM9aeC2N5putgBeHpn2 — para actualizarlo desde otra sesión, publicar con ese url.
+## Datos de campo (toma del 5-oct-2026)
+
+1. `make campo-ingest`: lista la carpeta pública de Drive (`configs/campo.yaml: drive_folder_id`),
+   descarga fotos, GPX, KML y lecturas del ultrasónico a `data/campo/raw/`, escribe el manifiesto con
+   sha1 y arma `data/campo/index/{fotogramas,tramos}.parquet` (GPS interpolado por timestamp, tramos de
+   `tramo_m` metros, `id_via` determinista).
+2. `make kaggle-bundle` (el bundle ahora incluye `models/release/yolov10n_rdd2020.pt`) y
+   `make campo-dataset` (dataset privado `dimmit-campo`).
+3. `make campo-infer`: kernel `dimmit-campo-inferencia` (mismo `kaggle_kernel.py` con
+   `DIMMIT_MODE=infer`); `make campo-status`; `make campo-pull` deja `detections.parquet`, `latency.json`
+   y `resumen.json` en `reports/campo/kaggle/outputs/`. `make campo-local` corre lo mismo en CPU para la
+   paridad.
+4. `make campo`: `campo.scores` (features acotadas de YOLO, pseudo-PCI, etiqueta, profundidad alineada,
+   score secundario de la red de fusión en modo solo visión), `campo.calidad` (calidad de imagen,
+   confianza, PSI y AUROC de dominio frente a F ∪ T, correlación sensor ↔ YOLO con IC bootstrap),
+   `campo.salidas` (CSV/JSON) y `reporting.presentacion_campo` (HTML por diapositivas).
+5. Cuando lleguen nuevas tomas: misma estructura de carpetas en el Drive (`grabacion_*_Prueba_N/` con
+   fotos `captura_YYYYMMDD_HHMMSS_mmm_n.jpg` y un GPX; `tomadedatos/*Profundidad*.txt`), actualizar el
+   mapa `ultrasonico.mapa` en `configs/campo.yaml` y repetir 1–4.
+
+Reportes publicados (Artifacts privados): evaluación v1 https://claude.ai/artifact/HbLoM9aeC2N5putgBeHpn2 ·
+presentación de campo https://claude.ai/artifact/Qqo4QtPrQ9g95c3sLPPN8p — para actualizarlos desde otra
+sesión, publicar con ese url.

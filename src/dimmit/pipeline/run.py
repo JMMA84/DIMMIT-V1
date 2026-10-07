@@ -26,6 +26,11 @@ STAGES = {
     "evaluate": "dimmit.evaluation.run_eval",
     "report": "dimmit.reporting.html_report",
     "validate": "dimmit.data.validate",
+    "campo-tramos": "dimmit.campo.tramos",
+    "campo-scores": "dimmit.campo.scores",
+    "campo-calidad": "dimmit.campo.calidad",
+    "campo-salidas": "dimmit.campo.salidas",
+    "campo-report": "dimmit.reporting.presentacion_campo",
 }
 
 

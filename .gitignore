@@ -10,6 +10,12 @@ data/*
 !data/index/
 data/index/*
 !data/index/splits.csv
+!data/campo/
+data/campo/*
+!data/campo/index/
+data/campo/index/*
+!data/campo/index/manifiesto.csv
+!data/campo/index/tramos.parquet
 models/*
 !models/.gitkeep
 !models/release/
@@ -28,6 +34,11 @@ reports/*
 !reports/*.html
 !reports/output/
 !reports/evaluation/
+!reports/campo/
+reports/campo/kaggle/*
+!reports/campo/kaggle/outputs/
+reports/campo/kaggle/outputs/*
+!reports/campo/kaggle/outputs/*.json
 
 # sistema
 .DS_Store

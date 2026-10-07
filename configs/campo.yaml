@@ -1,0 +1,49 @@
+# Datos de campo propios (toma del 5-oct-2026, La Candelaria): cámara a ~2 Hz, GPS a 1 Hz
+# (BasicAirData GPS Logger) y sensor ultrasónico de profundidad de bache (Arduino, ~4 Hz).
+drive_folder_id: 1nnRi1pvdz6eYqOOux2_PYnGBCWPB9CVt
+zona_horaria: America/Bogota
+
+# tramos: corte por distancia acumulada sobre la traza GPS suavizada
+tramo_m: 10
+tramo_min_fotos: 5             # un tramo final con menos fotos se funde con el anterior
+gps_suavizado_s: 5             # mediana móvil (ventana en segundos) para quitar el jitter del teléfono
+gps_incertidumbre_m: 5.0       # incertidumbre nominal de un GPS de teléfono a cielo abierto
+gps_sat_min: 12                # con menos satélites se duplica la incertidumbre
+
+# sensor ultrasónico: ProfundidadBache_cm = Distancia_cm - linea_base_cm
+ultrasonico:
+  linea_base_cm: 40.0
+  umbral_bache_cm: 3.0         # lectura >= umbral cuenta como bache
+  mapa:                        # archivo del sensor <-> prueba (confirmado por el equipo)
+    Prueba_2: ProfundidadB1
+    Prueba_3: ProfundidadB2
+    Prueba_4: ProfundidadB3
+  alineacion: tiempo_normalizado   # el Arduino no tiene reloj absoluto: 0-1 dentro de la prueba
+
+# inferencia del detector (pesos de models/release)
+inferencia:
+  pesos: models/release/yolov10n_rdd2020.pt
+  imgsz: 416                   # el detector se entrenó a 416 px
+  conf: 0.01
+  max_det: 100
+  batch: 16
+
+# etiqueta operativa a partir de estado, profundidad medida y baches detectados
+etiqueta:
+  intervencion:
+    estados: [malo, muy_malo]
+    profundidad_cm: 8.0
+    bache_conf_min: 0.5        # bache detectado con esta confianza en >= 1 foto del tramo
+  mantenimiento:
+    estados: [regular]
+    profundidad_cm: 3.0
+  # el resto -> prevencion
+
+# features de YOLO que SÍ se usan en campo (el embedding de 448-d no aportó en la ablación v1)
+features_yolo: [clase, confianza, cx, cy, w, h]
+
+# referencia para calidad de imagen y deriva: F ∪ T de RDD2020 (data/features/vision_frame.parquet)
+deriva:
+  variables: [brillo, contraste, nitidez, jpeg_kb, max_conf, pci_det, n_D00, n_D10, n_D20, n_D40]
+  psi_ok: 0.10
+  psi_alerta: 0.25
