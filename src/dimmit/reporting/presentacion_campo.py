@@ -185,39 +185,6 @@ def bars_damage(t):
     return "".join(o)
 
 
-def scatter_depth(t, rs, lo, hi, ctrl):
-    left, top, w, h = 70, 20, 520, 300
-    xs, ys = t["profundidad_max_cm"].to_numpy(float), t["n_baches"].to_numpy(float)
-    xmax = max(math.ceil(np.nanmax(xs) * 1.1 / 5) * 5, 10)
-    ystep = 10 if ys.max() > 20 else 5
-    ymax = max(math.ceil(ys.max() * 1.15 / ystep) * ystep, ystep)
-    sx = lambda v: left + v / xmax * w
-    sy = lambda v: top + h - v / ymax * h
-    o = [f'<svg viewBox="0 0 {left + w + 30} {top + h + 70}" class="chart" role="img" aria-label="Profundidad medida frente a baches detectados">']
-    for v in np.arange(0, xmax + 1, 5 if xmax <= 30 else 10):
-        if v > xmax:
-            break
-        o.append(f'<line x1="{sx(v):.0f}" y1="{top}" x2="{sx(v):.0f}" y2="{top + h}" class="grid"/><text x="{sx(v):.0f}" y="{top + h + 18}" text-anchor="middle">{fmt(v)}</text>')
-    for v in np.arange(0, ymax + 1, ystep):
-        o.append(f'<line x1="{left}" y1="{sy(v):.0f}" x2="{left + w}" y2="{sy(v):.0f}" class="grid"/><text x="{left - 8}" y="{sy(v) + 4:.0f}" text-anchor="end">{fmt(v)}</text>')
-    o.append(f'<text x="{left + w / 2:.0f}" y="{top + h + 40}" text-anchor="middle">profundidad máxima del sensor, línea base autocalibrada (cm)</text>')
-    o.append(f'<text transform="translate(14 {top + h / 2:.0f}) rotate(-90)" text-anchor="middle">cajas de bache conservadas (modo campo)</text>')
-    shapes = {"Prueba_2": "circle", "Prueba_3": "rect", "Prueba_4": "tri"}
-    for _, r in t.iterrows():
-        x, y = sx(r.profundidad_max_cm), sy(r.n_baches)
-        s = shapes.get(r.prueba, "circle")
-        if s == "circle":
-            o.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="7" class="pt"/>')
-        elif s == "rect":
-            o.append(f'<rect x="{x - 6:.0f}" y="{y - 6:.0f}" width="12" height="12" class="pt"/>')
-        else:
-            o.append(f'<polygon points="{x:.0f},{y - 8:.0f} {x - 8:.0f},{y + 6:.0f} {x + 8:.0f},{y + 6:.0f}" class="pt"/>')
-        o.append(f'<text x="{x + 10:.0f}" y="{y - 8:.0f}" class="small">T{int(r.tramo)}</text>')
-    o.append(f'<text x="{left}" y="{top + h + 60}" class="t-strong">Spearman {fmt(rs, 2)} · IC 95 % [{fmt(lo, 2)}, {fmt(hi, 2)}] · n = {len(t)} tramos</text>')
-    o.append("</svg>")
-    return "".join(o)
-
-
 def street_map(fr, t, depth_frames):
     """Mapa SVG de la calle: trazas por prueba, tramos coloreados por score, marcadores de profundidad."""
     lat0, lon0 = fr["lat"].mean(), fr["lon"].mean()
@@ -273,9 +240,9 @@ def build():
     t = vias[vias["nivel"] == "tramo"].copy()
     pr = vias[vias["nivel"] == "prueba"].copy()
     L = lambda m, via="LOTE": float(largo[(largo["metrica"] == m) & (largo["id_via"] == via)]["valor"].iloc[0]) if ((largo["metrica"] == m) & (largo["id_via"] == via)).any() else float("nan")
-    row = largo[(largo["metrica"] == "spearman_profundidad_max_cm__n_baches") & (largo["nivel"] == "tramo")].iloc[0]
-    row40 = largo[(largo["metrica"] == "spearman_profundidad_max_cm_base40__n_baches") & (largo["nivel"] == "tramo")].iloc[0]
-    tau_campo = json.loads((FEAT / "umbrales_campo.json").read_text())["tau_campo"]
+    umb = json.loads((FEAT / "umbrales_campo.json").read_text())
+    tau_campo, ref = umb["tau_campo"], umb["referencia_test"]
+    mc_campo = det.groupby("image_id")["conf"].max()
     # resumen de filtros (cajas descartadas por capa) y validación visual
     res = pd.read_csv(FEAT / "filtros_resumen.csv").set_index("cls")
     cols_f = [c for c in ("1_confianza", "2_banda", "2_fuera_de_via", "3_sin_persistencia", "4_sin_consenso_escala", "conservada") if c in res]
@@ -287,7 +254,6 @@ def build():
                          f'<td class="n us">{fmt(100 * V(f"precision_{k}_campo"))} %</td><td class="n us">{fmt(100 * V(f"recall_{k}_campo"))} %</td></tr>'
                          for k, n in (("piel_cocodrilo", "Piel de cocodrilo"), ("bache", "Bache"), ("cualquier_dano", "Cualquier daño")))
     parches_pct = fmt(100 * V("parches_marcados_como_piel_cocodrilo_campo"))
-    ctrl = L("spearman_profundidad_max_cm__n_grieta_longitudinal")
 
     det_f = pd.read_parquet(FEAT / "detecciones_filtradas.parquet")
     keep = det_f[det_f["conservada"]]
@@ -335,17 +301,29 @@ def build():
         f'<tr><td class="mono">{r.id_via}</td><td class="n">{fmt(r.brillo_media)}</td><td class="n">{fmt(r.nitidez_media)}</td><td class="n">{fmt(100 * r.frac_fotos_borrosa)} %</td>'
         f'<td class="n">{fmt(100 * r.frac_fotos_sobreexpuesta)} %</td><td class="n">{fmt(r.max_conf_media, 2)}</td><td class="n">{fmt(100 * r.frac_fotos_con_deteccion)} %</td><td class="n">{fmt(100 * r.frac_fotos_con_deteccion_conf25)} %</td></tr>'
         for _, r in t.sort_values(["prueba", "tramo"]).iterrows())
-    corr_rows = ""
+    comp_rows = ""
     for _, p in pr.iterrows():
-        corr_rows += f'<tr><td>{p.prueba.replace("_", " ")}</td><td class="n">{fmt(p.linea_base_cm)}</td><td class="n">{fmt(p.profundidad_max_cm_base40, 1)}</td><td class="n">{fmt(p.profundidad_max_cm, 1)}</td><td>{p.severidad_bache_astm if isinstance(p.severidad_bache_astm, str) else "—"}</td><td class="n">{int(p.n_baches)}</td></tr>'
+        sev = p.severidad_bache_astm if isinstance(p.severidad_bache_astm, str) and p.severidad_bache_astm else "—"
+        comp_rows += (f'<tr><td>{p.prueba.replace("_", " ")}</td><td class="n">{int(p.n_piel_cocodrilo)} / {int(p.n_baches)}</td><td class="n">{fmt(p.score_calidad)}</td>'
+                      f'<td class="n">{fmt(p.linea_base_cm)}</td><td class="n">{fmt(p.profundidad_max_cm, 1)}</td><td>{sev}</td>'
+                      f'<td><span class="pill et-{p.etiqueta}">{ETIQ_TXT[p.etiqueta]}</span></td></tr>')
+    # ejemplo: el tramo donde el sensor subió la etiqueta aunque la cámara viera poco
+    cand = t[(t["profundidad_max_cm"] >= 3) & t["estado"].isin(["bueno", "satisfactorio"])]
+    if len(cand):
+        e = cand.loc[cand["profundidad_max_cm"].idxmax()]
+        n_cajas = int(sum(e[f"n_{sl}"] for sl in CLASS_SLUGS.values()))
+        ejemplo = (f"Ejemplo: {e.prueba.replace('_', ' ')} T{int(e.tramo)}. La cámara conservó {n_cajas} cajas (score {fmt(e.score_calidad)}, {ESTADO_TXT[e.estado].lower()}) "
+                   f"y el sensor midió {fmt(e.profundidad_max_cm, 1)} cm → {ETIQ_TXT[e.etiqueta].lower()}. El sensor aporta lo que la imagen no puede ver.")
+    else:
+        ejemplo = "En esta toma ningún tramo cambió de etiqueta solo por el sensor."
 
     depth_frames = fr[fr["profundidad_cm"] >= 3]
     psi_vals = {v: L(f"psi_{v}") for v in ("brillo", "contraste", "nitidez", "jpeg_kb", "max_conf", "pci_det")}
-    psi_html = "".join(f'<div class="psi"><span>{k}</span><b>{fmt(v, 2)}</b><i class="{"ok" if v <= 0.1 else ("al" if v <= 0.25 else "fa")}"></i></div>' for k, v in psi_vals.items())
+    psi_html = "".join(f'<div class="psi"><span>{k}</span><b>{fmt(v, 2)}</b></div>' for k, v in psi_vals.items())
 
     ctx = {
-        "BOGOTA": bogota_svg(), "KPIS": kpis, "GALERIA": gallery, "TABLA": table_rows, "CALIDAD": cal_rows, "CORR": corr_rows,
-        "BARRAS": bars_scores(t), "DANOS": bars_damage(t), "DISPERSION": scatter_depth(t, row["valor"], row["ic95_inf"], row["ic95_sup"], ctrl),
+        "BOGOTA": bogota_svg(), "KPIS": kpis, "GALERIA": gallery, "TABLA": table_rows, "CALIDAD": cal_rows, "COMP": comp_rows, "EJEMPLO_COMPLEMENTO": ejemplo,
+        "BARRAS": bars_scores(t), "DANOS": bars_damage(t),
         "CALLE": street_map(fr, t, depth_frames), "PSI": psi_html,
         "YOLO_IMG": yolo_img, "YOLO_JSON": yolo_json, "YOLO_ID": best_all.image_id, "YOLO_N": str(int(len(yolo_keep))), "YOLO_N_TAU": str(int((yolo_boxes["conf"] >= yolo_boxes["tau"]).sum())), "PARCHES": parches_pct,
         "EX_ID": ex.id_via, "EX_N": str(int(ex.n_fotogramas)), "EX_SCORE": fmt(ex.score_calidad), "EX_ESTADO": ESTADO_TXT[ex.estado], "EX_ETIQ": ETIQ_TXT[ex.etiqueta],
@@ -353,10 +331,12 @@ def build():
         "EX_RHO": " · ".join(f"{SLUG_TXT[CLASS_SLUGS[c]].split()[0]} {fmt(100 - ex[f'sub_score_{CLASS_SLUGS[c]}'])}" for c in CLASS_KEYS),
         "EX_N_CAJAS": " · ".join(f"{int(ex[f'n_{CLASS_SLUGS[c]}'])} {SLUG_TXT[CLASS_SLUGS[c]].lower()}" for c in CLASS_KEYS),
         "N_FOTOS": str(n_fotos), "N_TRAMOS": str(n_tramos), "MS": fmt(lat["ms_por_imagen_lote"]), "AUROC": fmt(L("dominio_auroc"), 2),
-        "CONF_MED": fmt(fr["max_conf"].mean(), 2), "PCT_BORR": fmt(100 * fr["borrosa"].mean()),
+        "CONF_MED": fmt(mc_campo.mean(), 2), "CONF_MEDIANA": fmt(mc_campo.median(), 2), "CONF_REF": fmt(ref["max_conf_media_por_foto"], 2),
+        "CONF_REF_MEDIANA": fmt(ref["max_conf_mediana_por_foto"], 2), "PCT_CONF25": fmt(100 * (mc_campo >= 0.25).mean()), "PCT_REF25": fmt(100 * ref["frac_fotos_max_conf_ge_025"]),
+        "CONF_CAMPO_MIN": fmt(keep["conf"].min(), 2) if len(keep) else "—", "TP_LT25": fmt(100 * ref["frac_cajas_correctas_conf_lt_025"]), "TP_MED": fmt(ref["conf_mediana_caja_correcta"], 2),
+        "PREC15": fmt(100 * ref["precision_por_caja"]["0.15"]), "PREC20": fmt(100 * ref["precision_por_caja"]["0.2"]), "PREC25": fmt(100 * ref["precision_por_caja"]["0.25"]),
+        "PCT_BORR": fmt(100 * fr["borrosa"].mean()),
         "PCT_SOBRE": fmt(100 * fr["sobreexpuesta"].mean()), "PCT_DET": fmt(100 * (fr["n_detecciones_tau"] > 0).mean()),
-        "RS": fmt(row["valor"], 2), "RS_LO": fmt(row["ic95_inf"], 2), "RS_HI": fmt(row["ic95_sup"], 2),
-        "RS40": fmt(row40["valor"], 2), "RS40_LO": fmt(row40["ic95_inf"], 2), "RS40_HI": fmt(row40["ic95_sup"], 2),
         "SCORE_TAU": fmt(t["score_calidad_tau_rdd2020"].mean()), "SCORE_CAMPO": fmt(t["score_calidad"].mean()),
         "N_INT": str(etq.get("intervencion", 0)), "N_INT_ANTES": str(etq_antes.get("intervencion", 0)), "LONG": fmt(t["longitud_m"].sum()),
         "N_CONSERVADAS": str(int(len(keep))), "N_BRUTAS": str(int(len(det))), "N_TAU": str(int((det["conf"] >= det["tau"]).sum())),
@@ -663,7 +643,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   <div class="tablebox" style="max-height:none"><table class="cmp"><thead><tr><th>Evidencia</th><th>Causa</th><th>Corrección aplicada</th><th>Estado</th></tr></thead><tbody>
    <tr><td>La Prueba 2 marcaba 10 cm de profundidad <b>constantes</b> durante 35 s; la Prueba 4, 17–25 cm. La distancia más frecuente del sensor era 50 y 61 cm, no los 40 cm del firmware.</td><td><b>Sensor: línea base mal puesta</b> (altura del montaje). Fabricó baches en 2 de 3 pruebas y disparó "intervención" en los 9 tramos.</td><td>Línea base autocalibrada = distancia más frecuente de cada serie (el pavimento sano). Severidad del bache por profundidad según ASTM D6433.</td><td><span class="pill et-prevencion">Corregido</span></td></tr>
    <tr><td>183 "grietas transversales" con ancho mediano 0,52 de la imagen y altura 0,11 (área 4× la de RDD2020): juntas, sombra del bordillo y andén. Áreas de piel de cocodrilo y bache 1,4–2× las de RDD2020.</td><td><b>Dominio / encuadre</b>: cámara a 1,3 m del suelo mirando hacia abajo, a pie, frente a dashcam sobre la vía. El pseudo-PCI usa % de área: densidades infladas → "muy malo".</td><td>Umbral de campo por clase (precisión ≥ 50 % en RDD2020), filtro de bandas y de región de vía, persistencia entre fotos consecutivas, consenso a dos escalas.</td><td><span class="pill et-mantenimiento">Mitigado</span></td></tr>
-   <tr><td>En el propio test de RDD2020 la confianza máxima media por foto es 0,17 y solo el 23 % de las fotos tiene una caja ≥ 0,25. En campo: 0,13 y 10 %.</td><td><b>Modelo</b>: YOLOv10n de 12 épocas en CPU a 416 px (mAP50 0,28). La caída por dominio existe pero es moderada; la base ya era débil.</td><td>Inferencia a 640 px (confianza media 0,13 → 0,15). Lo demás requiere datos: fotos propias anotadas desde el vehículo y GPU.</td><td><span class="pill et-intervencion">Pendiente</span></td></tr>
+   <tr><td>La confianza en campo está en el mismo rango que en el propio test de RDD2020 (máxima media por foto {{CONF_MED}} vs {{CONF_REF}}; fotos con una caja ≥ 0,25: {{PCT_CONF25}} % vs {{PCT_REF25}} %). El detector acierta el daño principal, pero el recall es bajo: mAP50 0,28.</td><td><b>Modelo</b>: YOLOv10n de 12 épocas en CPU a 416 px. No es la confianza lo que falla; es la cobertura (grietas finas, India y Chequia).</td><td>Inferencia a 640 px. Lo demás requiere datos: fotos propias anotadas desde el vehículo y GPU.</td><td><span class="pill et-intervencion">Pendiente</span></td></tr>
    <tr><td>Los 6 parches rectangulares de asfalto de la muestra: el detector marca la mitad como piel de cocodrilo con confianza 0,29–0,36.</td><td><b>Modelo</b>: confusión parche ↔ piel de cocodrilo (textura). RDD2020 casi no tiene parches anotados.</td><td>Se reporta; no se filtra a mano (sería inventar una regla). Entra al plan de anotación propia.</td><td><span class="pill et-intervencion">Pendiente</span></td></tr>
    <tr><td>"Bogotá tiene más huecos": los daños reales de la cuadra (piel de cocodrilo junto al bordillo, el hueco de la Prueba 3) el modelo sí los ve.</td><td><b>No es el contexto</b> lo que falla; es el encuadre y la calibración.</td><td>—</td><td><span class="pill et-prevencion">Descartado</span></td></tr>
   </tbody></table></div>
@@ -703,15 +683,26 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
  </div>
 </section>
 
-<section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · sensor">
+<section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · cámara + sensor">
  <div class="sheet">
-  <div class="eyebrow">¿Coincide el sensor con lo que ve YOLO?</div>
+  <div class="eyebrow">Visión y sensor: dos medidas distintas que se complementan</div>
   <div class="cols">
-   <div>{{DISPERSION}}<div class="legend"><span>● Prueba 2</span><span>■ Prueba 3</span><span>▲ Prueba 4</span></div></div>
    <div style="display:grid;gap:12px;min-width:0">
-    <p class="lead">Débil y sin significancia: Spearman {{RS}} con IC [{{RS_LO}}, {{RS_HI}}] sobre 9 tramos. Con la línea base fija del firmware salía {{RS40}} [{{RS40_LO}}, {{RS40_HI}}], una correlación fabricada por el montaje, no por los baches.</p>
-    <div class="tablebox compact" style="max-height:none"><table class="cmp"><thead><tr><th>Prueba</th><th>línea base (moda, cm)</th><th>prof. máx con base 40</th><th>prof. máx autocalibrada</th><th>severidad ASTM</th><th>baches (modo campo)</th></tr></thead><tbody>{{CORR}}</tbody></table></div>
-    <p style="font-size:.85rem">La línea base se autocalibra con la distancia más frecuente de cada serie (el pavimento sano): 50, 37 y 61 cm, no los 40 cm del firmware. Con eso la Prueba 2 y la Prueba 4 dejan de "tener" baches de 10–25 cm y la Prueba 3 conserva su evento real (p95 11,5 cm, severidad alta según ASTM D6433). El Arduino no tiene reloj: la alineación foto–lectura es por tiempo normalizado (supuesto). Con 3 pruebas, descriptivo.</p>
+    <div class="cards">
+     <div class="card"><div class="k">cámara + YOLOv10</div><h3>Ve la superficie</h3><p>Qué tipo de daño hay (4 clases), cuánto ocupa y dónde está en la foto → score visual 0–100. No ve profundidad.</p></div>
+     <div class="card"><div class="k">sensor ultrasónico</div><h3>Mide la profundidad</h3><p>Centímetros bajo el pavimento sano, ~4 lecturas por segundo → severidad del bache según ASTM D6433 (L &lt; 2,5 · M 2,5–5 · H &gt; 5 cm). No sabe qué daño es ni dónde cae en la foto.</p></div>
+    </div>
+    <div class="flow">
+     <div class="step"><b>Score visual</b>cámara</div><div class="arrow">+</div>
+     <div class="step"><b>Severidad por profundidad</b>sensor</div><div class="arrow">→</div>
+     <div class="step out"><b>Etiqueta</b>profundidad ≥ 3 cm sube a mantenimiento · ≥ 8 cm a intervención, aunque la cámara vea poco</div>
+    </div>
+    <p style="font-size:.85rem">{{EJEMPLO_COMPLEMENTO}}</p>
+   </div>
+   <div style="display:grid;gap:12px;min-width:0">
+    <h3>Qué vio cada uno y qué salió</h3>
+    <div class="tablebox compact" style="max-height:none"><table class="cmp"><thead><tr><th>Prueba</th><th>Cámara: piel coc. / baches (cajas)</th><th>Cámara: score</th><th>Sensor: línea base (cm)</th><th>Sensor: prof. máx (cm)</th><th>Severidad ASTM</th><th>Etiqueta</th></tr></thead><tbody>{{COMP}}</tbody></table></div>
+    <p style="font-size:.82rem">Cómo se lee el sensor: la línea base es la distancia más frecuente de cada serie (el pavimento sano): 50, 37 y 61 cm, no los 40 cm del firmware. El Arduino no tiene reloj; cada lectura se asocia a su foto por tiempo normalizado (supuesto).</p>
    </div>
   </div>
  </div>
@@ -719,17 +710,28 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
 
 <section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · calidad">
  <div class="sheet">
-  <div class="eyebrow">Calidad de las fotos y confianza del modelo</div>
+  <div class="eyebrow">Confianza del modelo y calidad de las fotos: en el rango normal de operación de YOLO</div>
   <div class="tiles">
-   <div class="tile"><div class="v">{{CONF_MED}}</div><div class="l">confianza máxima media por foto</div><div class="s">en RDD2020 test el detector llega a 0,5 en piel de cocodrilo</div></div>
-   <div class="tile"><div class="v">{{PCT_CAMPO}} %</div><div class="l">fotos con alguna caja que pasa los filtros</div><div class="s">{{PCT_DET}} % tenían alguna caja con el umbral de RDD2020</div></div>
-   <div class="tile"><div class="v">{{PCT_BORR}} %</div><div class="l">fotos borrosas</div><div class="s">bajo el p05 de nitidez de RDD2020</div></div>
-   <div class="tile"><div class="v">{{PCT_SOBRE}} %</div><div class="l">fotos sobreexpuestas</div><div class="s">sobre el p98 de brillo de RDD2020</div></div>
-   <div class="tile"><div class="v">{{AUROC}}</div><div class="l">AUROC de dominio</div><div class="s">0,5 = igual a RDD2020 · 1,0 = otro mundo</div></div>
+   <div class="tile"><div class="v">{{CONF_MED}}</div><div class="l">confianza máxima media por foto en campo</div><div class="s">RDD2020 test: {{CONF_REF}} · medianas {{CONF_MEDIANA}} vs {{CONF_REF_MEDIANA}}. Mismo rango.</div></div>
+   <div class="tile"><div class="v">{{PCT_CONF25}} %</div><div class="l">fotos con alguna caja ≥ 0,25, el umbral por defecto de YOLO</div><div class="s">RDD2020 test: {{PCT_REF25}} %</div></div>
+   <div class="tile"><div class="v">{{CONF_CAMPO}}</div><div class="l">confianza media de las cajas conservadas</div><div class="s">mínima {{CONF_CAMPO_MIN}}; umbral de campo por clase 0,15–0,25</div></div>
+   <div class="tile"><div class="v">{{TP_LT25}} %</div><div class="l">de las cajas <b>correctas</b> en RDD2020 tienen confianza &lt; 0,25</div><div class="s">mediana de una caja correcta: {{TP_MED}}. La confianza de YOLO no es una probabilidad; importa la precisión en el umbral.</div></div>
+   <div class="tile"><div class="v">{{PCT_BORR}} % · {{PCT_SOBRE}} %</div><div class="l">fotos borrosas · sobreexpuestas</div><div class="s">a pie y con sol de las 9:40; se corrige con el montaje en el vehículo</div></div>
    <div class="tile"><div class="v">{{MS}} ms</div><div class="l">por foto en Kaggle (CPU)</div><div class="s">{{N_FOTOS}} fotos en menos de 2 minutos</div></div>
   </div>
-  <h3>Deriva frente a RDD2020 (PSI; ≤ 0,10 OK · ≤ 0,25 alerta · mayor falla)</h3>
-  <div class="psis">{{PSI}}</div>
+  <div class="cols">
+   <div>
+    <h3>Precisión por caja del detector en el test de RDD2020 según el umbral</h3>
+    <div class="tablebox compact" style="max-height:none"><table class="cmp"><thead><tr><th>umbral de confianza</th><th>0,15</th><th>0,20</th><th>0,25 (por defecto en Ultralytics)</th></tr></thead><tbody>
+     <tr><td>cajas que aciertan (IoU ≥ 0,5)</td><td class="n">{{PREC15}} %</td><td class="n">{{PREC20}} %</td><td class="n us">{{PREC25}} %</td></tr></tbody></table></div>
+    <p style="font-size:.82rem">El umbral de campo por clase se fijó donde la precisión llega al 50 % ({{TAU_CAMPO}}); en la muestra revisada, 67 % de los baches y 50 % de la piel de cocodrilo conservados son reales. Fuente del umbral por defecto: Ultralytics, <span class="mono">conf=0.25</span> en predicción y <span class="mono">0.001</span> en validación (docs.ultralytics.com/usage/cfg).</p>
+   </div>
+   <div>
+    <h3>Las fotos sí son distintas de RDD2020: es el encuadre, no la confianza</h3>
+    <div class="psis">{{PSI}}</div>
+    <p style="font-size:.82rem">PSI frente a RDD2020 (F ∪ T) en brillo, contraste, nitidez y tamaño del archivo; un clasificador separa campo de RDD2020 con AUROC {{AUROC}}. Otra cámara (1920×1080 a pie) y otro encuadre; la confianza del detector queda en el mismo rango que en su propio test.</p>
+   </div>
+  </div>
   <div class="tablebox"><table id="tcal"><thead><tr><th>id_via</th><th>brillo</th><th>nitidez</th><th>borrosas</th><th>sobreexp.</th><th>conf. máx media</th><th>fotos con caja ≥ τ</th><th>≥ 0,25</th></tr></thead><tbody>{{CALIDAD}}</tbody></table></div>
  </div>
 </section>

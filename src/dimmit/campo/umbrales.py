@@ -64,8 +64,19 @@ def main():
             tabla[c].append({"conf": th, "precision": prec, "recall": float(s["tp"].sum() / max(n_gt, 1)), "n_cajas": int(len(s))})
             if c not in tau and len(s) and prec >= args.precision_objetivo:
                 tau[c] = th
+    # referencia: cómo "habla" este detector cuando acierta (la confianza de YOLO no es una probabilidad calibrada)
+    tp = det[det["tp"]]
+    mc = det.groupby("image_id")["conf"].max()
+    ref = {
+        "n_cajas_correctas": int(len(tp)), "conf_mediana_caja_correcta": float(tp["conf"].median()),
+        "frac_cajas_correctas_conf_lt_025": float((tp["conf"] < 0.25).mean()), "frac_cajas_correctas_conf_lt_020": float((tp["conf"] < 0.20).mean()),
+        "max_conf_media_por_foto": float(mc.mean()), "max_conf_mediana_por_foto": float(mc.median()),
+        "frac_fotos_max_conf_ge_025": float((mc >= 0.25).mean()), "frac_fotos_max_conf_ge_020": float((mc >= 0.20).mean()),
+        "precision_por_caja": {str(th): float(det.loc[det["conf"] >= th, "tp"].mean()) for th in (0.15, 0.20, 0.25)},
+        "umbral_por_defecto_ultralytics": {"predict": 0.25, "val": 0.001, "fuente": "https://docs.ultralytics.com/usage/cfg/"},
+    }
     out = {"fuente": "test de RDD2020 (3 folds T), IoU >= 0.5, emparejamiento voraz por confianza", "precision_objetivo": args.precision_objetivo,
-           "tau_campo": tau, "tabla": tabla}
+           "tau_campo": tau, "tabla": tabla, "referencia_test": ref}
     ensure_dir(FEAT)
     (FEAT / "umbrales_campo.json").write_text(json.dumps(out, indent=1))
     print(f"[ok] tau_campo = {tau} -> {FEAT / 'umbrales_campo.json'}")
