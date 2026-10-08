@@ -282,6 +282,23 @@ def build():
     ex_rho_val = " · ".join(f"{SHORT[c]} {fmt(g_ex[f'rhocampo_{c}'].mean(), 2)}" for c in CLASS_KEYS)
     dvs = [100 - float(ex[f"sub_score_{CLASS_SLUGS[c]}"]) for c in CLASS_KEYS]
     ex_cdv = f"ΣDV {fmt(sum(dvs))} · DVmax {fmt(max(dvs))} → CDV {fmt(100 - ex.score_calidad)}"
+    # validación visual: las fotos del tramo de ejemplo con cajas conservadas (hasta 3), con sus cajas dibujadas
+    ex_frames = g_ex[g_ex["n_detecciones_campo"] > 0].sort_values("max_conf_campo", ascending=False).head(3)
+    if ex_frames.empty:
+        ex_frames = g_ex.sort_values("max_conf", ascending=False).head(1)
+    ex_fotos = ""
+    for _, r in ex_frames.sort_values("timestamp").iterrows():
+        b = keep[keep["image_id"] == r.image_id]
+        hora = pd.Timestamp(r.timestamp).tz_convert("America/Bogota").strftime("%H:%M:%S")
+        clases = ", ".join(f"{int(n)} {SLUG_TXT[CLASS_SLUGS[c]].lower()}" for c in CLASS_KEYS if (n := int((b["cls"] == c).sum())) > 0) or "sin cajas conservadas"
+        ex_fotos += (f'<figure><img src="{thumb(r.path, b, width=720, quality=74)}" alt="Foto {r.image_id} del tramo {ex.id_via}" loading="lazy">'
+                     f'<figcaption><b class="mono">{r.image_id}</b><br>{hora} · {clases} · confianza máx. {fmt(r.max_conf_campo, 2)}</figcaption></figure>')
+    ACCION_TXT = {"mantenimiento_rutinario": "mantenimiento rutinario", "sellado_de_fisuras": "sellado de fisuras", "parcheo": "parcheo", "bacheo": "bacheo",
+                  "rehabilitacion": "rehabilitación", "reconstruccion": "reconstrucción"}
+    presentes = [SLUG_TXT[sl] for sl in str(ex.danos_detectados).split(";") if sl and sl != "nan"]
+    dom = str(ex.dano_dominante) if isinstance(ex.dano_dominante, str) and ex.dano_dominante else ""
+    ex_danos = ", ".join(presentes) if presentes else (f"{SLUG_TXT[dom]} (en pocas fotos)" if dom in SLUG_TXT else "sin daño conservado")
+    ex_sev = ex.severidad_bache_astm if isinstance(ex.severidad_bache_astm, str) and ex.severidad_bache_astm else "—"
 
     n_fotos, n_tramos = len(fr), len(t)
     etq = t["etiqueta"].value_counts().to_dict()
@@ -329,7 +346,10 @@ def build():
         "EX_ID": ex.id_via, "EX_N": str(int(ex.n_fotogramas)), "EX_SCORE": fmt(ex.score_calidad), "EX_ESTADO": ESTADO_TXT[ex.estado], "EX_ETIQ": ETIQ_TXT[ex.etiqueta],
         "EX_PROF": fmt(ex.profundidad_max_cm, 1), "EX_LAT": fmt(ex.lat, 5), "EX_LON": fmt(ex.lon, 5),
         "EX_RHO": " · ".join(f"{SHORT[c]} {fmt(100 - ex[f'sub_score_{CLASS_SLUGS[c]}'])}" for c in CLASS_KEYS),
-        "EX_CONTEO": ex_conteo, "EX_RHO_VAL": ex_rho_val, "EX_CDV": ex_cdv,
+        "EX_CONTEO": ex_conteo, "EX_RHO_VAL": ex_rho_val, "EX_CDV": ex_cdv, "EX_FOTOS": ex_fotos, "EX_N_FOTOS_CAJAS": str(len(ex_frames)),
+        "EX_PRUEBA": ex.prueba.replace("_", " "), "EX_TRAMO": str(int(ex.tramo)), "EX_LONG": fmt(ex.longitud_m), "EX_DANOS": ex_danos, "EX_SEV": ex_sev,
+        "EX_ETIQ_CLASS": ex.etiqueta, "EX_ACCION": ACCION_TXT.get(ex.accion_recomendada, ex.accion_recomendada),
+        "EX_SCORE_ANTES": fmt(ex.score_calidad_tau_rdd2020), "EX_ESTADO_ANTES": ESTADO_TXT[ex.estado_tau_rdd2020], "EX_ETIQ_ANTES": ETIQ_TXT[ex.etiqueta_tau_rdd2020],
         "EX_N_CAJAS": " · ".join(f"{int(ex[f'n_{CLASS_SLUGS[c]}'])} {SLUG_TXT[CLASS_SLUGS[c]].lower()}" for c in CLASS_KEYS),
         "N_FOTOS": str(n_fotos), "N_TRAMOS": str(n_tramos), "MS": fmt(lat["ms_por_imagen_lote"]), "AUROC": fmt(L("dominio_auroc"), 2),
         "CONF_MED": fmt(mc_campo.mean(), 2), "CONF_MEDIANA": fmt(mc_campo.median(), 2), "CONF_REF": fmt(ref["max_conf_media_por_foto"], 2),
@@ -612,6 +632,20 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
    <div class="card"><div class="k">regla de etiqueta</div><h3><span class="pill et-prevencion">Prevención</span> <span class="pill et-mantenimiento">Mantenimiento</span> <span class="pill et-intervencion">Intervención</span></h3><p>bueno/satisfactorio → prevención · regular o profundidad ≥ 3 cm → mantenimiento · malo/muy malo, profundidad ≥ 8 cm o bache con confianza ≥ 0,5 → intervención. Ejemplo: {{EX_ETIQ}}.</p></div>
   </div>
   <p style="font-size:.82rem">Qué se descartó de YOLO: el embedding interno de 448 valores no mejoró el score en la evaluación (Δ MAE +0,07, IC incluye 0). Se usan solo clase, confianza y geometría de cada caja.</p>
+ </div>
+</section>
+
+<section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · tramo de ejemplo">
+ <div class="sheet">
+  <div class="eyebrow">Así se ve el tramo {{EX_ID}} · {{EX_PRUEBA}}, tramo {{EX_TRAMO}} · lo que dice el flujo, en las fotos</div>
+  <div class="cards">
+   <div class="card"><div class="k">tramo</div><h3 class="mono">{{EX_ID}}</h3><p>{{EX_N}} fotos · {{EX_LONG}} m · {{EX_LAT}}, {{EX_LON}}</p></div>
+   <div class="card"><div class="k">la cámara vio</div><h3>{{EX_DANOS}}</h3><p>{{EX_CONTEO}}</p></div>
+   <div class="card"><div class="k">el sensor midió</div><h3>{{EX_PROF}} cm</h3><p>profundidad máxima · severidad ASTM {{EX_SEV}} · línea base autocalibrada</p></div>
+   <div class="card" style="border-color:var(--accent);border-width:2px"><div class="k">resultado</div><h3>{{EX_SCORE}} · {{EX_ESTADO}}</h3><p><span class="pill et-{{EX_ETIQ_CLASS}}" style="font-size:.85rem;padding:3px 12px">{{EX_ETIQ}}</span><br>acción recomendada: {{EX_ACCION}}<br><span style="font-size:.8rem;color:var(--muted)">antes (umbral RDD2020, sensor con base fija): {{EX_SCORE_ANTES}} · {{EX_ESTADO_ANTES}} · {{EX_ETIQ_ANTES}}</span></p></div>
+  </div>
+  <div class="gallery" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">{{EX_FOTOS}}</div>
+  <p style="font-size:.82rem">Las {{EX_N_FOTOS_CAJAS}} fotos del tramo en las que alguna caja pasó los cuatro filtros, con esas cajas dibujadas (clase y confianza). El resto de las {{EX_N}} fotos no aportó cajas al score.</p>
  </div>
 </section>
 
