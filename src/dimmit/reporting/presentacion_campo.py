@@ -23,6 +23,7 @@ ESTADO_TXT = {"bueno": "Bueno", "satisfactorio": "Satisfactorio", "regular": "Re
 ETIQ_TXT = {"prevencion": "Prevención", "mantenimiento": "Mantenimiento", "intervencion": "Intervención"}
 CLS_COLOR = {"D00": "var(--c1)", "D10": "var(--c2)", "D20": "var(--c3)", "D40": "var(--c4)"}
 TAUS = {"D00": 0.07, "D10": 0.04, "D20": 0.09, "D40": 0.07}
+SHORT = {"D00": "long.", "D10": "transv.", "D20": "piel", "D40": "bache"}
 
 # --- mapa de Bogotá (lat/lon -> unidades del SVG) ---------------------------------------------
 K = 4000.0
@@ -272,8 +273,15 @@ def build():
     yolo_img = thumb(best_all.path, yolo_boxes.iloc[0:0], width=800, quality=78)
     yolo_json = json.dumps([{"c": r.cls, "p": round(float(r.conf), 3), "x": round(float(r.cx), 4), "y": round(float(r.cy), 4), "w": round(float(r.w), 4), "h": round(float(r.h), 4),
                              "k": bool(((yolo_keep["cx"] - r.cx).abs() < 1e-6).any())} for _, r in yolo_boxes.head(60).iterrows()])
-    # tramo de ejemplo para el flujo de score (el de la foto de YOLO)
+    # tramo de ejemplo para el flujo de score (el de la foto de YOLO): conteo, área, densidades y CDV reales
     ex = t[t["id_via"] == best_all.id_via].iloc[0]
+    g_ex = fr[fr["id_via"] == ex.id_via]
+    conteo = [f"{int(g_ex[f'ncampo_{c}'].sum())} de {SLUG_TXT[CLASS_SLUGS[c]].lower()} en {fmt(100 * (g_ex[f'ncampo_{c}'] > 0).mean())} % de las fotos"
+              for c in CLASS_KEYS if g_ex[f"ncampo_{c}"].sum() > 0]
+    ex_conteo = ("; ".join(conteo) if conteo else "sin cajas conservadas") + f" · cubren en promedio {fmt(100 * g_ex['union_campo'].mean(), 1)} % de la imagen"
+    ex_rho_val = " · ".join(f"{SHORT[c]} {fmt(g_ex[f'rhocampo_{c}'].mean(), 2)}" for c in CLASS_KEYS)
+    dvs = [100 - float(ex[f"sub_score_{CLASS_SLUGS[c]}"]) for c in CLASS_KEYS]
+    ex_cdv = f"ΣDV {fmt(sum(dvs))} · DVmax {fmt(max(dvs))} → CDV {fmt(100 - ex.score_calidad)}"
 
     n_fotos, n_tramos = len(fr), len(t)
     etq = t["etiqueta"].value_counts().to_dict()
@@ -320,7 +328,8 @@ def build():
         "YOLO_IMG": yolo_img, "YOLO_JSON": yolo_json, "YOLO_ID": best_all.image_id, "YOLO_N": str(int(len(yolo_keep))), "YOLO_N_TAU": str(int((yolo_boxes["conf"] >= yolo_boxes["tau"]).sum())), "PARCHES": parches_pct,
         "EX_ID": ex.id_via, "EX_N": str(int(ex.n_fotogramas)), "EX_SCORE": fmt(ex.score_calidad), "EX_ESTADO": ESTADO_TXT[ex.estado], "EX_ETIQ": ETIQ_TXT[ex.etiqueta],
         "EX_PROF": fmt(ex.profundidad_max_cm, 1), "EX_LAT": fmt(ex.lat, 5), "EX_LON": fmt(ex.lon, 5),
-        "EX_RHO": " · ".join(f"{SLUG_TXT[CLASS_SLUGS[c]].split()[0]} {fmt(100 - ex[f'sub_score_{CLASS_SLUGS[c]}'])}" for c in CLASS_KEYS),
+        "EX_RHO": " · ".join(f"{SHORT[c]} {fmt(100 - ex[f'sub_score_{CLASS_SLUGS[c]}'])}" for c in CLASS_KEYS),
+        "EX_CONTEO": ex_conteo, "EX_RHO_VAL": ex_rho_val, "EX_CDV": ex_cdv,
         "EX_N_CAJAS": " · ".join(f"{int(ex[f'n_{CLASS_SLUGS[c]}'])} {SLUG_TXT[CLASS_SLUGS[c]].lower()}" for c in CLASS_KEYS),
         "N_FOTOS": str(n_fotos), "N_TRAMOS": str(n_tramos), "MS": fmt(lat["ms_por_imagen_lote"]), "AUROC": fmt(L("dominio_auroc"), 2),
         "CONF_MED": fmt(mc_campo.mean(), 2), "CONF_MEDIANA": fmt(mc_campo.median(), 2), "CONF_REF": fmt(ref["max_conf_media_por_foto"], 2),
@@ -333,7 +342,7 @@ def build():
         "N_INT": str(etq.get("intervencion", 0)), "N_INT_ANTES": str(etq_antes.get("intervencion", 0)), "LONG": fmt(t["longitud_m"].sum()),
         "N_CONSERVADAS": str(int(len(keep))), "N_BRUTAS": str(int(len(det))), "N_TAU": str(int((det["conf"] >= det["tau"]).sum())),
         "FILTROS": filtros_html, "VALID": valid_html, "PCT_CAMPO": fmt(100 * (fr["n_detecciones_campo"] > 0).mean()), "CONF_CAMPO": fmt(fr.loc[fr["max_conf_campo"] > 0, "max_conf_campo"].mean(), 2),
-        "TAU_CAMPO": " · ".join(f"{ {'D00': 'long.', 'D10': 'transv.', 'D20': 'piel', 'D40': 'bache'}[c]} {fmt(v, 2)}" for c, v in tau_campo.items()),
+        "TAU_CAMPO": " · ".join(f"{SHORT[c]} {fmt(v, 2)}" for c, v in tau_campo.items()),
     }
     page = TEMPLATE
     for k, v in ctx.items():
@@ -591,10 +600,10 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   <div class="eyebrow">De las cajas al score y a la etiqueta · tramo de ejemplo {{EX_ID}}</div>
   <div class="flow">
    <div class="step"><b>Cajas de YOLO</b>clase · confianza · tamaño<span class="val">{{EX_N_CAJAS}}</span></div><div class="arrow">→</div>
-   <div class="step"><b>Conteo y área por clase</b>en las {{EX_N}} fotos del tramo</div><div class="arrow">→</div>
-   <div class="step"><b>Densidad ρ por clase</b>% del área visible (~143 m² por foto)</div><div class="arrow">→</div>
+   <div class="step"><b>Conteo y área por clase</b>en las {{EX_N}} fotos del tramo<span class="val">{{EX_CONTEO}}</span></div><div class="arrow">→</div>
+   <div class="step"><b>Densidad ρ por clase</b>% del área visible (~143 m² por foto), promedio del tramo<span class="val">{{EX_RHO_VAL}}</span></div><div class="arrow">→</div>
    <div class="step"><b>Valor deducido DV</b>curva estilo ASTM D6433<span class="val">{{EX_RHO}}</span></div><div class="arrow">→</div>
-   <div class="step"><b>CDV</b>DVmax + 0,35 · (ΣDV − DVmax)</div><div class="arrow">→</div>
+   <div class="step"><b>CDV</b>DVmax + 0,35 · (ΣDV − DVmax)<span class="val">{{EX_CDV}}</span></div><div class="arrow">→</div>
    <div class="step out"><b>score = 100 − CDV</b><span class="val">{{EX_SCORE}} → {{EX_ESTADO}}</span></div>
   </div>
   <div class="cols">
