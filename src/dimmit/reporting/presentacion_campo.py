@@ -289,14 +289,6 @@ def build():
         f'<span class="pill et-{r.etiqueta}">{ETIQ_TXT[r.etiqueta]}</span> · {thumbs[r.id_via][2]} cajas conservadas de {thumbs[r.id_via][3]} · {fmt(r.lat, 5)}, {fmt(r.lon, 5)}</figcaption></figure>'
         for _, r in t.sort_values(["prueba", "tramo"]).iterrows())
 
-    table_rows = "".join(
-        f'<tr><td class="mono">{r.id_via}</td><td>{r.prueba.replace("_", " ")}</td><td class="n">{int(r.tramo)}</td><td class="n">{int(r.n_fotogramas)}</td>'
-        f'<td class="n">{fmt(r.lat, 5)}</td><td class="n">{fmt(r.lon, 5)}</td><td>{", ".join(SLUG_TXT[s] for s in str(r.danos_detectados).split(";") if s and s != "nan")}</td>'
-        f'<td class="n">{fmt(r.score_calidad_tau_rdd2020)}</td><td>{ESTADO_TXT[r.estado_tau_rdd2020]}</td><td><span class="pill et-{r.etiqueta_tau_rdd2020}">{ETIQ_TXT[r.etiqueta_tau_rdd2020]}</span></td>'
-        f'<td class="n">{fmt(r.score_calidad)}</td><td>{ESTADO_TXT[r.estado]}</td><td><span class="pill et-{r.etiqueta}">{ETIQ_TXT[r.etiqueta]}</span></td>'
-        f'<td class="n">{fmt(r.profundidad_max_cm_base40, 1)}</td><td class="n">{fmt(r.profundidad_max_cm, 1)}</td><td class="n">{fmt(r.confianza_modelo, 2)}</td></tr>'
-        for _, r in t.sort_values(["prueba", "tramo"]).iterrows())
-
     cal_rows = "".join(
         f'<tr><td class="mono">{r.id_via}</td><td class="n">{fmt(r.brillo_media)}</td><td class="n">{fmt(r.nitidez_media)}</td><td class="n">{fmt(100 * r.frac_fotos_borrosa)} %</td>'
         f'<td class="n">{fmt(100 * r.frac_fotos_sobreexpuesta)} %</td><td class="n">{fmt(r.max_conf_media, 2)}</td><td class="n">{fmt(100 * r.frac_fotos_con_deteccion)} %</td><td class="n">{fmt(100 * r.frac_fotos_con_deteccion_conf25)} %</td></tr>'
@@ -322,7 +314,7 @@ def build():
     psi_html = "".join(f'<div class="psi"><span>{k}</span><b>{fmt(v, 2)}</b></div>' for k, v in psi_vals.items())
 
     ctx = {
-        "BOGOTA": bogota_svg(), "KPIS": kpis, "GALERIA": gallery, "TABLA": table_rows, "CALIDAD": cal_rows, "COMP": comp_rows, "EJEMPLO_COMPLEMENTO": ejemplo,
+        "BOGOTA": bogota_svg(), "KPIS": kpis, "GALERIA": gallery, "CALIDAD": cal_rows, "COMP": comp_rows, "EJEMPLO_COMPLEMENTO": ejemplo,
         "BARRAS": bars_scores(t), "DANOS": bars_damage(t),
         "CALLE": street_map(fr, t, depth_frames), "PSI": psi_html,
         "YOLO_IMG": yolo_img, "YOLO_JSON": yolo_json, "YOLO_ID": best_all.image_id, "YOLO_N": str(int(len(yolo_keep))), "YOLO_N_TAU": str(int((yolo_boxes["conf"] >= yolo_boxes["tau"]).sum())), "PARCHES": parches_pct,
@@ -736,14 +728,6 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
  </div>
 </section>
 
-<section class="slide" data-lat="4.5995" data-lon="-74.0735" data-z="3.2" data-lm="candelaria" data-place="La Candelaria · tabla">
- <div class="sheet">
-  <div class="eyebrow">Salida 1 · vias_clasificacion.csv (clic en un encabezado para ordenar)</div>
-  <div class="tablebox"><table id="tvias"><thead><tr><th>id_via</th><th>prueba</th><th>tramo</th><th>fotos</th><th>lat</th><th>lon</th><th>daños (modo campo)</th><th>score antes</th><th>estado antes</th><th>etiqueta antes</th><th>score</th><th>estado</th><th>etiqueta</th><th>prof. base 40</th><th>prof. autocal.</th><th>conf. modelo</th></tr></thead><tbody>{{TABLA}}</tbody></table></div>
-  <p style="font-size:.82rem">La salida 2 (calidad, confianza, deriva y correlación) está en <span class="mono">calidad_confianza_correlacion.csv</span>, en formato largo, con sus intervalos de confianza.</p>
- </div>
-</section>
-
 <section class="slide" data-lat="4.65" data-lon="-74.11" data-z="1.0" data-lm="ciudad" data-place="Bogotá">
  <div class="sheet">
   <div class="eyebrow">Insights · DIMMIT frente al diagnóstico oficial</div>
@@ -843,7 +827,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   render();
 
   // --- tablas ordenables ---------------------------------------------------------------------
-  document.querySelectorAll('#tvias th, #tcal th').forEach((th, i) => { th.tabIndex = 0; const sort = () => { const tb = th.closest('table').tBodies[0], rows = [...tb.rows]; const asc = th.dataset.asc !== '1'; th.dataset.asc = asc ? '1' : '0'; const num = s => parseFloat(s.replace(/\./g, '').replace(',', '.').replace('%', '')); rows.sort((a, b) => { const x = a.cells[i].textContent.trim(), y = b.cells[i].textContent.trim(); const nx = num(x), ny = num(y); const c = (!isNaN(nx) && !isNaN(ny)) ? nx - ny : x.localeCompare(y, 'es'); return asc ? c : -c; }); rows.forEach(r => tb.appendChild(r)); }; th.onclick = sort; th.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sort(); } }; });
+  document.querySelectorAll('#tcal th').forEach((th, i) => { th.tabIndex = 0; const sort = () => { const tb = th.closest('table').tBodies[0], rows = [...tb.rows]; const asc = th.dataset.asc !== '1'; th.dataset.asc = asc ? '1' : '0'; const num = s => parseFloat(s.replace(/\./g, '').replace(',', '.').replace('%', '')); rows.sort((a, b) => { const x = a.cells[i].textContent.trim(), y = b.cells[i].textContent.trim(); const nx = num(x), ny = num(y); const c = (!isNaN(nx) && !isNaN(ny)) ? nx - ny : x.localeCompare(y, 'es'); return asc ? c : -c; }); rows.forEach(r => tb.appendChild(r)); }; th.onclick = sort; th.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sort(); } }; });
 })();
 </script>
 """
