@@ -1,10 +1,10 @@
 {
   "modo": "infer",
-  "fotos": 131,
+  "fotos": 322,
   "pesos": "yolov10n_rdd2020.pt",
   "gpu": false,
   "imgsz": 640,
   "conf": 0.05,
   "max_det": 30,
-  "segundos": 116.5
+  "segundos": 149.3
 }

@@ -17,16 +17,50 @@ pruebas:
   Prueba_8: {fotos: prueba8, sensor: "BACHES TOMAS/primera tomo segundo sitio enviar.txt", sitio: 2, superficie: adoquin}
   Prueba_9: {fotos: prueba9, sensor: "BACHES TOMAS/segunda toma segundo sitio enviar.txt", sitio: 2, superficie: adoquin}
 # superficie (por defecto asfalto): la registra el equipo en campo, como en una inspección PCI
+# Ubicación de los sitios (sin GPS en las fotos): declarada por el equipo ("tramo de calle en La Candelaria
+# detrás del CAI Rosario, cerca de la U. del Rosario") y anclada a la calzada del inventario IDU. El CAI Rosario
+# está en la Av. Jiménez con Carrera 5 (Mapa de Referencia IDECA, topónimo 17070865). La toma del 5-oct, con GPS
+# real, cae sobre la misma Carrera 5, lo que confirma el sitio 1.
+sitios:
+  1:
+    descripcion: "Carrera 5 detrás del CAI Rosario (asfalto)"
+    lat: 4.60013
+    lon: -74.07176
+    incertidumbre_m: 50          # media longitud de la calzada IDU
+    calcodigo_idu: 91032823
+  2:
+    descripcion: "calzada en adoquín junto al CAI Rosario (Av. Jiménez con Carrera 5)"
+    lat: 4.60077
+    lon: -74.07112
+    incertidumbre_m: 100
+    calcodigo_idu: 91032298
+
+# Calibración de la cámara contra el IDU (src/dimmit/campo/calibracion.py). Se ajusta un solo parámetro: un
+# multiplicador m de los umbrales de confianza por clase (tau = m · tau_campo), para que el score de los tramos
+# con estado IDU conocido caiga en el rango PCI de ese estado. Tramos de calibración:
+#   * los de la toma vigente con calzada IDU declarada y estado publicado (sitio 1);
+#   * la toma del 5-oct (GPS real, misma calle): el equipo indicó que su sensor no correspondía, así que
+#     se usa solo la cámara y no entra en los resultados.
+calibracion:
+  usar: true
+  pruebas:
+    Prueba_2: {fotos: grabacion_20261005_093800_Prueba_2}
+    Prueba_3: {fotos: grabacion_20261005_094134_Prueba_3}
+    Prueba_4: {fotos: grabacion_20261005_094715_Prueba_4}
+  rangos_idu: {bueno: 90, regular: 56}    # PCI ≥ 90 bueno · 56–89 regular · < 56 malo (IDU, Boletín Técnico Malla Vial 2021-II)
+  multiplicador: {min: 0.2, max: 1.2, paso: 0.05}
+
+# superficie (por defecto asfalto): la registra el equipo en campo, como en una inspección PCI
 
 # referencia oficial (src/dimmit/campo/idu.py): estado superficial de calzada del IDU en la zona de los sitios
-# (alrededor de la sede centro de la U. del Rosario, según el equipo). Sin GPS se compara por zona y superficie.
+# (alrededor del CAI Rosario). Los tramos se emparejan con su calzada (`sitios` o GPS).
 idu:
-  referencia: "Plazoleta del Rosario"
-  lat: 4.6007396
-  lon: -74.0730663
+  referencia: "CAI Rosario"
+  lat: 4.600539
+  lon: -74.071376
   radio_m: 350
-# Toma anterior (5-oct-2026, La Candelaria, cámara 2 Hz + GPS 1 Hz); el equipo indicó que no eran las fotos
-# que correspondían. Para reproducirla, reemplazar `pruebas` por:
+# Toma anterior (5-oct-2026, Carrera 5 detrás del CAI Rosario, cámara 2 Hz + GPS 1 Hz); el equipo indicó que su
+# sensor no correspondía. Hoy solo calibra la cámara; para reproducirla completa, reemplazar `pruebas` por:
 #   Prueba_2: {fotos: grabacion_20261005_093800_Prueba_2, sensor: "tomadedatos/Tiempo_ms,Distancia_cm,ProfundidadB1.txt"}
 #   Prueba_3: {fotos: grabacion_20261005_094134_Prueba_3, sensor: "tomadedatos/Tiempo_ms,Distancia_cm,ProfundidadB2.txt"}
 #   Prueba_4: {fotos: grabacion_20261005_094715_Prueba_4, sensor: "tomadedatos/Tiempo_ms,Distancia_cm,ProfundidadB3.txt"}

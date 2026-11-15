@@ -41,7 +41,10 @@ def arrow(ax, a, b, color, rad=0.0):
 def main():
     cfg = load_cfg()
     fr = pd.read_parquet(INDEX_CAMPO / "fotogramas.parquet")
+    if "conjunto" in fr:
+        fr = fr[fr["conjunto"] == "evaluacion"]
     det_f = pd.read_parquet(FEAT / "detecciones_filtradas.parquet")
+    det_f = det_f[det_f["image_id"].isin(fr["image_id"])]
     depth = load_depth(cfg)
     n_lect = sum(f["n_lecturas"] for _, f in depth.values())
     n_val = sum(f["n_validas"] for _, f in depth.values())
@@ -64,8 +67,8 @@ def main():
     L = [
         ("1. Cámara (celular)", f"{len(fr)} fotos a pie, {fr['prueba'].nunique()} recorridos"),
         ("2. YOLOv10 (RDD2020)", "grietas, piel de cocodrilo, bache\ninferencia en Kaggle"),
-        ("3. Filtros de campo", f"confianza, vía, superficie, persistencia\ny escalas: {n_cajas} → {n_keep} cajas"),
-        ("4. Score 0–100", "pseudo-PCI (ASTM D6433)\nbueno · satisf. · regular · malo"),
+        ("3. Filtros de campo", f"umbral calibrado con el IDU, vía,\nsuperficie, persistencia: {n_cajas} → {n_keep} cajas"),
+        ("4. Score 0–100", "pseudo-PCI (ASTM D6433)\nescala IDU: bueno · regular · malo"),
     ]
     R = [
         ("1. Sensor ultrasónico", f"en bastón, ~4 lecturas/s\n{n_lect} lecturas"),

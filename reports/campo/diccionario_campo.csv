@@ -2,6 +2,8 @@ columna,descripcion
 id_via,"ID único: tramo VIA-<sha1 de fecha|prueba|tramo|centroide GPS, o hash de sus fotos si no hay GPS>; prueba PRU-…; sitio SIT-…"
 nivel,"tramo (con GPS ~10 m; sin GPS la prueba completa), prueba (recorrido con GPS) o sitio (tomas repetidas del mismo lugar)"
 id_prueba,ID de la prueba a la que pertenece (vacío en filas de sitio)
+ubicacion_fuente,gps (medida) o declarada (sitio indicado por el equipo y anclado a la calzada IDU; no es GPS)
+calcodigo_idu,calzada del inventario IDU asociada (sitios declarados)
 prueba,nombre de la prueba (Sitio_N en filas de sitio)
 sitio,sitio de medición (las tomas repetidas comparten sitio)
 superficie,asfalto / adoquin (registrada en campo); en adoquín solo cuentan los baches
@@ -27,8 +29,9 @@ sub_score_grieta_longitudinal,100 − valor deducido de grieta_longitudinal
 sub_score_grieta_transversal,100 − valor deducido de grieta_transversal
 sub_score_piel_cocodrilo,100 − valor deducido de piel_cocodrilo
 sub_score_baches,100 − valor deducido de baches
-score_calidad,"pseudo-PCI visual 0–100 (100 = sin daño) en modo campo: cajas que pasan las 4 capas de filtros, severidad de bache por profundidad ASTM"
-estado,bueno/satisfactorio/regular/malo/muy_malo según score_calidad
+score_calidad,"pseudo-PCI visual 0–100 (100 = sin daño) en modo campo: umbral de confianza calibrado contra el IDU, cajas que pasan los filtros, severidad de bache por profundidad ASTM"
+estado,bueno/satisfactorio/regular/malo/muy_malo según score_calidad (escala de 5 rangos del pseudo-PCI)
+estado_idu_equivalente,el mismo score en la escala de 3 clases del IDU: bueno ≥ 90 · regular 56–89 · malo < 56
 score_calidad_tau_rdd2020,antes: mismo score con el umbral de RDD2020 y sin filtros
 estado_tau_rdd2020,estado del score anterior
 etiqueta_tau_rdd2020,"antes: etiqueta con el umbral de RDD2020 y la profundidad del firmware (distancia − 40 cm, sin depurar)"

@@ -24,10 +24,14 @@ data/campo/index/*
 !data/campo/idu/
 data/campo/idu/*
 !data/campo/idu/calzadas_estado.csv
+!data/campo/idu/calzadas.geojson
 !data/campo/referencia/
 !data/campo/features/
 data/campo/features/*
 !data/campo/features/umbrales_campo.json
+!data/campo/features/calibracion_idu.json
+!data/campo/features/calibracion_idu.csv
+!data/campo/features/calibracion_idu_curva.csv
 !data/index/severity_cutoffs.json
 models/*
 !models/.gitkeep

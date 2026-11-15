@@ -1,0 +1,13 @@
+id_via,calcodigo,frac_fotos_en_calzada,estado_idu,superficie,civ,fecha_idu,prueba,fecha,conjunto,superficie_tramo,score_sin_calibrar,score_calibrado,estado_dimmit_calibrado
+VIA-01538ee502cc,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_4,2026-10-05,calibracion,asfalto,74.24712528087883,73.51397857853023,regular
+VIA-11eb58b9227a,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_6,2026-11-15,evaluacion,asfalto,95.32633450595057,76.45089404979882,regular
+VIA-2985571a3698,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_3,2026-10-05,calibracion,asfalto,50.80100194141821,49.762113067932034,malo
+VIA-42294e6bab9e,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_5,2026-11-15,evaluacion,asfalto,77.27162141814355,73.52345931989456,regular
+VIA-57cac608141a,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_3,2026-10-05,calibracion,asfalto,70.47530529340146,67.19785836044775,regular
+VIA-6a8c7dd60e98,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_2,2026-10-05,calibracion,asfalto,79.61252896103476,79.1234465683664,regular
+VIA-75f714b86843,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_3,2026-10-05,calibracion,asfalto,100.0,100.0,bueno
+VIA-7fe064e60e0a,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_2,2026-10-05,calibracion,asfalto,86.3512913111339,86.3512913111339,regular
+VIA-a6946618547f,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_7,2026-11-15,evaluacion,asfalto,100.0,73.28893010748381,regular
+VIA-c321926ea46b,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_4,2026-10-05,calibracion,asfalto,63.72109631377921,62.59495447310432,regular
+VIA-d502dbe6b2e6,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_4,2026-10-05,calibracion,asfalto,60.405967039435446,56.405788680393506,regular
+VIA-edee8f48f254,91032823,1.0,regular,flexible,17000080,2025-12-31,Prueba_4,2026-10-05,calibracion,asfalto,62.44742789098077,57.653310341802815,regular

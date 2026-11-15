@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from dimmit.campo.gpx import interpolate, read_gpx, smooth_track
-from dimmit.campo.scores import etiqueta
+from dimmit.campo.scores import estado_idu, etiqueta
 from dimmit.campo.tramos import cut_tramos, frames_sin_gps, prueba_id, sitio_id, via_id, via_id_sin_gps, wa_key
 from dimmit.campo.filtros import apply as apply_filters, in_road
 from dimmit.campo.ultrasonico import align_normalized, astm_severity, depth_features, read_depth
@@ -134,3 +134,8 @@ def test_filters_band_road_persistence_and_scales():
     other = pd.DataFrame([("a", 2, 0.30, 0.50, 0.60, 0.20, 0.20)], columns=det.columns)
     out2, _ = apply_filters(det, frames, cfg, {"832": other})
     assert out2["motivo_descarte"].tolist()[:2] == ["", "4_sin_consenso_escala"]
+
+
+def test_estado_idu_scale():
+    cfg = {"calibracion": {"rangos_idu": {"bueno": 90, "regular": 56}}}
+    assert [estado_idu(x, cfg) for x in (100, 90, 89.9, 56, 55.9, 0)] == ["bueno", "bueno", "regular", "regular", "malo", "malo"]

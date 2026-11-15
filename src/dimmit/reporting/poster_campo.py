@@ -17,8 +17,7 @@ from dimmit.utils.io import ensure_dir
 
 INK, MUTED = "#15191c", "#6b7378"
 ETIQ = {"prevencion": ("Prevención", "#2a78d6"), "mantenimiento": ("Mantenimiento", "#c98500"), "intervencion": ("Intervención", "#d03b3b")}
-ESTADOS = [(0, 41, "muy malo"), (41, 56, "malo"), (56, 71, "regular"), (71, 86, "satisf."), (86, 100, "bueno")]
-BANDAS = ["#f4e6e3", "#f7ede4", "#f7f3e6", "#eef3ea", "#e7f0f7"]
+BANDAS = {"malo": "#f4e0dd", "regular": "#f8efd9", "bueno": "#e3f0e6"}  # escala de 3 clases del IDU
 
 
 def _row_label(r):
@@ -34,7 +33,9 @@ def main():
     cfg = load_cfg()
     et_cfg = cfg["etiqueta"]
     v = pd.read_parquet(FEAT / "vias.parquet")
-    t = v[v["nivel"] == "tramo"].copy()
+    t = v[(v["nivel"] == "tramo") & (v["conjunto"] == "evaluacion" if "conjunto" in v else True)].copy()
+    r = cfg["calibracion"]["rangos_idu"]
+    ESTADOS = [(0, r["regular"], "malo"), (r["regular"], r["bueno"], "regular"), (r["bueno"], 100, "bueno")]
     t["_s"] = t["sitio"].fillna(0) if "sitio" in t else 0
     t = t.sort_values(["_s", "prueba", "tramo"], ascending=False).reset_index(drop=True)
     n = len(t)
@@ -43,22 +44,22 @@ def main():
     fig.patch.set_facecolor("white")
     y = np.arange(n)
     # --- panel 1: score visual de la corrida (modo campo) ------------------------------------------
-    for (lo, hi, name), col in zip(ESTADOS, BANDAS):
-        ax.axvspan(lo, hi, color=col, zorder=0)
-        ax.text((lo + hi) / 2, n - 0.45, name, ha="center", va="bottom", color=MUTED, fontsize=12.5)
+    for lo, hi, name in ESTADOS:
+        ax.axvspan(lo, hi, color=BANDAS[name], zorder=0)
+        ax.text((lo + hi) / 2, n - 0.45, f"{name} (IDU)", ha="center", va="bottom", color=MUTED, fontsize=12.5)
     for i, r in t.iterrows():
         d = r["score_calidad"]
         col = ETIQ[r["etiqueta"]][1]
         ax.plot([0, d], [i, i], color=col, lw=3, alpha=0.55, zorder=2, solid_capstyle="butt")
         ax.scatter(d, i, s=330, color=col, zorder=4, edgecolor="white", linewidth=2, clip_on=False)
-        ax.text(d - 2.4, i + 0.3, f"{d:.0f} · {r['estado'].replace('_', ' ')}", ha="right", va="bottom", fontsize=13, color=col, fontweight="bold")
+        ax.text(d - 2.4, i + 0.3, f"{d:.0f} · {r['estado_idu_equivalente']}", ha="right", va="bottom", fontsize=13, color=col, fontweight="bold")
     ax.set_yticks(y, [_row_label(r) for _, r in t.iterrows()], fontsize=14.5, color=INK)
     ax.set_xlim(0, 100)
     ax.set_ylim(-0.6, n + 0.15)
     ax.set_xticks([0, 25, 50, 75, 100])
     ax.tick_params(axis="x", colors=MUTED, labelsize=12.5)
     ax.tick_params(axis="y", length=0)
-    ax.set_xlabel("Score visual de la vía (YOLOv10 + filtros de campo)\n0 = fallada · 100 = sin daño", color=INK, fontsize=14, labelpad=10)
+    ax.set_xlabel("Score visual de la vía (YOLOv10 calibrado con el IDU)\n0 = fallada · 100 = sin daño", color=INK, fontsize=14, labelpad=10)
     ax.set_title("Lo que ve la cámara", loc="left", fontsize=17, fontweight="bold", color=INK, pad=12)
     # --- panel 2: profundidad del sensor ---------------------------------------------------------
     pmax = t["profundidad_max_cm"].to_numpy(float)
@@ -90,7 +91,7 @@ def main():
     titulo = f"{n_int} de {n} recorridos requieren intervención" if n_int else "Ningún recorrido requiere intervención"
     fig.text(0.02, 0.975, titulo, fontsize=26, fontweight="bold", color=INK, ha="left", va="top")
     rango = f"{np.nanmin(pmax):.0f} a {np.nanmax(pmax):.0f} cm" if np.isfinite(pmax).any() else "sin lecturas válidas"
-    fig.text(0.02, 0.918, f"Con los filtros de campo, la cámara ve la superficie en buen estado; el sensor mide depresiones de {rango}.",
+    fig.text(0.02, 0.918, f"La cámara, calibrada con el IDU, ve la superficie entre regular y buena; el sensor mide depresiones de {rango}.",
              fontsize=15.5, color=INK, ha="left", va="top")
     toma = cfg.get("toma", {}).get("titulo", "")
     fig.text(0.02, 0.878, f"DIMMIT V1 · {toma} · YOLOv10 (RDD2020) + sensor ultrasónico en bastón", fontsize=13, color=MUTED, ha="left", va="top")
@@ -98,7 +99,7 @@ def main():
     fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.015, 0.095), ncol=len(handles), frameon=False, fontsize=13)
     run = pd.read_csv(OUT_CAMPO / "vias_clasificacion.csv", usecols=["run_id"])["run_id"].iloc[0] if (OUT_CAMPO / "vias_clasificacion.csv").exists() else ""
     nota = (f"Corrida {run} · {int(t['n_fotogramas'].sum())} fotos. Score = pseudo-PCI (ASTM D6433) con las cajas que pasan los filtros de campo\n"
-            "(confianza, geometría, superficie, persistencia y consenso multi-escala); en adoquín solo cuentan los baches.\n"
+            "(umbral de confianza calibrado con el IDU, geometría, superficie, persistencia y escalas); en adoquín solo cuentan los baches.\n"
             f"Etiqueta: estado malo, bache ≥ {et_cfg['intervencion']['profundidad_cm']:.0f} cm o bache visto con confianza ≥ {et_cfg['intervencion']['bache_conf_min']:.1f} → intervención; "
             f"estado regular o bache ≥ {et_cfg['mantenimiento']['profundidad_cm']:.0f} cm → mantenimiento.").replace("0.5", "0,5")
     fig.text(0.02, 0.012, nota, fontsize=11, color=MUTED, ha="left", va="bottom", linespacing=1.5)

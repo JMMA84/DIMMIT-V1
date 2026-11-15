@@ -133,10 +133,11 @@ def _tramo_row(g, vid, prueba, k, fecha, tz, id_prueba, sitio, id_sitio):
     geo = np.isfinite(lat_c)
     return {
         "id_via": vid, "id_prueba": id_prueba, "prueba": prueba, "tramo": int(k), "fecha": fecha, "sitio": sitio, "id_sitio": id_sitio,
-        "superficie": g["superficie"].iloc[0],
+        "superficie": g["superficie"].iloc[0], "conjunto": g["conjunto"].iloc[0], "ubicacion_fuente": g["ubicacion_fuente"].iloc[0],
+        "calcodigo_idu": g["calcodigo_idu"].iloc[0],
         "lat": lat_c, "lon": lon_c, "lat_ini": float(g["lat"].iloc[0]), "lon_ini": float(g["lon"].iloc[0]),
         "lat_fin": float(g["lat"].iloc[-1]), "lon_fin": float(g["lon"].iloc[-1]), "geohash7": encode(lat_c, lon_c, 7) if geo else None,
-        "longitud_m": float(g["dist_acum_m"].max() - g["dist_acum_m"].min()) if geo else np.nan,
+        "longitud_m": float(g["dist_acum_m"].max() - g["dist_acum_m"].min()) if g["dist_acum_m"].notna().any() else np.nan,
         "n_fotogramas": int(len(g)), "hora_ini": g["timestamp"].min().tz_convert(tz).strftime("%H:%M:%S"),
         "hora_fin": g["timestamp"].max().tz_convert(tz).strftime("%H:%M:%S"),
         "gps_incertidumbre_m": float(g["gps_incertidumbre_m"].max()) if geo else np.nan,
@@ -149,7 +150,12 @@ def build():
     tz = cfg["zona_horaria"]
     frames, tramos = [], []
     shutil.rmtree(FOTOS, ignore_errors=True)
-    for prueba, spec in cfg["pruebas"].items():
+    cal = cfg.get("calibracion") or {}
+    todas = [(p, s, "evaluacion") for p, s in cfg["pruebas"].items()]
+    if cal.get("usar"):
+        todas += [(p, s, "calibracion") for p, s in (cal.get("pruebas") or {}).items()]
+    sitios = cfg.get("sitios") or {}
+    for prueba, spec, conjunto in todas:
         folder = RAW / spec["fotos"]
         gpx = sorted(folder.glob("*.gpx"))
         sitio = spec.get("sitio")
@@ -173,6 +179,12 @@ def build():
             for c in GEO_COLS:
                 fr[c] = np.nan
             fr["tramo"] = 0  # sin posición no hay distancia para cortar: la prueba completa es el tramo
+            loc = sitios.get(sitio) or {}
+            if "lat" in loc:  # ubicación declarada por el equipo y anclada a la calzada IDU (no es una medición GPS)
+                fr["lat"], fr["lon"], fr["gps_incertidumbre_m"] = loc["lat"], loc["lon"], float(loc.get("incertidumbre_m", np.nan))
+        fr["conjunto"] = conjunto
+        fr["ubicacion_fuente"] = "gps" if con_gps else ("declarada" if fr["lat"].notna().all() else "sin_ubicacion")
+        fr["calcodigo_idu"] = (sitios.get(sitio) or {}).get("calcodigo_idu") if not con_gps else None
         fr["prueba"], fr["fecha"], fr["id_prueba"] = prueba, fecha, prueba_id(fecha, prueba)
         fr["con_gps"] = con_gps
         fr["superficie"] = spec.get("superficie", "asfalto")
@@ -191,14 +203,14 @@ def build():
     ensure_dir(INDEX_CAMPO)
     frames.to_parquet(INDEX_CAMPO / "fotogramas.parquet", index=False)
     tramos.to_parquet(INDEX_CAMPO / "tramos.parquet", index=False)
-    (INDEX_CAMPO / "campo.txt").write_text("\n".join(frames["path"]) + "\n")
+    (INDEX_CAMPO / "campo.txt").write_text("\n".join(sorted(frames["path"])) + "\n")  # mismo orden (y lotes) que el kernel de Kaggle
     return frames, tramos
 
 
 def main():
     frames, tramos = build()
     print(f"[ok] {len(frames)} fotos en {len(tramos)} tramos de {frames['prueba'].nunique()} pruebas -> {INDEX_CAMPO}")
-    print(tramos[["id_via", "prueba", "tramo", "sitio", "longitud_m", "n_fotogramas", "lat", "lon"]].to_string(index=False))
+    print(tramos[["id_via", "conjunto", "prueba", "tramo", "sitio", "ubicacion_fuente", "longitud_m", "n_fotogramas", "lat", "lon"]].to_string(index=False))
 
 
 if __name__ == "__main__":

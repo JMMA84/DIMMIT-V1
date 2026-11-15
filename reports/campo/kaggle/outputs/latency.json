@@ -1,9 +1,9 @@
 {
-  "imagenes": 131,
-  "detecciones": 413,
-  "ms_por_imagen_lote": 149.09040472889674,
-  "latencia_lote1_ms_p50": 102.17809677124023,
-  "latencia_lote1_ms_p95": 109.1864824295044,
+  "imagenes": 322,
+  "detecciones": 1238,
+  "ms_por_imagen_lote": 163.01951941496097,
+  "latencia_lote1_ms_p50": 118.10660362243652,
+  "latencia_lote1_ms_p95": 121.90381288528442,
   "dispositivo": "cpu",
   "imgsz": 640
 }

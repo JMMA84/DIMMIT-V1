@@ -5,8 +5,10 @@ Fuente: Mapa de Referencia de Bogotá (IDECA / Catastro), servicio público ArcG
   tabla 54 Estado superficial de calzada (Bueno / Regular / Malo, con fecha de evaluación del IDU)
 Las fotos de la toma no tienen GPS, así que la comparación es por zona (radio alrededor de un punto de
 referencia de configs/campo.yaml) y por tipo de superficie, no tramo a tramo.
-Salida: data/campo/idu/calzadas_estado.csv
+Salida: data/campo/idu/calzadas_estado.csv y calzadas.geojson (polígonos, para ubicar los puntos GPS)
 """
+import json
+
 import numpy as np
 import pandas as pd
 import requests
@@ -51,14 +53,16 @@ def download(lat, lon, radio_m):
     t["funcion"] = t["CALFUNCION"].map({0: "no_aplica", 1: "vehicular", 2: "peatonal"})
     t["dist_m"] = np.hypot((t["lat"] - lat) * 111320, (t["lon"] - lon) * 111320 * np.cos(np.radians(lat)))
     cols = ["CALCODIGO", "CALCIV", "funcion", "superficie", "grupo", "estado_idu", "ESTADO", "fecha_idu", "CALLONGITU", "CALANCHO", "lat", "lon", "dist_m"]
-    return t[cols].rename(columns={"CALCODIGO": "calcodigo", "CALCIV": "civ", "ESTADO": "estado_codigo", "CALLONGITU": "longitud_m", "CALANCHO": "ancho_m"}).sort_values("dist_m")
+    out = t[cols].rename(columns={"CALCODIGO": "calcodigo", "CALCIV": "civ", "ESTADO": "estado_codigo", "CALLONGITU": "longitud_m", "CALANCHO": "ancho_m"}).sort_values("dist_m")
+    return out, g
 
 
 def main():
     ref = load_cfg()["idu"]
-    t = download(ref["lat"], ref["lon"], ref["radio_m"])
+    t, g = download(ref["lat"], ref["lon"], ref["radio_m"])
     ensure_dir(OUT)
     t.to_csv(OUT / "calzadas_estado.csv", index=False)
+    (OUT / "calzadas.geojson").write_text(json.dumps(g))
     print(f"[ok] {len(t)} calzadas a ≤ {ref['radio_m']} m de {ref['referencia']} (IDU, {t['fecha_idu'].max()}) -> {OUT}")
     print(pd.crosstab(t["grupo"], t["estado_idu"], margins=True))
 

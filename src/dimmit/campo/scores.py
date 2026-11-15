@@ -47,6 +47,12 @@ def etiqueta(estado, prof_max_cm, maxconf_bache, cfg_et):
     return "prevencion"
 
 
+def estado_idu(score, cfg):
+    """Estado en la escala de 3 clases del IDU (bueno PCI >= 90, regular 56-89, malo < 56)."""
+    r = (cfg.get("calibracion") or {}).get("rangos_idu", {"bueno": 90, "regular": 56})
+    return "bueno" if score >= r["bueno"] else ("regular" if score >= r["regular"] else "malo")
+
+
 def load_depth(cfg):
     """{prueba: (serie, features)} del sensor ultrasónico según `pruebas[*].sensor` en configs/campo.yaml."""
     out = {}
@@ -84,15 +90,20 @@ def astm_weights(boxes, cfg_lab, cuts, severity_by_image):
     return w
 
 
-def frame_table(det, det_f, frames, cfg, severity_by_image):
+def image_quality_table(frames):
+    q = pd.DataFrame([image_quality(p) for p in frames["path"]], columns=["brillo", "contraste", "nitidez"])
+    q["image_id"] = frames["image_id"].to_numpy()
+    q["jpeg_kb"] = [__import__("os").stat(p).st_size / 1024 for p in frames["path"]]
+    return q
+
+
+def frame_table(det, det_f, frames, cfg, severity_by_image, quality=None):
     cfg_lab, cuts = pp.load_cfg(), pp.load_cutoffs()
     taus = pd.read_json(FEATURES / "vision_thresholds.json")["tau"].to_dict()
     ids = pd.Index(frames["image_id"])
     # --- modo RDD2020: features del pipeline v1 tal cual ------------------------------------
     f = frame_features(det, ids, taus, cfg_lab, cuts)
-    q = pd.DataFrame([image_quality(p) for p in frames["path"]], columns=["brillo", "contraste", "nitidez"])
-    q["image_id"] = frames["image_id"].to_numpy()
-    q["jpeg_kb"] = [__import__("os").stat(p).st_size / 1024 for p in frames["path"]]
+    q = quality if quality is not None else image_quality_table(frames)
     f = f.merge(q, on="image_id")
     d = det.assign(cls=det["class_id"].map(dict(enumerate(CLASS_KEYS))))
     d["tau"] = d["cls"].map(taus)
@@ -154,8 +165,9 @@ def _depth(g, nivel, prueba, depth, cfg, col):
 def via_table(fr, tramos, depth, cfg):
     cfg_lab = pp.load_cfg()
     rows = []
-    nivel_ag, col_ag = agg_level(fr)
-    groups = [("tramo", k, g) for k, g in fr.groupby("id_via")] + [(nivel_ag, k, g) for k, g in fr.groupby(col_ag)]
+    con_sitio = fr["id_sitio"].notna() if "id_sitio" in fr else pd.Series(False, index=fr.index)
+    groups = [("tramo", k, g) for k, g in fr.groupby("id_via")]
+    groups += [("sitio", k, g) for k, g in fr[con_sitio].groupby("id_sitio")] + [("prueba", k, g) for k, g in fr[~con_sitio].groupby("id_prueba")]
     for nivel, key, g in groups:
         prueba = g["prueba"].iloc[0] if nivel != "sitio" else f"Sitio_{int(g['sitio'].iloc[0])}"
         # modo campo (principal)
@@ -175,6 +187,9 @@ def via_table(fr, tramos, depth, cfg):
         feats = {"linea_base_cm": fs[0]["linea_base_cm"], "n_validas": sum(f["n_validas"] for f in fs), "n_lecturas": sum(f["n_lecturas"] for f in fs)} if fs else {}
         row = {
             "id_via": key, "nivel": nivel, "id_prueba": g["id_prueba"].iloc[0] if nivel != "sitio" else "", "prueba": prueba,
+            "conjunto": g["conjunto"].iloc[0] if "conjunto" in g else "evaluacion",
+            "ubicacion_fuente": g["ubicacion_fuente"].iloc[0] if "ubicacion_fuente" in g else "",
+            "calcodigo_idu": g["calcodigo_idu"].iloc[0] if "calcodigo_idu" in g else None,
             "sitio": g["sitio"].iloc[0] if "sitio" in g else np.nan, "superficie": ";".join(sorted(g["superficie"].unique())) if "superficie" in g else "asfalto", "id_sitio": g["id_sitio"].iloc[0] if "id_sitio" in g else None,
             "tramo": int(g["tramo"].iloc[0]) if nivel == "tramo" else -1, "fecha": g["fecha"].iloc[0],
             "n_fotogramas": int(len(g)), "lat": float(g["lat"].mean()), "lon": float(g["lon"].mean()),
@@ -184,7 +199,7 @@ def via_table(fr, tramos, depth, cfg):
             **{f"maxconf_{CLASS_SLUGS[c]}": float(g[f"maxconfcampo_{c}"].max()) for c in CLASS_KEYS},
             "area_danada_pct": float(100 * g["union_campo"].mean()),
             **{f"sub_score_{CLASS_SLUGS[c]}": float(pci[f"sub_{c}"]) for c in CLASS_KEYS},
-            "score_calidad": score, "estado": estado, "etiqueta": et, "accion_recomendada": rule_action(estado, dominante or "D00"),
+            "score_calidad": score, "estado": estado, "estado_idu_equivalente": estado_idu(score, cfg), "etiqueta": et, "accion_recomendada": rule_action(estado, dominante or "D00"),
             "profundidad_max_cm": prof["max"], "profundidad_media_cm": prof["media"], "profundidad_frac_bache": prof["frac"], "fuente_profundidad": prof["fuente"],
             "linea_base_cm": feats.get("linea_base_cm", np.nan), "lecturas_validas": feats.get("n_validas", 0), "lecturas_totales": feats.get("n_lecturas", 0),
             "severidad_bache_astm": astm_severity(prof["max"]) or "",
@@ -200,7 +215,8 @@ def via_table(fr, tramos, depth, cfg):
     t = tramos.set_index("id_via")
     for col in ("geohash7", "longitud_m", "hora_ini", "hora_fin", "gps_incertidumbre_m", "hash_imagenes", "lat_ini", "lon_ini", "lat_fin", "lon_fin"):
         vias[col] = vias["id_via"].map(t[col])
-    for k, g in tramos.groupby(col_ag):  # filas agregadas (prueba o sitio): agregados de sus tramos
+    ts = tramos["id_sitio"].notna() if "id_sitio" in tramos else pd.Series(False, index=tramos.index)
+    for k, g in list(tramos[ts].groupby("id_sitio")) + list(tramos[~ts].groupby("id_prueba")):  # filas agregadas: agregados de sus tramos
         m = vias["id_via"] == k
         vias.loc[m, "longitud_m"] = float(g["longitud_m"].sum(min_count=1))
         vias.loc[m, "hora_ini"], vias.loc[m, "hora_fin"] = g["hora_ini"].min(), g["hora_fin"].max()
@@ -227,12 +243,22 @@ def fusion_scores(fr, cfg_lab):
     return seg["pci_vis"].rename("score_red_fusion_vision")
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--det", default=None, help="carpeta con detections.parquet (por defecto reports/campo/kaggle/outputs o data/campo/det_local)")
-    args = ap.parse_args()
-    cfg = load_cfg()
-    det_dir = detector_dir(args.det)
+CALIB = FEAT / "calibracion_idu.json"
+
+
+def filtros_calibrados(cfg):
+    """Filtros de configs/campo.yaml con el umbral de confianza calibrado contra el IDU (si existe y se usa)."""
+    f = {**cfg["filtros"], "tau_campo": dict(cfg["filtros"]["tau_campo"])}
+    m = 1.0
+    if (cfg.get("calibracion") or {}).get("usar") and CALIB.exists():
+        m = float(json.loads(CALIB.read_text())["multiplicador"])
+        f["tau_campo"] = {k: round(v * m, 4) for k, v in f["tau_campo"].items()}
+    return f, m
+
+
+def prepare(cfg, det_arg=None):
+    """Todo lo que no depende de los filtros: detecciones, fotos, tramos, sensor, severidad, escalas y calidad de imagen."""
+    det_dir = detector_dir(det_arg)
     det = pd.read_parquet(det_dir / "detections.parquet")
     frames = pd.read_parquet(INDEX_CAMPO / "fotogramas.parquet")
     tramos = pd.read_parquet(INDEX_CAMPO / "tramos.parquet")
@@ -245,17 +271,39 @@ def main():
         frames.loc[m, "profundidad_cm_base40"] = align_normalized(serie, frames.loc[m, "t_norm"].to_numpy(), col="profundidad_cm_base40")
     # severidad ASTM del bache por foto (profundidad depurada y alineada); sin sensor -> tamaño aparente
     sev = {r.image_id: astm_severity(r.profundidad_cm) for r in frames.itertuples() if np.isfinite(r.profundidad_cm)}
-    # filtros anti falsos positivos (con consenso multi-escala si existen las corridas a otras escalas)
+    # corridas a otras escalas para el consenso multi-escala
     scales = {}
     for s in cfg["filtros"]["escalas"]["imgsz"]:
         p = CAMPO / f"det_local_{s}" / "detections.parquet"
         if p.exists():
             scales[str(s)] = pd.read_parquet(p)
-    det_f, resumen = apply_filters(det, frames, cfg["filtros"], scales or None)
-    fr = frame_table(det, det_f, frames, cfg, sev)
+    return {"det_dir": det_dir, "det": det, "frames": frames, "tramos": tramos, "depth": depth, "sev": sev, "scales": scales,
+            "quality": image_quality_table(frames)}
+
+
+def compute(ctx, cfg, filtros):
+    """Filtros -> features por foto -> score, estado y etiqueta por tramo/sitio/prueba."""
+    det, frames = ctx["det"], ctx["frames"]
+    det_f, resumen = apply_filters(det, frames, filtros, ctx["scales"] or None)
+    fr = frame_table(det, det_f, frames, cfg, ctx["sev"], ctx["quality"])
     for col in ("profundidad_cm", "profundidad_cm_base40"):
         fr[col] = fr["image_id"].map(frames.set_index("image_id")[col])
-    vias = via_table(fr, tramos, depth, cfg)
+    for col in ("conjunto", "ubicacion_fuente", "calcodigo_idu"):
+        if col in frames:
+            fr[col] = fr["image_id"].map(frames.set_index("image_id")[col])
+    vias = via_table(fr, ctx["tramos"], ctx["depth"], cfg)
+    return fr, vias, det_f, resumen
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--det", default=None, help="carpeta con detections.parquet (por defecto reports/campo/kaggle/outputs o data/campo/det_local)")
+    args = ap.parse_args()
+    cfg = load_cfg()
+    ctx = prepare(cfg, args.det)
+    det_dir, depth, scales = ctx["det_dir"], ctx["depth"], ctx["scales"]
+    filtros, m = filtros_calibrados(cfg)
+    fr, vias, det_f, resumen = compute(ctx, cfg, filtros)
     sec = fusion_scores(fr, pp.load_cfg())
     if sec is not None:
         vias["score_red_fusion_vision"] = vias["id_via"].map(sec)
@@ -266,10 +314,11 @@ def main():
     resumen.to_csv(FEAT / "filtros_resumen.csv")
     (FEAT / "fuente_detecciones.json").write_text(json.dumps({
         "detector_dir": str(det_dir.relative_to(REPO_ROOT)), "escalas_consenso": list(scales),
+        "calibracion_idu": {"multiplicador": m, "tau_campo_usado": filtros["tau_campo"]},
         "latencia": json.loads((det_dir / "latency.json").read_text()) if (det_dir / "latency.json").exists() else None,
         "sensor": {p: {k: f[k] for k in ("linea_base_cm", "n_lecturas", "n_validas", "n_fuera_de_rango", "n_nulas", "prof_max_cm", "severidad_astm")} for p, (_, f) in depth.items()}},
         indent=2, default=lambda x: None if isinstance(x, float) and x != x else x))
-    print(f"[ok] detecciones de {det_dir.relative_to(REPO_ROOT)}; escalas de consenso {list(scales)}; {len(fr)} fotos, {len(vias)} filas -> {FEAT}")
+    print(f"[ok] detecciones de {det_dir.relative_to(REPO_ROOT)}; escalas {list(scales)}; tau = {m:g} · tau_campo {filtros['tau_campo']}; {len(fr)} fotos, {len(vias)} filas -> {FEAT}")
     print(resumen.to_string())
     print(vias[["id_via", "nivel", "prueba", "tramo", "score_calidad", "estado", "etiqueta", "score_calidad_tau_rdd2020", "etiqueta_tau_rdd2020",
                                            "profundidad_max_cm", "profundidad_max_cm_base40", "danos_detectados", "confianza_modelo"]].to_string(index=False))
