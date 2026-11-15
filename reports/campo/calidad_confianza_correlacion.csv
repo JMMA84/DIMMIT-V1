@@ -1,254 +1,213 @@
 run_id,id_via,nivel,bloque,metrica,valor,ic95_inf,ic95_sup,n,nota
-campo-20261115-1939,VIA-01538ee502cc,tramo,calidad_imagen,brillo_media,134.4319,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,calidad_imagen,contraste_media,58.1147,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,calidad_imagen,nitidez_media,1353.0895,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,calidad_imagen,jpeg_kb_media,499.4978,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,9,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-01538ee502cc,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,9,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-01538ee502cc,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.0000,,,9,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,max_conf_media,0.1559,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,max_conf_max,0.4092,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,conf_media_detecciones_tau,0.1409,,,9,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.6667,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.3333,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,n_detecciones_por_foto_tau,1.7778,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.2222,,,9,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.3333,,,9,
-campo-20261115-1939,VIA-01538ee502cc,tramo,confianza_modelo,conf_media_detecciones_campo,0.2440,,,9,
-campo-20261115-1939,VIA-2985571a3698,tramo,calidad_imagen,brillo_media,148.9435,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,calidad_imagen,contraste_media,32.0070,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,calidad_imagen,nitidez_media,876.3533,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,calidad_imagen,jpeg_kb_media,346.2548,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,calidad_imagen,frac_fotos_borrosa,0.6087,,,23,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-2985571a3698,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,23,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-2985571a3698,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.3478,,,23,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,max_conf_media,0.1688,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,max_conf_max,0.3452,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,conf_media_detecciones_tau,0.1423,,,23,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.9565,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1739,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,n_detecciones_por_foto_tau,2.0870,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.3478,,,23,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.3913,,,23,
-campo-20261115-1939,VIA-2985571a3698,tramo,confianza_modelo,conf_media_detecciones_campo,0.2560,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,calidad_imagen,brillo_media,163.6510,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,calidad_imagen,contraste_media,22.0516,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,calidad_imagen,nitidez_media,1399.4016,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,calidad_imagen,jpeg_kb_media,498.5693,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,calidad_imagen,frac_fotos_borrosa,0.0870,,,23,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-57cac608141a,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,23,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-57cac608141a,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.7826,,,23,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,max_conf_media,0.1425,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,max_conf_max,0.3409,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,conf_media_detecciones_tau,0.1069,,,23,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.7391,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.2174,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,n_detecciones_por_foto_tau,4.3478,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.2609,,,23,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.3478,,,23,
-campo-20261115-1939,VIA-57cac608141a,tramo,confianza_modelo,conf_media_detecciones_campo,0.2805,,,23,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,calidad_imagen,brillo_media,125.3179,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,calidad_imagen,contraste_media,44.0353,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,calidad_imagen,nitidez_media,1135.5596,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,calidad_imagen,jpeg_kb_media,429.6824,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,calidad_imagen,frac_fotos_borrosa,0.3725,,,51,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,51,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.0000,,,51,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,max_conf_media,0.1470,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,max_conf_max,0.4705,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,conf_media_detecciones_tau,0.1305,,,51,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.8824,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1373,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,n_detecciones_por_foto_tau,2.4706,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.0784,,,51,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.0784,,,51,
-campo-20261115-1939,VIA-6a8c7dd60e98,tramo,confianza_modelo,conf_media_detecciones_campo,0.4039,,,51,
-campo-20261115-1939,VIA-75f714b86843,tramo,calidad_imagen,brillo_media,153.4053,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,calidad_imagen,contraste_media,25.1265,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,calidad_imagen,nitidez_media,923.9085,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,calidad_imagen,jpeg_kb_media,362.7780,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,calidad_imagen,frac_fotos_borrosa,0.1765,,,17,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-75f714b86843,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,17,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-75f714b86843,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.0000,,,17,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,max_conf_media,0.1089,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,max_conf_max,0.2287,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,conf_media_detecciones_tau,0.1184,,,17,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.6471,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.0000,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,n_detecciones_por_foto_tau,1.3529,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.0000,,,17,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.0000,,,17,
-campo-20261115-1939,VIA-75f714b86843,tramo,confianza_modelo,conf_media_detecciones_campo,,,,17,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,calidad_imagen,brillo_media,128.1246,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,calidad_imagen,contraste_media,56.2764,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,calidad_imagen,nitidez_media,1584.8957,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,calidad_imagen,jpeg_kb_media,447.1507,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,18,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,18,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.0000,,,18,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,max_conf_media,0.1309,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,max_conf_max,0.3273,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,conf_media_detecciones_tau,0.1099,,,18,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.8333,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1111,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,n_detecciones_por_foto_tau,1.8889,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.1667,,,18,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.1667,,,18,
-campo-20261115-1939,VIA-7fe064e60e0a,tramo,confianza_modelo,conf_media_detecciones_campo,0.2494,,,18,
-campo-20261115-1939,VIA-c321926ea46b,tramo,calidad_imagen,brillo_media,144.7663,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,calidad_imagen,contraste_media,39.8472,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,calidad_imagen,nitidez_media,1093.7223,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,calidad_imagen,jpeg_kb_media,335.2373,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,calidad_imagen,frac_fotos_borrosa,0.2500,,,20,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-c321926ea46b,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,20,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-c321926ea46b,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.2000,,,20,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,max_conf_media,0.1492,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,max_conf_max,0.2808,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,conf_media_detecciones_tau,0.1386,,,20,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.7500,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1000,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,n_detecciones_por_foto_tau,2.0000,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.2500,,,20,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.2500,,,20,
-campo-20261115-1939,VIA-c321926ea46b,tramo,confianza_modelo,conf_media_detecciones_campo,0.2209,,,20,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,calidad_imagen,brillo_media,158.6755,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,calidad_imagen,contraste_media,33.4467,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,calidad_imagen,nitidez_media,1383.9812,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,calidad_imagen,jpeg_kb_media,525.8335,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,19,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,19,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.7895,,,19,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,max_conf_media,0.1750,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,max_conf_max,0.3534,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,conf_media_detecciones_tau,0.1095,,,19,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,1.0000,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.2105,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,n_detecciones_por_foto_tau,5.5789,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.2632,,,19,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.5789,,,19,
-campo-20261115-1939,VIA-d502dbe6b2e6,tramo,confianza_modelo,conf_media_detecciones_campo,0.2588,,,19,
-campo-20261115-1939,VIA-edee8f48f254,tramo,calidad_imagen,brillo_media,128.3026,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,calidad_imagen,contraste_media,57.3301,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,calidad_imagen,nitidez_media,1406.6432,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,calidad_imagen,jpeg_kb_media,446.1962,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,11,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-edee8f48f254,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,11,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-edee8f48f254,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.0000,,,11,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,max_conf_media,0.1514,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,max_conf_max,0.3568,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,conf_media_detecciones_tau,0.1265,,,11,cajas con conf >= tau por clase
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.8182,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.2727,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,n_detecciones_por_foto_tau,2.6364,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.2727,,,11,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.2727,,,11,
-campo-20261115-1939,VIA-edee8f48f254,tramo,confianza_modelo,conf_media_detecciones_campo,0.3011,,,11,
-campo-20261115-1939,PRU-0e41b56f,prueba,calidad_imagen,brillo_media,126.0501,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,calidad_imagen,contraste_media,47.2286,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,calidad_imagen,nitidez_media,1252.7777,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,calidad_imagen,jpeg_kb_media,434.2393,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,calidad_imagen,frac_fotos_borrosa,0.2754,,,69,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-0e41b56f,prueba,calidad_imagen,frac_fotos_oscura,0.0000,,,69,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-0e41b56f,prueba,calidad_imagen,frac_fotos_sobreexpuesta,0.0000,,,69,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,max_conf_media,0.1428,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,max_conf_max,0.4705,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,conf_media_detecciones_tau,0.1254,,,69,cajas con conf >= tau por clase
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,frac_fotos_con_deteccion_tau,0.8696,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1304,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,n_detecciones_por_foto_tau,2.3188,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,frac_fotos_con_deteccion_campo,0.1014,,,69,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,n_detecciones_por_foto_campo,0.1014,,,69,
-campo-20261115-1939,PRU-0e41b56f,prueba,confianza_modelo,conf_media_detecciones_campo,0.3377,,,69,
-campo-20261115-1939,PRU-b964f224,prueba,calidad_imagen,brillo_media,155.5169,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,calidad_imagen,contraste_media,26.5159,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,calidad_imagen,nitidez_media,1080.1398,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,calidad_imagen,jpeg_kb_media,406.3203,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,calidad_imagen,frac_fotos_borrosa,0.3016,,,63,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-b964f224,prueba,calidad_imagen,frac_fotos_oscura,0.0000,,,63,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-b964f224,prueba,calidad_imagen,frac_fotos_sobreexpuesta,0.4127,,,63,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,max_conf_media,0.1431,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,max_conf_max,0.3452,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,conf_media_detecciones_tau,0.1250,,,63,cajas con conf >= tau por clase
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,frac_fotos_con_deteccion_tau,0.7937,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1429,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,n_detecciones_por_foto_tau,2.7143,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,frac_fotos_con_deteccion_campo,0.2222,,,63,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,n_detecciones_por_foto_campo,0.2698,,,63,
-campo-20261115-1939,PRU-b964f224,prueba,confianza_modelo,conf_media_detecciones_campo,0.2665,,,63,
-campo-20261115-1939,PRU-fa9806a6,prueba,calidad_imagen,brillo_media,144.5996,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,calidad_imagen,contraste_media,43.8321,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,calidad_imagen,nitidez_media,1285.1012,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,calidad_imagen,jpeg_kb_media,442.3597,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,calidad_imagen,frac_fotos_borrosa,0.0847,,,59,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-fa9806a6,prueba,calidad_imagen,frac_fotos_oscura,0.0000,,,59,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-fa9806a6,prueba,calidad_imagen,frac_fotos_sobreexpuesta,0.3220,,,59,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,max_conf_media,0.1589,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,max_conf_max,0.4092,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,conf_media_detecciones_tau,0.1254,,,59,cajas con conf >= tau por clase
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,frac_fotos_con_deteccion_tau,0.8305,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,frac_fotos_con_deteccion_conf25,0.2034,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,n_detecciones_por_foto_tau,3.2373,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,frac_fotos_con_deteccion_campo,0.2542,,,59,cajas que pasan las 4 capas de filtros
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,n_detecciones_por_foto_campo,0.3729,,,59,
-campo-20261115-1939,PRU-fa9806a6,prueba,confianza_modelo,conf_media_detecciones_campo,0.2527,,,59,
-campo-20261115-1939,LOTE,lote,deriva,psi_brillo,3.3876,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_contraste,5.5161,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_nitidez,5.0892,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_jpeg_kb,8.2831,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_max_conf,1.8600,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_pci_det,0.5586,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_n_D00,1.0695,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_n_D10,0.2626,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_n_D20,0.0501,,,191,OK; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,psi_n_D40,0.5401,,,191,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,LOTE,lote,deriva,dominio_auroc,1.0000,,,191,0.5 = indistinguible de RDD2020; 1.0 = otro dominio
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_brillo,3.3579,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_contraste,5.8043,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_nitidez,5.9164,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_jpeg_kb,8.2831,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_max_conf,2.0194,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_pci_det,0.6368,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_n_D00,1.9251,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_n_D10,0.2193,,,69,ALERTA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_n_D20,0.0688,,,69,OK; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,psi_n_D40,0.5336,,,69,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-0e41b56f,prueba,deriva,dominio_auroc,1.0000,,,69,0.5 = indistinguible de RDD2020; 1.0 = otro dominio
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_brillo,6.6372,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_contraste,7.5702,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_nitidez,6.4493,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_jpeg_kb,8.2831,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_max_conf,2.3981,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_pci_det,1.2512,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_n_D00,1.0936,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_n_D10,0.0136,,,63,OK; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_n_D20,0.0174,,,63,OK; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,psi_n_D40,0.6716,,,63,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-b964f224,prueba,deriva,dominio_auroc,1.0000,,,63,0.5 = indistinguible de RDD2020; 1.0 = otro dominio
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_brillo,4.2290,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_contraste,5.2492,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_nitidez,7.1402,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_jpeg_kb,8.2831,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_max_conf,2.3662,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_pci_det,0.5946,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_n_D00,1.0526,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_n_D10,0.8580,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_n_D20,0.0947,,,59,OK; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,psi_n_D40,0.4215,,,59,FALLA; referencia F∪T RDD2020 (n=7300)
-campo-20261115-1939,PRU-fa9806a6,prueba,deriva,dominio_auroc,1.0000,,,59,0.5 = indistinguible de RDD2020; 1.0 = otro dominio
-campo-20261115-1939,PRU-b964f224,prueba,correlacion_sensor,spearman_foto_profundidad_cm__maxconfcampo_D40,-0.0324,,,38,supuesto: alineación por tiempo normalizado 0-1
-campo-20261115-1939,PRU-b964f224,prueba,correlacion_sensor,spearman_foto_profundidad_cm__ncampo_D40,-0.0324,,,38,supuesto: alineación por tiempo normalizado 0-1
-campo-20261115-1939,PRU-b964f224,prueba,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D40,-0.1336,,,38,supuesto: alineación por tiempo normalizado 0-1
-campo-20261115-1939,PRU-b964f224,prueba,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D00,-0.0609,,,38,supuesto: alineación por tiempo normalizado 0-1 (control negativo)
-campo-20261115-1939,MUESTRA,foto,validacion_visual,precision_piel_cocodrilo_tau_rdd2020,0.4167,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=5 FP=7 FN=5
-campo-20261115-1939,MUESTRA,foto,validacion_visual,recall_piel_cocodrilo_tau_rdd2020,0.5000,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=5 FP=7 FN=5
-campo-20261115-1939,MUESTRA,foto,validacion_visual,precision_bache_tau_rdd2020,0.2000,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=3 FP=12 FN=0
-campo-20261115-1939,MUESTRA,foto,validacion_visual,recall_bache_tau_rdd2020,1.0000,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=3 FP=12 FN=0
-campo-20261115-1939,MUESTRA,foto,validacion_visual,precision_cualquier_dano_tau_rdd2020,0.7143,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=20 FP=8 FN=0
-campo-20261115-1939,MUESTRA,foto,validacion_visual,recall_cualquier_dano_tau_rdd2020,1.0000,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=20 FP=8 FN=0
-campo-20261115-1939,MUESTRA,foto,validacion_visual,precision_piel_cocodrilo_campo,0.5000,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=3 FP=3 FN=7
-campo-20261115-1939,MUESTRA,foto,validacion_visual,recall_piel_cocodrilo_campo,0.3000,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=3 FP=3 FN=7
-campo-20261115-1939,MUESTRA,foto,validacion_visual,precision_bache_campo,0.6667,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=2 FP=1 FN=1
-campo-20261115-1939,MUESTRA,foto,validacion_visual,recall_bache_campo,0.6667,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=2 FP=1 FN=1
-campo-20261115-1939,MUESTRA,foto,validacion_visual,precision_cualquier_dano_campo,0.6667,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=6 FP=3 FN=14
-campo-20261115-1939,MUESTRA,foto,validacion_visual,recall_cualquier_dano_campo,0.3000,,,31,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=6 FP=3 FN=14
-campo-20261115-1939,MUESTRA,foto,validacion_visual,parches_marcados_como_piel_cocodrilo_campo,0.5000,,,6,fracción de parches de asfalto (reparaciones) que el modo campo clasifica como piel de cocodrilo: confusión conocida del detector
+campo-20261115-2142,VIA-11eb58b9227a,tramo,calidad_imagen,brillo_media,144.4424,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,calidad_imagen,contraste_media,52.2670,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,calidad_imagen,nitidez_media,3335.8754,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,calidad_imagen,jpeg_kb_media,128.0925,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,22,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-11eb58b9227a,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,22,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-11eb58b9227a,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.0000,,,22,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,max_conf_media,0.1798,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,max_conf_max,0.3405,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,conf_media_detecciones_tau,0.1662,,,22,cajas con conf >= tau por clase
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.7727,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.2727,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,n_detecciones_por_foto_tau,2.4091,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.1364,,,22,cajas que pasan las 4 capas de filtros
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.1364,,,22,
+campo-20261115-2142,VIA-11eb58b9227a,tramo,confianza_modelo,conf_media_detecciones_campo,0.2634,,,22,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,calidad_imagen,brillo_media,147.6251,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,calidad_imagen,contraste_media,50.2651,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,calidad_imagen,nitidez_media,3244.4217,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,calidad_imagen,jpeg_kb_media,129.1986,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,25,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-42294e6bab9e,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,25,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-42294e6bab9e,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.0400,,,25,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,max_conf_media,0.1551,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,max_conf_max,0.3945,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,conf_media_detecciones_tau,0.1294,,,25,cajas con conf >= tau por clase
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.8000,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1200,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,n_detecciones_por_foto_tau,2.5600,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.0400,,,25,cajas que pasan las 4 capas de filtros
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.0400,,,25,
+campo-20261115-2142,VIA-42294e6bab9e,tramo,confianza_modelo,conf_media_detecciones_campo,0.2144,,,25,
+campo-20261115-2142,VIA-a083ff574a01,tramo,calidad_imagen,brillo_media,164.7964,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,calidad_imagen,contraste_media,38.4046,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,calidad_imagen,nitidez_media,2562.0454,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,calidad_imagen,jpeg_kb_media,124.7692,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,32,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-a083ff574a01,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,32,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-a083ff574a01,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.9375,,,32,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,max_conf_media,0.2706,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,max_conf_max,0.5431,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,conf_media_detecciones_tau,0.2514,,,32,cajas con conf >= tau por clase
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.8438,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.5625,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,n_detecciones_por_foto_tau,1.7500,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.0000,,,32,cajas que pasan las 4 capas de filtros
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.0000,,,32,
+campo-20261115-2142,VIA-a083ff574a01,tramo,confianza_modelo,conf_media_detecciones_campo,,,,32,
+campo-20261115-2142,VIA-a6946618547f,tramo,calidad_imagen,brillo_media,153.8191,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,calidad_imagen,contraste_media,40.0887,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,calidad_imagen,nitidez_media,2210.7273,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,calidad_imagen,jpeg_kb_media,124.3171,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,26,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-a6946618547f,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,26,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-a6946618547f,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.4615,,,26,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,max_conf_media,0.1197,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,max_conf_max,0.3766,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,conf_media_detecciones_tau,0.1198,,,26,cajas con conf >= tau por clase
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.6923,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1154,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,n_detecciones_por_foto_tau,1.8077,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.0000,,,26,cajas que pasan las 4 capas de filtros
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.0000,,,26,
+campo-20261115-2142,VIA-a6946618547f,tramo,confianza_modelo,conf_media_detecciones_campo,,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,calidad_imagen,brillo_media,167.3649,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,calidad_imagen,contraste_media,37.9829,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,calidad_imagen,nitidez_media,2443.4595,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,calidad_imagen,jpeg_kb_media,123.5280,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,calidad_imagen,frac_fotos_borrosa,0.0000,,,26,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-de196faec4d1,tramo,calidad_imagen,frac_fotos_oscura,0.0000,,,26,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-de196faec4d1,tramo,calidad_imagen,frac_fotos_sobreexpuesta,0.9231,,,26,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,max_conf_media,0.2846,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,max_conf_max,0.6728,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,conf_media_detecciones_tau,0.2724,,,26,cajas con conf >= tau por clase
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,frac_fotos_con_deteccion_tau,0.8462,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,frac_fotos_con_deteccion_conf25,0.4615,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,n_detecciones_por_foto_tau,1.4615,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,frac_fotos_con_deteccion_campo,0.0000,,,26,cajas que pasan las 4 capas de filtros
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,n_detecciones_por_foto_campo,0.0000,,,26,
+campo-20261115-2142,VIA-de196faec4d1,tramo,confianza_modelo,conf_media_detecciones_campo,,,,26,
+campo-20261115-2142,SIT-1963454e,sitio,calidad_imagen,brillo_media,148.8720,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,calidad_imagen,contraste_media,47.2439,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,calidad_imagen,nitidez_media,2903.8179,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,calidad_imagen,jpeg_kb_media,127.1266,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,calidad_imagen,frac_fotos_borrosa,0.0000,,,73,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,SIT-1963454e,sitio,calidad_imagen,frac_fotos_oscura,0.0000,,,73,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,SIT-1963454e,sitio,calidad_imagen,frac_fotos_sobreexpuesta,0.1781,,,73,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,max_conf_media,0.1499,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,max_conf_max,0.3945,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,conf_media_detecciones_tau,0.1376,,,73,cajas con conf >= tau por clase
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,frac_fotos_con_deteccion_tau,0.7534,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,frac_fotos_con_deteccion_conf25,0.1644,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,n_detecciones_por_foto_tau,2.2466,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,frac_fotos_con_deteccion_campo,0.0548,,,73,cajas que pasan las 4 capas de filtros
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,n_detecciones_por_foto_campo,0.0548,,,73,
+campo-20261115-2142,SIT-1963454e,sitio,confianza_modelo,conf_media_detecciones_campo,0.2512,,,73,
+campo-20261115-2142,SIT-6934c70f,sitio,calidad_imagen,brillo_media,165.9478,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,calidad_imagen,contraste_media,38.2156,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,calidad_imagen,nitidez_media,2508.8862,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,calidad_imagen,jpeg_kb_media,124.2128,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,calidad_imagen,frac_fotos_borrosa,0.0000,,,58,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,SIT-6934c70f,sitio,calidad_imagen,frac_fotos_oscura,0.0000,,,58,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,SIT-6934c70f,sitio,calidad_imagen,frac_fotos_sobreexpuesta,0.9310,,,58,"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,max_conf_media,0.2769,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,max_conf_max,0.6728,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,conf_media_detecciones_tau,0.2609,,,58,cajas con conf >= tau por clase
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,frac_fotos_con_deteccion_tau,0.8448,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,frac_fotos_con_deteccion_conf25,0.5172,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,n_detecciones_por_foto_tau,1.6207,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,frac_fotos_con_deteccion_campo,0.0000,,,58,cajas que pasan las 4 capas de filtros
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,n_detecciones_por_foto_campo,0.0000,,,58,
+campo-20261115-2142,SIT-6934c70f,sitio,confianza_modelo,conf_media_detecciones_campo,,,,58,
+campo-20261115-2142,LOTE,lote,deriva,psi_brillo,6.5151,,,131,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_contraste,6.0060,,,131,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_nitidez,3.9104,,,131,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_jpeg_kb,7.6336,,,131,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_max_conf,0.9598,,,131,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_pci_det,0.5960,,,131,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_n_D00,0.3001,,,131,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_n_D10,0.0749,,,131,OK; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_n_D20,0.2358,,,131,ALERTA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,psi_n_D40,0.2175,,,131,ALERTA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,LOTE,lote,deriva,dominio_auroc,0.9920,,,131,0.5 = indistinguible de RDD2020; 1.0 = otro dominio
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_brillo,6.2214,,,73,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_contraste,5.7411,,,73,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_nitidez,3.6756,,,73,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_jpeg_kb,7.5147,,,73,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_max_conf,1.6155,,,73,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_pci_det,0.2244,,,73,ALERTA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_n_D00,0.1295,,,73,ALERTA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_n_D10,0.0147,,,73,OK; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_n_D20,0.0161,,,73,OK; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,psi_n_D40,0.3883,,,73,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-1963454e,sitio,deriva,dominio_auroc,0.9906,,,73,0.5 = indistinguible de RDD2020; 1.0 = otro dominio
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_brillo,8.2831,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_contraste,7.5530,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_nitidez,5.6851,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_jpeg_kb,8.2831,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_max_conf,1.8195,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_pci_det,3.2311,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_n_D00,1.9251,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_n_D10,0.8529,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_n_D20,1.0434,,,58,FALLA; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,psi_n_D40,0.0655,,,58,OK; referencia F∪T RDD2020 (n=7300)
+campo-20261115-2142,SIT-6934c70f,sitio,deriva,dominio_auroc,0.9960,,,58,0.5 = indistinguible de RDD2020; 1.0 = otro dominio
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,spearman_profundidad_max_cm__n_baches,0.7071,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,pearson_profundidad_max_cm__n_baches,0.6611,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,spearman_profundidad_max_cm__maxconf_baches,0.7071,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,pearson_profundidad_max_cm__maxconf_baches,0.6611,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,spearman_profundidad_media_cm__n_baches,0.0000,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,pearson_profundidad_media_cm__n_baches,0.2223,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,spearman_profundidad_frac_bache__frac_fotos_baches,0.0000,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,pearson_profundidad_frac_bache__frac_fotos_baches,-0.0478,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,spearman_profundidad_max_cm__score_calidad,-0.2236,-0.8750,-0.1081,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,pearson_profundidad_max_cm__score_calidad,-0.5532,,,5,"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,spearman_profundidad_max_cm__n_grieta_longitudinal,,,,5,control negativo: no debería correlacionar
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,pearson_profundidad_max_cm__n_grieta_longitudinal,,,,5,control negativo: no debería correlacionar
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,spearman_profundidad_max_cm_base40__n_baches,0.7071,,,5,firmware: distancia − 40 cm sin depurar (antes)
+campo-20261115-2142,LOTE,tramo,correlacion_sensor,pearson_profundidad_max_cm_base40__n_baches,0.6611,,,5,firmware: distancia − 40 cm sin depurar (antes)
+campo-20261115-2142,VIA-a083ff574a01,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconfcampo_D40,,,,32,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-a083ff574a01,tramo,correlacion_sensor,spearman_foto_profundidad_cm__ncampo_D40,,,,32,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-a083ff574a01,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D40,-0.1174,,,32,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-a083ff574a01,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D00,,,,32,supuesto: alineación por orden de fotos 0-1 (control negativo)
+campo-20261115-2142,VIA-de196faec4d1,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconfcampo_D40,,,,26,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-de196faec4d1,tramo,correlacion_sensor,spearman_foto_profundidad_cm__ncampo_D40,,,,26,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-de196faec4d1,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D40,-0.2034,,,26,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-de196faec4d1,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D00,,,,26,supuesto: alineación por orden de fotos 0-1 (control negativo)
+campo-20261115-2142,VIA-a6946618547f,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconfcampo_D40,,,,26,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-a6946618547f,tramo,correlacion_sensor,spearman_foto_profundidad_cm__ncampo_D40,,,,26,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-a6946618547f,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D40,0.4972,,,26,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-a6946618547f,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D00,0.0115,,,26,supuesto: alineación por orden de fotos 0-1 (control negativo)
+campo-20261115-2142,VIA-42294e6bab9e,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconfcampo_D40,0.0285,,,25,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-42294e6bab9e,tramo,correlacion_sensor,spearman_foto_profundidad_cm__ncampo_D40,0.0285,,,25,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-42294e6bab9e,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D40,0.1636,,,25,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-42294e6bab9e,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D00,-0.1755,,,25,supuesto: alineación por orden de fotos 0-1 (control negativo)
+campo-20261115-2142,VIA-11eb58b9227a,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconfcampo_D40,,,,22,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-11eb58b9227a,tramo,correlacion_sensor,spearman_foto_profundidad_cm__ncampo_D40,,,,22,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-11eb58b9227a,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D40,0.0980,,,22,supuesto: alineación por orden de fotos 0-1
+campo-20261115-2142,VIA-11eb58b9227a,tramo,correlacion_sensor,spearman_foto_profundidad_cm__maxconf_D00,-0.2103,,,22,supuesto: alineación por orden de fotos 0-1 (control negativo)
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,score_calidad_desv_est,12.0027,,,3,3 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,score_calidad_rango,22.7284,,,3,3 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,score_calidad_tau_rdd2020_desv_est,8.1783,,,3,3 tomas del sitio; rango = máx − mín (antes)
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,score_calidad_tau_rdd2020_rango,14.6917,,,3,3 tomas del sitio; rango = máx − mín (antes)
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,profundidad_max_cm_desv_est,8.8932,,,3,3 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,profundidad_max_cm_rango,17.5100,,,3,3 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,profundidad_media_cm_desv_est,1.7058,,,3,3 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,profundidad_media_cm_rango,3.2213,,,3,3 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,etiqueta_coincide,1.0000,,,3,1 = todas las tomas con la misma etiqueta
+campo-20261115-2142,SIT-1963454e,sitio,repetibilidad,etiqueta_coincide_tau_rdd2020,1.0000,,,3,antes
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,score_calidad_desv_est,0.0000,,,2,2 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,score_calidad_rango,0.0000,,,2,2 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,score_calidad_tau_rdd2020_desv_est,2.3819,,,2,2 tomas del sitio; rango = máx − mín (antes)
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,score_calidad_tau_rdd2020_rango,3.3685,,,2,2 tomas del sitio; rango = máx − mín (antes)
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,profundidad_max_cm_desv_est,8.2378,,,2,2 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,profundidad_max_cm_rango,11.6500,,,2,2 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,profundidad_media_cm_desv_est,0.6000,,,2,2 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,profundidad_media_cm_rango,0.8486,,,2,2 tomas del sitio; rango = máx − mín
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,etiqueta_coincide,1.0000,,,2,1 = todas las tomas con la misma etiqueta
+campo-20261115-2142,SIT-6934c70f,sitio,repetibilidad,etiqueta_coincide_tau_rdd2020,1.0000,,,2,antes
+campo-20261115-2142,MUESTRA,foto,validacion_visual,precision_piel_cocodrilo_tau_rdd2020,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,recall_piel_cocodrilo_tau_rdd2020,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,precision_bache_tau_rdd2020,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,recall_bache_tau_rdd2020,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,precision_cualquier_dano_tau_rdd2020,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,recall_cualquier_dano_tau_rdd2020,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,precision_piel_cocodrilo_campo,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,recall_piel_cocodrilo_campo,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,precision_bache_campo,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,recall_bache_campo,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,precision_cualquier_dano_campo,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,recall_cualquier_dano_campo,0.0000,,,0,revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0
+campo-20261115-2142,MUESTRA,foto,validacion_visual,parches_marcados_como_piel_cocodrilo_campo,,,,0,fracción de parches de asfalto (reparaciones) que el modo campo clasifica como piel de cocodrilo: confusión conocida del detector

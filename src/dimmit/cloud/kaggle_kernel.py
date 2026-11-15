@@ -114,14 +114,17 @@ def download(env):
         shutil.copy(p, raw / name)
 
 
+CAMPO_GLOB = os.environ.get("DIMMIT_CAMPO_GLOB", "Prueba_*/*.jpg")  # data/campo/fotos/<prueba>/<foto>.jpg
+
+
 def find_campo_images():
     """Carpeta con las fotos de campo: DIMMIT_CAMPO (prueba local) o el dataset dimmit-campo."""
     if os.environ.get("DIMMIT_CAMPO"):
         return Path(os.environ["DIMMIT_CAMPO"])
-    hits = glob.glob("/kaggle/input/**/grabacion_*/", recursive=True)
+    hits = [h for h in glob.glob(f"/kaggle/input/**/{CAMPO_GLOB}", recursive=True) if os.path.isfile(h)]
     if not hits:
-        raise FileNotFoundError("no encontré carpetas grabacion_* en /kaggle/input")
-    return Path(hits[0]).parent
+        raise FileNotFoundError(f"no encontré fotos {CAMPO_GLOB} en /kaggle/input")
+    return Path(hits[0]).parent.parent
 
 
 def infer(env, t0):
@@ -130,7 +133,7 @@ def infer(env, t0):
 
     weights = ROOT / "models/release/yolov10n_rdd2020.pt"
     campo = find_campo_images()
-    paths = sorted(str(p) for p in campo.glob("grabacion_*/*.jpg"))
+    paths = sorted(str(p) for p in campo.glob(CAMPO_GLOB))
     if SMOKE:
         paths = paths[:SMOKE]
     (ROOT / "campo.txt").write_text("\n".join(paths) + "\n")

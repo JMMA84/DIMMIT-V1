@@ -21,6 +21,9 @@ data/campo/index/*
 !data/campo/index/manifiesto.csv
 !data/campo/index/tramos.parquet
 !data/campo/index/revision_visual_31.csv
+!data/campo/idu/
+data/campo/idu/*
+!data/campo/idu/calzadas_estado.csv
 !data/campo/referencia/
 !data/campo/features/
 data/campo/features/*

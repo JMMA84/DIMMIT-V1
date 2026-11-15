@@ -48,16 +48,24 @@ def etiqueta(estado, prof_max_cm, maxconf_bache, cfg_et):
 
 
 def load_depth(cfg):
-    """{prueba: (serie, features)} del sensor ultrasónico según el mapa de configs/campo.yaml."""
+    """{prueba: (serie, features)} del sensor ultrasónico según `pruebas[*].sensor` en configs/campo.yaml."""
     out = {}
-    folder = RAW / "tomadedatos"
     u = cfg["ultrasonico"]
-    for prueba, tag in u["mapa"].items():
-        hits = sorted(folder.glob(f"*{tag}*.txt"))
-        if hits:
-            s = read_depth(hits[0], u["linea_base_cm"], u["rango_max_cm"], u.get("firmware_base_cm", 40.0))
-            out[prueba] = (s, depth_features(s, u["umbral_bache_cm"]))
+    for prueba, spec in cfg["pruebas"].items():
+        path = RAW / spec["sensor"] if spec.get("sensor") else None
+        if path is None or not path.exists():
+            print(f"[aviso] {prueba}: sin archivo de sensor ({spec.get('sensor')})")
+            continue
+        s = read_depth(path, u["linea_base_cm"], u["rango_max_cm"], u.get("firmware_base_cm", 40.0))
+        out[prueba] = (s, depth_features(s, u["umbral_bache_cm"]))
     return out
+
+
+def agg_level(fr):
+    """Nivel agregado: "sitio" (tomas repetidas del mismo lugar) si las pruebas lo declaran; si no, "prueba"."""
+    if "id_sitio" in fr and fr["id_sitio"].notna().all():
+        return "sitio", "id_sitio"
+    return "prueba", "id_prueba"
 
 
 def astm_weights(boxes, cfg_lab, cuts, severity_by_image):
@@ -109,6 +117,7 @@ def frame_table(det, det_f, frames, cfg, severity_by_image):
     f["severidad_bache_astm"] = f["image_id"].map(severity_by_image)
     base = ["image_id", "path", "prueba", "id_prueba", "id_via", "tramo", "fecha", "timestamp", "lat", "lon", "sat", "vel_ms", "gps_dt_s",
             "gps_incertidumbre_m", "dist_acum_m", "t_norm", "hash_imagen"]
+    base += [c for c in ("sitio", "id_sitio", "superficie", "con_gps", "archivo_original") if c in frames]
     return frames[base].merge(f, on="image_id")
 
 
@@ -120,13 +129,15 @@ def _score(g, prefix, cfg_lab):
 
 
 def _depth(g, nivel, prueba, depth, cfg, col):
-    """Profundidad asociada: por prueba la serie completa, por tramo las lecturas alineadas a sus fotos."""
+    """Profundidad asociada: por prueba o sitio las series completas, por tramo las lecturas alineadas a sus fotos."""
     out = {"max": np.nan, "media": np.nan, "frac": np.nan, "fuente": "sin_sensor"}
-    if prueba not in depth:
+    pruebas = [q for q in g["prueba"].unique() if q in depth]
+    if not pruebas:
         return out
-    serie, feats = depth[prueba]
-    if nivel == "prueba":
-        p = serie[col].to_numpy(float)
+    serie, feats = depth[pruebas[0]]
+    completa = nivel != "tramo" or (g["t_norm"].min() <= 0 and g["t_norm"].max() >= 1)  # tramo = prueba entera (sin GPS)
+    if completa:
+        p = np.concatenate([depth[q][0][col].to_numpy(float) for q in pruebas])
         p = p[np.isfinite(p)]
         if not len(p):
             return {**out, "fuente": "sin_lecturas_validas"}
@@ -143,9 +154,10 @@ def _depth(g, nivel, prueba, depth, cfg, col):
 def via_table(fr, tramos, depth, cfg):
     cfg_lab = pp.load_cfg()
     rows = []
-    groups = [("tramo", k, g) for k, g in fr.groupby("id_via")] + [("prueba", k, g) for k, g in fr.groupby("id_prueba")]
+    nivel_ag, col_ag = agg_level(fr)
+    groups = [("tramo", k, g) for k, g in fr.groupby("id_via")] + [(nivel_ag, k, g) for k, g in fr.groupby(col_ag)]
     for nivel, key, g in groups:
-        prueba = g["prueba"].iloc[0]
+        prueba = g["prueba"].iloc[0] if nivel != "sitio" else f"Sitio_{int(g['sitio'].iloc[0])}"
         # modo campo (principal)
         score, pci = _score(g, "rhocampo", cfg_lab)
         estado = str(pp.state_of([score], cfg_lab)[0])
@@ -159,9 +171,11 @@ def via_table(fr, tramos, depth, cfg):
         estado_r = str(pp.state_of([score_r], cfg_lab)[0])
         prof_r = _depth(g, nivel, prueba, depth, cfg, "profundidad_cm_base40")
         et_r = etiqueta(estado_r, prof_r["max"], float(g["maxconf_D40"].max()), cfg["etiqueta"])
-        feats = depth[prueba][1] if prueba in depth else {}
+        fs = [depth[q][1] for q in g["prueba"].unique() if q in depth]
+        feats = {"linea_base_cm": fs[0]["linea_base_cm"], "n_validas": sum(f["n_validas"] for f in fs), "n_lecturas": sum(f["n_lecturas"] for f in fs)} if fs else {}
         row = {
-            "id_via": key if nivel == "tramo" else g["id_prueba"].iloc[0], "nivel": nivel, "id_prueba": g["id_prueba"].iloc[0], "prueba": prueba,
+            "id_via": key, "nivel": nivel, "id_prueba": g["id_prueba"].iloc[0] if nivel != "sitio" else "", "prueba": prueba,
+            "sitio": g["sitio"].iloc[0] if "sitio" in g else np.nan, "superficie": ";".join(sorted(g["superficie"].unique())) if "superficie" in g else "asfalto", "id_sitio": g["id_sitio"].iloc[0] if "id_sitio" in g else None,
             "tramo": int(g["tramo"].iloc[0]) if nivel == "tramo" else -1, "fecha": g["fecha"].iloc[0],
             "n_fotogramas": int(len(g)), "lat": float(g["lat"].mean()), "lon": float(g["lon"].mean()),
             "danos_detectados": ";".join(CLASS_SLUGS[c] for c in presentes), "dano_dominante": CLASS_SLUGS[dominante] if dominante else "",
@@ -186,12 +200,13 @@ def via_table(fr, tramos, depth, cfg):
     t = tramos.set_index("id_via")
     for col in ("geohash7", "longitud_m", "hora_ini", "hora_fin", "gps_incertidumbre_m", "hash_imagenes", "lat_ini", "lon_ini", "lat_fin", "lon_fin"):
         vias[col] = vias["id_via"].map(t[col])
-    for k, g in tramos.groupby("id_prueba"):  # filas por prueba: agregados de sus tramos
+    for k, g in tramos.groupby(col_ag):  # filas agregadas (prueba o sitio): agregados de sus tramos
         m = vias["id_via"] == k
-        vias.loc[m, "longitud_m"] = float(g["longitud_m"].sum())
+        vias.loc[m, "longitud_m"] = float(g["longitud_m"].sum(min_count=1))
         vias.loc[m, "hora_ini"], vias.loc[m, "hora_fin"] = g["hora_ini"].min(), g["hora_fin"].max()
         vias.loc[m, "gps_incertidumbre_m"] = float(g["gps_incertidumbre_m"].max())
-        vias.loc[m, "geohash7"] = encode(float(vias.loc[m, "lat"].iloc[0]), float(vias.loc[m, "lon"].iloc[0]), 7)
+        lat0, lon0 = float(vias.loc[m, "lat"].iloc[0]), float(vias.loc[m, "lon"].iloc[0])
+        vias.loc[m, "geohash7"] = encode(lat0, lon0, 7) if np.isfinite(lat0) else None
         vias.loc[m, "hash_imagenes"] = hashlib.sha1("".join(sorted(g["hash_imagenes"])).encode()).hexdigest()[:12]
     return vias
 
@@ -256,7 +271,7 @@ def main():
         indent=2, default=lambda x: None if isinstance(x, float) and x != x else x))
     print(f"[ok] detecciones de {det_dir.relative_to(REPO_ROOT)}; escalas de consenso {list(scales)}; {len(fr)} fotos, {len(vias)} filas -> {FEAT}")
     print(resumen.to_string())
-    print(vias[vias["nivel"] == "tramo"][["id_via", "prueba", "tramo", "score_calidad", "estado", "etiqueta", "score_calidad_tau_rdd2020", "etiqueta_tau_rdd2020",
+    print(vias[["id_via", "nivel", "prueba", "tramo", "score_calidad", "estado", "etiqueta", "score_calidad_tau_rdd2020", "etiqueta_tau_rdd2020",
                                            "profundidad_max_cm", "profundidad_max_cm_base40", "danos_detectados", "confianza_modelo"]].to_string(index=False))
 
 

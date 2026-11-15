@@ -1,6 +1,6 @@
 """Las dos salidas finales de campo (CSV + JSON) más el detalle por foto y el diccionario.
 
-reports/campo/vias_clasificacion.{csv,json}            una fila por tramo (id_via) y por prueba
+reports/campo/vias_clasificacion.{csv,json}            una fila por tramo (id_via) y por prueba o sitio
 reports/campo/calidad_confianza_correlacion.{csv,json} formato largo: calidad, confianza, deriva, correlación
 reports/campo/fotogramas_detalle.csv                   una fila por foto (trazabilidad)
 reports/campo/diccionario_campo.csv
@@ -10,19 +10,22 @@ import time
 
 import pandas as pd
 
-from dimmit.campo import OUT_CAMPO
+from dimmit.campo import OUT_CAMPO, load_cfg
 from dimmit.campo.scores import FEAT
 from dimmit.utils.io import CLASS_SLUGS, ensure_dir
 
-VERSION_DETECTOR = "yolov10n_rdd2020 (Kaggle CPU, 12 épocas, 416 px)"
+VERSION_DETECTOR = "yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a {imgsz} px)"
 
 COLS_VIAS = [
-    ("id_via", "ID único del tramo (VIA-<sha1 de fecha|prueba|tramo|centroide>) o de la prueba (PRU-…)"),
-    ("nivel", "tramo (~10 m) o prueba (recorrido completo)"),
-    ("id_prueba", "ID de la prueba a la que pertenece"), ("prueba", "nombre de la carpeta de grabación"), ("tramo", "índice del tramo dentro de la prueba (-1 = fila de prueba)"),
-    ("fecha", "fecha de captura"), ("hora_ini", "hora local de la primera foto"), ("hora_fin", "hora local de la última foto"),
-    ("lat", "latitud del centroide (WGS84)"), ("lon", "longitud del centroide"), ("geohash7", "geohash de 7 caracteres (~150 m)"),
-    ("longitud_m", "longitud recorrida según GPS suavizado"), ("gps_incertidumbre_m", "incertidumbre nominal de posición"), ("n_fotogramas", "fotos del tramo"),
+    ("id_via", "ID único: tramo VIA-<sha1 de fecha|prueba|tramo|centroide GPS, o hash de sus fotos si no hay GPS>; prueba PRU-…; sitio SIT-…"),
+    ("nivel", "tramo (con GPS ~10 m; sin GPS la prueba completa), prueba (recorrido con GPS) o sitio (tomas repetidas del mismo lugar)"),
+    ("id_prueba", "ID de la prueba a la que pertenece (vacío en filas de sitio)"), ("prueba", "nombre de la prueba (Sitio_N en filas de sitio)"),
+    ("sitio", "sitio de medición (las tomas repetidas comparten sitio)"),
+    ("superficie", "asfalto / adoquin (registrada en campo); en adoquín solo cuentan los baches"), ("id_sitio", "ID del sitio (SIT-<sha1 de fecha|sitio>)"),
+    ("tramo", "índice del tramo dentro de la prueba (-1 = fila agregada)"),
+    ("fecha", "fecha de captura"), ("hora_ini", "hora local de la primera foto (sin GPS: hora de envío)"), ("hora_fin", "hora local de la última foto (sin GPS: hora de envío)"),
+    ("lat", "latitud del centroide (WGS84; vacío sin GPS)"), ("lon", "longitud del centroide (vacío sin GPS)"), ("geohash7", "geohash de 7 caracteres (~150 m; vacío sin GPS)"),
+    ("longitud_m", "longitud recorrida según GPS suavizado (vacío sin GPS)"), ("gps_incertidumbre_m", "incertidumbre nominal de posición (vacío sin GPS)"), ("n_fotogramas", "fotos del tramo"),
     ("danos_detectados", "clases presentes en ≥ 20 % de las fotos (cajas que pasan los filtros del modo campo)"), ("dano_dominante", "clase con mayor valor deducido"),
     *[(f"n_{s}", f"cajas de {s} conservadas por el modo campo (suma sobre fotos)") for s in CLASS_SLUGS.values()],
     ("area_danada_pct", "porcentaje medio de la imagen cubierto por cajas conservadas"),
@@ -37,7 +40,7 @@ COLS_VIAS = [
     ("profundidad_frac_bache", "fracción de lecturas válidas ≥ umbral de bache (3 cm)"), ("profundidad_max_cm_base40", "antes: profundidad máxima del firmware (distancia − 40 cm, sin depurar)"),
     ("linea_base_cm", "altura del sensor sobre pavimento plano (cm)"), ("lecturas_validas", "lecturas del sensor tras descartar nulas y > 35 cm (posicionamiento y apagado)"),
     ("lecturas_totales", "lecturas crudas del sensor en la prueba"), ("severidad_bache_astm", "severidad del bache por profundidad (ASTM D6433): L < 2.5 cm, M 2.5–5, H > 5"),
-    ("fuente_profundidad", "cómo se asoció la profundidad (prueba completa / alineación por tiempo normalizado / sin sensor)"),
+    ("fuente_profundidad", "cómo se asoció la profundidad (serie completa / alineación por posición 0–1 dentro de la prueba / sin sensor)"),
     ("confianza_modelo", "confianza media de las cajas conservadas de la clase dominante"), ("frac_fotos_con_deteccion", "fotos con alguna caja conservada"),
     ("brillo_media", "brillo medio (0–255)"), ("nitidez_media", "varianza de bordes (mayor = más nítida)"), ("frac_fotos_borrosa", "fotos bajo el p05 de nitidez de RDD2020"),
     ("frac_fotos_sobreexpuesta", "fotos sobre el p98 de brillo de RDD2020"),
@@ -49,9 +52,9 @@ COLS_VIAS = [
 def main():
     run_id = time.strftime("campo-%Y%m%d-%H%M")
     vias = pd.read_parquet(FEAT / "vias.parquet")
-    vias["version_detector"], vias["run_id"] = VERSION_DETECTOR, run_id
+    vias["version_detector"], vias["run_id"] = VERSION_DETECTOR.format(imgsz=load_cfg()["inferencia"]["imgsz"]), run_id
     cols = [c for c, _ in COLS_VIAS if c in vias]
-    vias = vias.sort_values(["nivel", "prueba", "tramo"], ascending=[False, True, True])[cols]
+    vias = vias.sort_values(["nivel", "prueba", "tramo"], ascending=[False, True, True], key=lambda c: c.map({"tramo": 2, "prueba": 1, "sitio": 0}) if c.name == "nivel" else c)[cols]
     ensure_dir(OUT_CAMPO)
     vias.to_csv(OUT_CAMPO / "vias_clasificacion.csv", index=False, float_format="%.4f")
     vias.to_json(OUT_CAMPO / "vias_clasificacion.json", orient="records", force_ascii=False, indent=1)
@@ -63,6 +66,7 @@ def main():
     # detalle por foto: solo lo que usa el modo campo (clase, confianza y geometría de las cajas conservadas)
     det_cols = ["image_id", "prueba", "id_via", "tramo", "timestamp", "lat", "lon", "gps_dt_s", "t_norm", "profundidad_cm", "severidad_bache_astm",
                 "brillo", "nitidez", "borrosa", "sobreexpuesta", "n_detecciones_campo", "max_conf_campo", "pci_campo", "hash_imagen"]
+    det_cols += [c for c in ("sitio", "superficie", "archivo_original") if c in fr]
     det_cols += [c for c in fr.columns if c.startswith(("ncampo_", "maxconfcampo_"))]
     fr[det_cols].to_csv(OUT_CAMPO / "fotogramas_detalle.csv", index=False, float_format="%.4f")
     dic = pd.DataFrame(COLS_VIAS, columns=["columna", "descripcion"])
