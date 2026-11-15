@@ -94,6 +94,29 @@ make test validate-data
 Variables de entorno: `~/.kaggle/access_token` (Kaggle) y, opcionalmente, `ANTHROPIC_API_KEY`
 para las descripciones con Claude (`make describe LLM=1`).
 
+## Datos de campo propios (`src/dimmit/campo/`)
+
+Toma del 5-oct-2026 en La Candelaria: fotos a ~2 Hz, GPX del teléfono y un sensor ultrasónico de
+profundidad de bache (Arduino). La etapa de campo no usa el simulador ni la rama de sensores: el
+score sale solo de visión en **modo campo** (umbral por clase con precisión ≥ 50 % en RDD2020, filtro
+de bandas y de región de vía, persistencia entre fotos y consenso multi-escala), la línea base del
+ultrasónico se depura (sin lecturas nulas ni > 35 cm del posicionamiento y apagado del bastón), la
+profundidad es distancia − 8 cm (altura del sensor sobre pavimento plano) y fija la
+severidad del bache (ASTM D6433) y puede subir la etiqueta (prevención / mantenimiento / intervención).
+El modo RDD2020 (umbral original, sin filtros) se conserva como columnas `*_tau_rdd2020`.
+
+```bash
+make campo-ingest                       # Drive público -> data/campo/raw + manifiesto sha1 + tramos de 10 m con id_via
+make kaggle-bundle campo-dataset        # bundle con los pesos release + dataset privado dimmit-campo
+make campo-infer && make campo-pull     # kernel de solo inferencia en Kaggle -> reports/campo/kaggle/outputs
+make campo-local && make campo          # detecciones a 416/640/832 px + scores, calidad, salidas y presentación v2
+```
+
+Salidas en `reports/campo/`: `vias_clasificacion.{csv,json}` (ID por tramo, daños, score, estado,
+etiqueta, profundidad, lat/lon), `calidad_confianza_correlacion.{csv,json}` (formato largo),
+`fotogramas_detalle.csv`, `diccionario_campo.csv`, `dimmit_presentacion.html` y
+`analisis_<fecha>.md` con las conclusiones.
+
 ## Estructura
 
 ```

@@ -1,0 +1,232 @@
+{
+ "fuente": "test de RDD2020 (3 folds T), IoU >= 0.5, emparejamiento voraz por confianza",
+ "precision_objetivo": 0.5,
+ "tau_campo": {
+  "D00": 0.25,
+  "D10": 0.15,
+  "D20": 0.2,
+  "D40": 0.2
+ },
+ "tabla": {
+  "D00": [
+   {
+    "conf": 0.05,
+    "precision": 0.16191799861014594,
+    "recall": 0.43148148148148147,
+    "n_cajas": 2878
+   },
+   {
+    "conf": 0.1,
+    "precision": 0.29497098646034814,
+    "recall": 0.2824074074074074,
+    "n_cajas": 1034
+   },
+   {
+    "conf": 0.15,
+    "precision": 0.4051383399209486,
+    "recall": 0.18981481481481483,
+    "n_cajas": 506
+   },
+   {
+    "conf": 0.2,
+    "precision": 0.48363636363636364,
+    "recall": 0.12314814814814815,
+    "n_cajas": 275
+   },
+   {
+    "conf": 0.25,
+    "precision": 0.5629139072847682,
+    "recall": 0.0787037037037037,
+    "n_cajas": 151
+   },
+   {
+    "conf": 0.3,
+    "precision": 0.6190476190476191,
+    "recall": 0.04814814814814815,
+    "n_cajas": 84
+   },
+   {
+    "conf": 0.4,
+    "precision": 0.7666666666666667,
+    "recall": 0.021296296296296296,
+    "n_cajas": 30
+   },
+   {
+    "conf": 0.5,
+    "precision": 0.8571428571428571,
+    "recall": 0.005555555555555556,
+    "n_cajas": 7
+   }
+  ],
+  "D10": [
+   {
+    "conf": 0.05,
+    "precision": 0.1792086889061288,
+    "recall": 0.3620689655172414,
+    "n_cajas": 1289
+   },
+   {
+    "conf": 0.1,
+    "precision": 0.3164983164983165,
+    "recall": 0.14733542319749215,
+    "n_cajas": 297
+   },
+   {
+    "conf": 0.15,
+    "precision": 0.547945205479452,
+    "recall": 0.06269592476489028,
+    "n_cajas": 73
+   },
+   {
+    "conf": 0.2,
+    "precision": 0.65,
+    "recall": 0.02037617554858934,
+    "n_cajas": 20
+   },
+   {
+    "conf": 0.25,
+    "precision": 0.75,
+    "recall": 0.009404388714733543,
+    "n_cajas": 8
+   },
+   {
+    "conf": 0.3,
+    "precision": 0.6666666666666666,
+    "recall": 0.003134796238244514,
+    "n_cajas": 3
+   },
+   {
+    "conf": 0.4,
+    "precision": NaN,
+    "recall": 0.0,
+    "n_cajas": 0
+   },
+   {
+    "conf": 0.5,
+    "precision": NaN,
+    "recall": 0.0,
+    "n_cajas": 0
+   }
+  ],
+  "D20": [
+   {
+    "conf": 0.05,
+    "precision": 0.23514285714285715,
+    "recall": 0.6685621445978879,
+    "n_cajas": 3500
+   },
+   {
+    "conf": 0.1,
+    "precision": 0.3672922252010724,
+    "recall": 0.5564581640942323,
+    "n_cajas": 1865
+   },
+   {
+    "conf": 0.15,
+    "precision": 0.4726661059714045,
+    "recall": 0.4565393988627132,
+    "n_cajas": 1189
+   },
+   {
+    "conf": 0.2,
+    "precision": 0.5617848970251716,
+    "recall": 0.39886271324126726,
+    "n_cajas": 874
+   },
+   {
+    "conf": 0.25,
+    "precision": 0.6475770925110133,
+    "recall": 0.35824532900081235,
+    "n_cajas": 681
+   },
+   {
+    "conf": 0.3,
+    "precision": 0.7129629629629629,
+    "recall": 0.31275385865150285,
+    "n_cajas": 540
+   },
+   {
+    "conf": 0.4,
+    "precision": 0.8168168168168168,
+    "recall": 0.22095857026807472,
+    "n_cajas": 333
+   },
+   {
+    "conf": 0.5,
+    "precision": 0.880184331797235,
+    "recall": 0.15515840779853776,
+    "n_cajas": 217
+   }
+  ],
+  "D40": [
+   {
+    "conf": 0.05,
+    "precision": 0.18095238095238095,
+    "recall": 0.3910411622276029,
+    "n_cajas": 1785
+   },
+   {
+    "conf": 0.1,
+    "precision": 0.2988165680473373,
+    "recall": 0.24455205811138014,
+    "n_cajas": 676
+   },
+   {
+    "conf": 0.15,
+    "precision": 0.4223433242506812,
+    "recall": 0.18765133171912832,
+    "n_cajas": 367
+   },
+   {
+    "conf": 0.2,
+    "precision": 0.5046296296296297,
+    "recall": 0.13196125907990314,
+    "n_cajas": 216
+   },
+   {
+    "conf": 0.25,
+    "precision": 0.6187050359712231,
+    "recall": 0.10411622276029056,
+    "n_cajas": 139
+   },
+   {
+    "conf": 0.3,
+    "precision": 0.6979166666666666,
+    "recall": 0.0811138014527845,
+    "n_cajas": 96
+   },
+   {
+    "conf": 0.4,
+    "precision": 0.8297872340425532,
+    "recall": 0.04721549636803874,
+    "n_cajas": 47
+   },
+   {
+    "conf": 0.5,
+    "precision": 0.8823529411764706,
+    "recall": 0.018159806295399514,
+    "n_cajas": 17
+   }
+  ]
+ },
+ "referencia_test": {
+  "n_cajas_correctas": 2721,
+  "conf_mediana_caja_correcta": 0.09122899174690247,
+  "frac_cajas_correctas_conf_lt_025": 0.772877618522602,
+  "frac_cajas_correctas_conf_lt_020": 0.7258360896729144,
+  "max_conf_media_por_foto": 0.18486135760809716,
+  "max_conf_mediana_por_foto": 0.12594007700681686,
+  "frac_fotos_max_conf_ge_025": 0.25390890550645817,
+  "frac_fotos_max_conf_ge_020": 0.3263086335825969,
+  "precision_por_caja": {
+   "0.15": 0.4505854800936768,
+   "0.2": 0.5386281588447653,
+   "0.25": 0.6312563840653729
+  },
+  "umbral_por_defecto_ultralytics": {
+   "predict": 0.25,
+   "val": 0.001,
+   "fuente": "https://docs.ultralytics.com/usage/cfg/"
+  }
+ }
+}

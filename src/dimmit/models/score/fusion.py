@@ -15,6 +15,7 @@ fuera de fold en F) y P(estado) desde esa distribución.
 """
 import argparse
 import json
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -312,6 +313,29 @@ def save_release(members, groups, q, sigma, path):
              "pre": {g: p.state() for g, p in m["pres"].items()}, "objetivos": m["tgt"].state()}
         )
     (path / "fusion_meta.json").write_text(json.dumps(meta, indent=1, default=float))
+
+
+def load_release(path):
+    """Reconstruye los miembros del ensamble guardado por save_release (para inferencia)."""
+    path = Path(path)
+    meta = json.loads((path / "fusion_meta.json").read_text())
+    members = []
+    for m in meta["miembros"]:
+        pres = {}
+        for g, st in m["pre"].items():
+            p = Preprocessor()
+            p.cols, p.log_cols = st["cols"], st["log_cols"]
+            p.med, p.mu, p.sd = pd.Series(st["med"]), pd.Series(st["mu"]), pd.Series(st["sd"])
+            pres[g] = p
+        model = FusionNet({g: len(p.cols) for g, p in pres.items()})
+        model.load_state_dict(torch.load(path / m["archivo"], map_location="cpu"))
+        model.eval()
+        tgt = Targets()
+        o = m["objetivos"]
+        tgt.rho_mu, tgt.rho_sd = np.array(o["rho_mu"]), np.array(o["rho_sd"])
+        tgt.iri_mu, tgt.iri_sd = o["iri_mu"], o["iri_sd"]
+        members.append({"model": model, "pres": pres, "tgt": tgt, "fold": m["fold"], "seed": m["seed"]})
+    return members, meta
 
 
 def main():

@@ -1,0 +1,66 @@
+# Datos de campo propios (toma del 5-oct-2026, La Candelaria): cámara a ~2 Hz, GPS a 1 Hz
+# (BasicAirData GPS Logger) y sensor ultrasónico de profundidad de bache (Arduino, ~4 Hz).
+drive_folder_id: 1nnRi1pvdz6eYqOOux2_PYnGBCWPB9CVt
+zona_horaria: America/Bogota
+
+# tramos: corte por distancia acumulada sobre la traza GPS suavizada
+tramo_m: 10
+tramo_min_fotos: 5             # un tramo final con menos fotos se funde con el anterior
+gps_suavizado_s: 5             # mediana móvil (ventana en segundos) para quitar el jitter del teléfono
+gps_incertidumbre_m: 5.0       # incertidumbre nominal de un GPS de teléfono a cielo abierto
+gps_sat_min: 12                # con menos satélites se duplica la incertidumbre
+
+# sensor ultrasónico en bastón manual (metodología del equipo de medición):
+#   1) se descartan lecturas nulas (0,00 cm) y fuera de rango (> rango_max_cm): posicionamiento y apagado
+#   2) ProfundidadBache_cm = Distancia_cm - linea_base_cm (altura real del sensor sobre pavimento plano)
+#   3) > 0 cm = profundidad del bache; ~0 o levemente negativo = pavimento sano y su rugosidad
+ultrasonico:
+  linea_base_cm: 8.0
+  rango_max_cm: 35.0
+  firmware_base_cm: 40.0       # referencia del "antes" (el firmware restaba 40 cm)
+  umbral_bache_cm: 3.0         # lectura >= umbral cuenta como bache
+  mapa:                        # archivo del sensor <-> prueba (confirmado por el equipo)
+    Prueba_2: ProfundidadB1
+    Prueba_3: ProfundidadB2
+    Prueba_4: ProfundidadB3
+  alineacion: tiempo_normalizado   # el Arduino no tiene reloj absoluto: 0-1 dentro de la prueba
+
+# inferencia del detector (pesos de models/release)
+inferencia:
+  pesos: models/release/yolov10n_rdd2020.pt
+  imgsz: 640                   # escala principal en campo: a 640 la confianza sube (416 = escala de entrenamiento, se usa en el consenso)
+  # salidas acotadas: el umbral de campo más bajo es 0,15 y el consenso tolera 0,6x (0,09); por debajo de
+  # 0,05 YOLO solo produce ruido. 30 cajas por foto bastan (en campo ninguna foto conserva más de 3).
+  conf: 0.05
+  max_det: 30
+  batch: 16
+
+# etiqueta operativa a partir de estado, profundidad medida y baches detectados
+etiqueta:
+  intervencion:
+    estados: [malo, muy_malo]
+    profundidad_cm: 8.0
+    bache_conf_min: 0.5        # bache detectado con esta confianza en >= 1 foto del tramo
+  mantenimiento:
+    estados: [regular]
+    profundidad_cm: 3.0
+  # el resto -> prevencion
+
+# defensa contra falsos positivos en el encuadre a pie (cada capa cuenta lo que descarta)
+filtros:
+  # capa 1: confianza mínima por clase = la menor a la que la precisión por caja (IoU >= 0.5) en el test
+  # de RDD2020 llega al 50 % (data/campo/features/umbrales_campo.json lo documenta)
+  tau_campo: {D00: 0.25, D10: 0.15, D20: 0.20, D40: 0.20}
+  banda: {clase: D10, w_min: 0.5, h_max: 0.15}   # capa 2a: bandas anchas y bajas = juntas / sombra de bordillo
+  via: {cy_min: 0.35, half_w0: 0.38, half_w_slope: 0.12}   # capa 2b: trapecio de la calzada (|cx-0.5| < half_w0 + slope*cy)
+  persistencia: {vecinos: 2, iou_min: 0.30, dy_tol: 0.15}  # capa 3: pareja en las 2 fotos anteriores/siguientes
+  escalas: {imgsz: [416, 832], iou_min: 0.5, minimo: 1}   # capa 4: la caja debe aparecer en >= `minimo` de las otras escalas
+
+# features de YOLO que SÍ se usan en campo (el embedding de 448-d no aportó en la ablación v1)
+features_yolo: [clase, confianza, cx, cy, w, h]
+
+# referencia para calidad de imagen y deriva: F ∪ T de RDD2020 (data/features/vision_frame.parquet)
+deriva:
+  variables: [brillo, contraste, nitidez, jpeg_kb, max_conf, pci_det, n_D00, n_D10, n_D20, n_D40]
+  psi_ok: 0.10
+  psi_alerta: 0.25
