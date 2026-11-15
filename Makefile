@@ -4,7 +4,7 @@ DET ?= data/features/detector
 WEIGHTS ?= models/release/yolov10n_rdd2020.pt
 IMGSZ ?= 640
 
-.PHONY: setup data labels validate-data train-cpu kaggle-bundle kaggle-train kaggle-status kaggle-pull \
+.PHONY: campo-poster setup data labels validate-data train-cpu kaggle-bundle kaggle-train kaggle-status kaggle-pull \
         predict-all features sensors context importance fusion baselines zenodo drift describe \
         evaluate report v1 test campo-ingest campo-dataset campo-infer campo-status campo-pull campo-local campo-scores campo-report campo
 
@@ -91,7 +91,9 @@ campo-scores:    ## umbrales de campo, score, etiqueta, calidad, correlación y 
 	$(ENV) $(PY) -m dimmit.campo.salidas
 campo-report:    ## presentación HTML (reports/campo/dimmit_presentacion.html)
 	$(ENV) $(PY) -m dimmit.reporting.presentacion_campo
-campo: campo-scores campo-report
+campo-poster:    ## gráfica PNG 300 dpi para póster (reports/campo/poster/score_tramos_antes_despues.png)
+	$(ENV) $(PY) -m dimmit.reporting.poster_campo
+campo: campo-scores campo-report campo-poster
 
 test:
 	$(ENV) $(PY) -m pytest -q
