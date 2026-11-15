@@ -12,7 +12,7 @@ from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import roc_auc_score
 
 from dimmit.campo import CAMPO, INDEX_CAMPO, load_cfg
-from dimmit.campo.scores import FEAT
+from dimmit.campo.scores import FEAT, agg_level
 from dimmit.evaluation.metrics import psi
 from dimmit.utils.io import CLASS_KEYS, CLASS_SLUGS, FEATURES, INDEX
 
@@ -75,8 +75,10 @@ def build(fr, vias, cfg):
     rows = []
     add = lambda via, nivel, bloque, metrica, valor, n, nota="", lo=np.nan, hi=np.nan: rows.append(
         {"id_via": via, "nivel": nivel, "bloque": bloque, "metrica": metrica, "valor": valor, "ic95_inf": lo, "ic95_sup": hi, "n": n, "nota": nota})
-    # --- por tramo y por prueba: calidad de imagen y confianza ---------------------------
-    for nivel, col in (("tramo", "id_via"), ("prueba", "id_prueba")):
+    nivel_ag, col_ag = agg_level(fr)
+    sitios = nivel_ag == "sitio"  # sin GPS: tramo = prueba completa; el agregado es el sitio
+    # --- por tramo y por prueba (o sitio): calidad de imagen y confianza ---------------------------
+    for nivel, col in (("tramo", "id_via"), (nivel_ag, col_ag)):
         for key, g in fr.groupby(col):
             for q in Q_COLS:
                 add(key, nivel, "calidad_imagen", f"{q}_media", float(g[q].mean()), len(g))
@@ -93,8 +95,8 @@ def build(fr, vias, cfg):
             add(key, nivel, "confianza_modelo", "conf_media_detecciones_campo", float(g.loc[g["max_conf_campo"] > 0, "max_conf_campo"].mean()) if (g["max_conf_campo"] > 0).any() else float("nan"), len(g))
     # --- deriva vs RDD2020 (lote completo y por prueba) --------------------------------------
     dv = cfg["deriva"]["variables"]
-    for key, g in [("LOTE", fr)] + list(fr.groupby("id_prueba")):
-        nivel = "lote" if key == "LOTE" else "prueba"
+    for key, g in [("LOTE", fr)] + list(fr.groupby(col_ag)):
+        nivel = "lote" if key == "LOTE" else nivel_ag
         for v in dv:
             val = psi(ref[v], g[v])
             est = "OK" if val <= cfg["deriva"]["psi_ok"] else ("ALERTA" if val <= cfg["deriva"]["psi_alerta"] else "FALLA")
@@ -113,17 +115,32 @@ def build(fr, vias, cfg):
             nota = "control negativo: no debería correlacionar" if "longitudinal" in b else ("firmware: distancia − 40 cm sin depurar (antes)" if "base40" in a else "por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap")
             add("LOTE", "tramo", "correlacion_sensor", f"spearman_{a}__{b}", float(rs), len(t), nota, lo, hi)
             add("LOTE", "tramo", "correlacion_sensor", f"pearson_{a}__{b}", float(pearsonr(t[a], t[b])[0]), len(t), nota)
-    p = vias[(vias["nivel"] == "prueba") & vias["profundidad_max_cm"].notna()]
+    p = vias[(vias["nivel"] == nivel_ag) & vias["profundidad_max_cm"].notna()]
     if len(p) >= 3:
         for a, b in (("profundidad_max_cm", "n_baches"), ("profundidad_media_cm", "score_calidad")):
-            add("LOTE", "prueba", "correlacion_sensor", f"spearman_{a}__{b}", float(spearmanr(p[a], p[b])[0]), len(p), "n = 3 pruebas: solo descriptivo")
+            add("LOTE", nivel_ag, "correlacion_sensor", f"spearman_{a}__{b}", float(spearmanr(p[a], p[b])[0]), len(p), f"n = {len(p)}: solo descriptivo")
     # por foto, dentro de cada prueba, con la profundidad alineada por tiempo normalizado
     for key, g in fr.groupby("id_prueba"):
+        key, nivel_f = (g["id_via"].iloc[0], "tramo") if sitios else (key, "prueba")
         g = g[g["profundidad_cm"].notna()]
         if len(g) >= 10:
             for b in ("maxconfcampo_D40", "ncampo_D40", "maxconf_D40", "maxconf_D00"):
-                nota = "supuesto: alineación por tiempo normalizado 0-1" + (" (control negativo)" if b == "maxconf_D00" else "")
-                add(key, "prueba", "correlacion_sensor", f"spearman_foto_profundidad_cm__{b}", float(spearmanr(g["profundidad_cm"], g[b])[0]), len(g), nota)
+                nota = "supuesto: alineación por orden de fotos 0-1" + (" (control negativo)" if b == "maxconf_D00" else "")
+                add(key, nivel_f, "correlacion_sensor", f"spearman_foto_profundidad_cm__{b}", float(spearmanr(g["profundidad_cm"], g[b])[0]), len(g), nota)
+    # --- repetibilidad: tomas repetidas del mismo sitio deberían dar el mismo diagnóstico ----------
+    if sitios:
+        t_all = vias[vias["nivel"] == "tramo"]
+        for sid, g in t_all.groupby("id_sitio"):
+            if len(g) < 2:
+                continue
+            for m in ("score_calidad", "score_calidad_tau_rdd2020", "profundidad_max_cm", "profundidad_media_cm"):
+                v = g[m].dropna()
+                if len(v) >= 2:
+                    nota = f"{len(v)} tomas del sitio; rango = máx − mín" + (" (antes)" if "rdd2020" in m else "")
+                    add(sid, "sitio", "repetibilidad", f"{m}_desv_est", float(v.std(ddof=1)), len(v), nota)
+                    add(sid, "sitio", "repetibilidad", f"{m}_rango", float(v.max() - v.min()), len(v), nota)
+            add(sid, "sitio", "repetibilidad", "etiqueta_coincide", float(g["etiqueta"].nunique() == 1), len(g), "1 = todas las tomas con la misma etiqueta")
+            add(sid, "sitio", "repetibilidad", "etiqueta_coincide_tau_rdd2020", float(g["etiqueta_tau_rdd2020"].nunique() == 1), len(g), "antes")
     # --- validación mínima: revisión visual de una muestra de fotos (presencia por clase) ---------
     rev_path = INDEX_CAMPO / "revision_visual_31.csv"
     if rev_path.exists():

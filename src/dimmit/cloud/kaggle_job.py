@@ -84,8 +84,8 @@ def bundle(message="actualización"):
 
 
 def campo_dataset(message="toma de campo"):
-    """Sube data/campo/raw (fotos, GPX, KML y lecturas) como dataset privado dimmit-campo."""
-    src = REPO_ROOT / "data/campo/raw"
+    """Sube data/campo/fotos (fotos con nombre único por prueba, las que lee el detector) como dataset privado dimmit-campo."""
+    src = REPO_ROOT / "data/campo/fotos"
     if not src.exists():
         raise SystemExit("primero: make campo-ingest")
     d = BUILD / "campo"

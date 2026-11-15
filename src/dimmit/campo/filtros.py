@@ -3,8 +3,10 @@
 Cuatro capas, cada una marca las cajas que descarta en `motivo_descarte` (la primera capa que la
 descarta gana) y cuenta cuántas quitó:
   1. umbral de confianza de campo (tau_campo, todas las clases);
-  2. geometría: bandas anchas y bajas de D10 (juntas, sombra del bordillo) y centro fuera del
-     trapecio de la calzada (el andén en el encuadre a pie);
+  2. geometría y superficie: bandas anchas y bajas de D10 (juntas, sombra del bordillo), centro fuera
+     del trapecio de la calzada (el andén en el encuadre a pie) y clases que no aplican a la superficie
+     de la prueba (RDD2020 es solo asfalto: sobre adoquín las "grietas" y la "piel de cocodrilo" son las
+     juntas del patrón; ASTM E2840 tiene otro catálogo para pavimento articulado);
   3. persistencia temporal: a ~2 Hz un daño real aparece en fotos consecutivas; la caja necesita una
      pareja de la misma clase (IoU tras compensar el avance) en las `vecinos` fotos anteriores o
      siguientes;
@@ -60,6 +62,12 @@ def apply(det: pd.DataFrame, frames: pd.DataFrame, cfg, det_scales: dict | None 
     d.loc[m, "motivo_descarte"] = "2_banda"
     m = (d["motivo_descarte"] == "") & ~in_road(d["cx"].to_numpy(), d["cy"].to_numpy(), cfg["via"])
     d.loc[m, "motivo_descarte"] = "2_fuera_de_via"
+    sup_cfg = cfg.get("superficie") or {}
+    if sup_cfg and "superficie" in frames:
+        sup = d["image_id"].map(frames.set_index("image_id")["superficie"]).fillna("asfalto")
+        valida = np.array([c in sup_cfg.get(s, CLASS_KEYS) for c, s in zip(d["cls"], sup)], dtype=bool)
+        m = (d["motivo_descarte"] == "") & ~valida
+        d.loc[m, "motivo_descarte"] = "2_superficie"
     # --- capa 3: persistencia temporal -----------------------------------------------------------
     order = frames.sort_values(["prueba", "timestamp"]).reset_index(drop=True)
     pos = {iid: (p, k) for k, (iid, p) in enumerate(zip(order["image_id"], order["prueba"]))}

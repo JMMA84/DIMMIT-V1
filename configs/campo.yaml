@@ -1,9 +1,30 @@
-# Datos de campo propios (toma del 5-oct-2026, La Candelaria): cámara a ~2 Hz, GPS a 1 Hz
-# (BasicAirData GPS Logger) y sensor ultrasónico de profundidad de bache (Arduino, ~4 Hz).
+# Datos de campo propios. Carpeta de Drive con todas las tomas; `pruebas` elige cuáles se procesan.
 drive_folder_id: 1nnRi1pvdz6eYqOOux2_PYnGBCWPB9CVt
 zona_horaria: America/Bogota
 
-# tramos: corte por distancia acumulada sobre la traza GPS suavizada
+# Toma vigente (15-nov-2026): 5 pruebas en 2 sitios, fotos de celular reenviadas por WhatsApp (1280x720, sin
+# EXIF ni GPS) y sensor ultrasónico en bastón (~4 Hz, BACHES TOMAS/). El sitio 1 se recorrió 3 veces y el 2,
+# 2 veces; el emparejamiento foto <-> sensor sigue el orden de envío y se verificó con las escenas
+# (5-7: calle con arcadas -> plazoleta con el bache parcheado; 8-9: calle peatonal en adoquín).
+# prueba9/prueba8/ es un duplicado de prueba8 y no se lee (solo el primer nivel de cada carpeta).
+toma:
+  fecha: "2026-11-15"
+  titulo: "Toma del 15-nov-2026 · 2 sitios, 5 recorridos"
+pruebas:
+  Prueba_5: {fotos: prueba5, sensor: "BACHES TOMAS/primera toma primer sitio enviar.txt", sitio: 1}
+  Prueba_6: {fotos: prueba6, sensor: "BACHES TOMAS/segunda toma primer sitio.txt", sitio: 1}
+  Prueba_7: {fotos: prueba7, sensor: "BACHES TOMAS/tercera toma primer sitio enviar.txt", sitio: 1}
+  Prueba_8: {fotos: prueba8, sensor: "BACHES TOMAS/primera tomo segundo sitio enviar.txt", sitio: 2, superficie: adoquin}
+  Prueba_9: {fotos: prueba9, sensor: "BACHES TOMAS/segunda toma segundo sitio enviar.txt", sitio: 2, superficie: adoquin}
+# superficie (por defecto asfalto): la registra el equipo en campo, como en una inspección PCI
+# Toma anterior (5-oct-2026, La Candelaria, cámara 2 Hz + GPS 1 Hz); el equipo indicó que no eran las fotos
+# que correspondían. Para reproducirla, reemplazar `pruebas` por:
+#   Prueba_2: {fotos: grabacion_20261005_093800_Prueba_2, sensor: "tomadedatos/Tiempo_ms,Distancia_cm,ProfundidadB1.txt"}
+#   Prueba_3: {fotos: grabacion_20261005_094134_Prueba_3, sensor: "tomadedatos/Tiempo_ms,Distancia_cm,ProfundidadB2.txt"}
+#   Prueba_4: {fotos: grabacion_20261005_094715_Prueba_4, sensor: "tomadedatos/Tiempo_ms,Distancia_cm,ProfundidadB3.txt"}
+
+# tramos (solo pruebas con GPS): corte por distancia acumulada sobre la traza GPS suavizada; sin GPS la
+# prueba completa es un tramo
 tramo_m: 10
 tramo_min_fotos: 5             # un tramo final con menos fotos se funde con el anterior
 gps_suavizado_s: 5             # mediana móvil (ventana en segundos) para quitar el jitter del teléfono
@@ -19,10 +40,7 @@ ultrasonico:
   rango_max_cm: 35.0
   firmware_base_cm: 40.0       # referencia del "antes" (el firmware restaba 40 cm)
   umbral_bache_cm: 3.0         # lectura >= umbral cuenta como bache
-  mapa:                        # archivo del sensor <-> prueba (confirmado por el equipo)
-    Prueba_2: ProfundidadB1
-    Prueba_3: ProfundidadB2
-    Prueba_4: ProfundidadB3
+  # el archivo de cada prueba se declara en `pruebas` (ruta relativa a data/campo/raw)
   alineacion: tiempo_normalizado   # el Arduino no tiene reloj absoluto: 0-1 dentro de la prueba
 
 # inferencia del detector (pesos de models/release)
@@ -53,6 +71,9 @@ filtros:
   tau_campo: {D00: 0.25, D10: 0.15, D20: 0.20, D40: 0.20}
   banda: {clase: D10, w_min: 0.5, h_max: 0.15}   # capa 2a: bandas anchas y bajas = juntas / sombra de bordillo
   via: {cy_min: 0.35, half_w0: 0.38, half_w_slope: 0.12}   # capa 2b: trapecio de la calzada (|cx-0.5| < half_w0 + slope*cy)
+  superficie:                  # capa 2c: clases válidas por superficie (RDD2020 solo tiene asfalto)
+    asfalto: [D00, D10, D20, D40]
+    adoquin: [D40]             # en adoquín solo baches/hundimientos; grietas y piel de cocodrilo = juntas del patrón
   persistencia: {vecinos: 2, iou_min: 0.30, dy_tol: 0.15}  # capa 3: pareja en las 2 fotos anteriores/siguientes
   escalas: {imgsz: [416, 832], iou_min: 0.5, minimo: 1}   # capa 4: la caja debe aparecer en >= `minimo` de las otras escalas
 

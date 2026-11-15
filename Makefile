@@ -74,7 +74,7 @@ v1: features sensors context fusion baselines drift describe evaluate report
 campo-ingest:    ## descarga la carpeta de Drive y arma fotogramas/tramos con id_via
 	$(ENV) $(PY) -m dimmit.campo.ingest
 	$(ENV) $(PY) -m dimmit.campo.tramos
-campo-dataset:   ## sube data/campo/raw como dataset privado de Kaggle (dimmit-campo)
+campo-dataset:   ## sube data/campo/fotos (fotos con nombre único por prueba) como dataset privado de Kaggle (dimmit-campo)
 	$(ENV) $(PY) -m dimmit.cloud.kaggle_job campo-dataset -m "$(or $(MSG),toma de campo)"
 campo-infer:     ## kernel de solo inferencia en Kaggle (requiere kaggle-bundle y campo-dataset)
 	$(ENV) $(PY) -m dimmit.cloud.kaggle_job infer-push
@@ -89,11 +89,11 @@ campo-scores:    ## umbrales de campo, score, etiqueta, calidad, correlación y 
 	$(ENV) $(PY) -m dimmit.campo.scores
 	$(ENV) $(PY) -m dimmit.campo.calidad
 	$(ENV) $(PY) -m dimmit.campo.salidas
-campo-report:    ## presentación HTML (reports/campo/dimmit_presentacion.html)
+campo-report:    ## presentación HTML de la toma del 5-oct-2026 (textos fijos de esa toma; no se regenera con la vigente)
 	$(ENV) $(PY) -m dimmit.reporting.presentacion_campo
 campo-poster:    ## gráfica PNG 300 dpi para póster (reports/campo/poster/score_tramos_antes_despues.png)
 	$(ENV) $(PY) -m dimmit.reporting.poster_campo
-campo: campo-scores campo-report campo-poster
+campo: campo-scores campo-poster
 
 test:
 	$(ENV) $(PY) -m pytest -q

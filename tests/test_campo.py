@@ -4,7 +4,7 @@ import pandas as pd
 
 from dimmit.campo.gpx import interpolate, read_gpx, smooth_track
 from dimmit.campo.scores import etiqueta
-from dimmit.campo.tramos import cut_tramos, prueba_id, via_id
+from dimmit.campo.tramos import cut_tramos, frames_sin_gps, prueba_id, sitio_id, via_id, via_id_sin_gps, wa_key
 from dimmit.campo.filtros import apply as apply_filters, in_road
 from dimmit.campo.ultrasonico import align_normalized, astm_severity, depth_features, read_depth
 
@@ -44,6 +44,22 @@ def test_ids_are_deterministic_and_distinct():
     assert a == via_id("2026-10-05", "Prueba_2", 0, 4.6002591, -74.0716894)  # mismo centroide a 1e-5
     assert a != via_id("2026-10-05", "Prueba_2", 1, 4.600259, -74.071689) and a.startswith("VIA-") and len(a) == 16
     assert prueba_id("2026-10-05", "Prueba_2") != prueba_id("2026-10-05", "Prueba_3")
+
+
+def test_whatsapp_frames_order_and_skip_nested(tmp_path):
+    names = ["WhatsApp Image 2026-11-15 at 3.35.47 PM (1).jpeg", "WhatsApp Image 2026-11-15 at 3.35.46 PM.jpeg",
+             "WhatsApp Image 2026-11-15 at 3.35.47 PM.jpeg", "WhatsApp Image 2026-11-15 at 12.01.02 AM.jpeg", "nota.txt"]
+    for n in names:
+        (tmp_path / n).write_bytes(b"x")
+    (tmp_path / "prueba8").mkdir()  # duplicado anidado: no se lee
+    (tmp_path / "prueba8" / "WhatsApp Image 2026-11-15 at 3.36.31 PM.jpeg").write_bytes(b"x")
+    assert wa_key(names[0]) == ("2026-11-15", 15 * 3600 + 35 * 60 + 47, 1) and wa_key(names[3])[1] == 62 and wa_key("captura.jpg") is None
+    fr = frames_sin_gps(tmp_path, "America/Bogota")
+    assert [p.name for p in fr["path_original"]] == [names[3], names[1], names[2], names[0]]
+    assert fr["timestamp"].is_monotonic_increasing and fr["t_norm"].tolist() == [0, 1 / 3, 2 / 3, 1]
+    a = via_id_sin_gps("2026-11-15", "Prueba_5", 0, "abc")
+    assert a.startswith("VIA-") and len(a) == 16 and a != via_id_sin_gps("2026-11-15", "Prueba_5", 0, "abd")
+    assert sitio_id("2026-11-15", 1) != sitio_id("2026-11-15", 2)
 
 
 def test_ultrasonic_cleaning_baseline_and_alignment(tmp_path):
@@ -107,6 +123,12 @@ def test_filters_band_road_persistence_and_scales():
            "escalas": {"imgsz": [832], "iou_min": 0.5, "minimo": 1}}
     out, resumen = apply_filters(det, frames, cfg)
     assert out["motivo_descarte"].tolist() == ["", "", "2_banda", "2_fuera_de_via", "3_sin_persistencia", "1_confianza"]
+    # superficie: en adoquín la "piel de cocodrilo" (D20) son las juntas del patrón; los baches sí cuentan
+    sup = {**cfg, "superficie": {"asfalto": ["D00", "D10", "D20", "D40"], "adoquin": ["D40"]}}
+    out_s, _ = apply_filters(det, frames.assign(superficie=["adoquin", "adoquin", "asfalto"]), sup)
+    assert out_s["motivo_descarte"].tolist()[:2] == ["2_superficie", "2_superficie"]
+    pot = pd.DataFrame([("a", 3, 0.5, 0.5, 0.6, 0.2, 0.2), ("b", 3, 0.5, 0.5, 0.6, 0.2, 0.2)], columns=det.columns)
+    assert apply_filters(pot, frames.assign(superficie="adoquin"), sup)[0]["conservada"].all()
     assert in_road(np.array([0.5, 0.05]), np.array([0.6, 0.4])).tolist() == [True, False]
     # consenso: la otra escala solo ve la caja de "a"
     other = pd.DataFrame([("a", 2, 0.30, 0.50, 0.60, 0.20, 0.20)], columns=det.columns)
