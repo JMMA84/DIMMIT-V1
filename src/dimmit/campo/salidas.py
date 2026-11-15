@@ -19,7 +19,9 @@ VERSION_DETECTOR = "yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia 
 COLS_VIAS = [
     ("id_via", "ID único: tramo VIA-<sha1 de fecha|prueba|tramo|centroide GPS, o hash de sus fotos si no hay GPS>; prueba PRU-…; sitio SIT-…"),
     ("nivel", "tramo (con GPS ~10 m; sin GPS la prueba completa), prueba (recorrido con GPS) o sitio (tomas repetidas del mismo lugar)"),
-    ("id_prueba", "ID de la prueba a la que pertenece (vacío en filas de sitio)"), ("prueba", "nombre de la prueba (Sitio_N en filas de sitio)"),
+    ("id_prueba", "ID de la prueba a la que pertenece (vacío en filas de sitio)"),
+    ("ubicacion_fuente", "gps (medida) o declarada (sitio indicado por el equipo y anclado a la calzada IDU; no es GPS)"),
+    ("calcodigo_idu", "calzada del inventario IDU asociada (sitios declarados)"), ("prueba", "nombre de la prueba (Sitio_N en filas de sitio)"),
     ("sitio", "sitio de medición (las tomas repetidas comparten sitio)"),
     ("superficie", "asfalto / adoquin (registrada en campo); en adoquín solo cuentan los baches"), ("id_sitio", "ID del sitio (SIT-<sha1 de fecha|sitio>)"),
     ("tramo", "índice del tramo dentro de la prueba (-1 = fila agregada)"),
@@ -30,8 +32,9 @@ COLS_VIAS = [
     *[(f"n_{s}", f"cajas de {s} conservadas por el modo campo (suma sobre fotos)") for s in CLASS_SLUGS.values()],
     ("area_danada_pct", "porcentaje medio de la imagen cubierto por cajas conservadas"),
     *[(f"sub_score_{s}", f"100 − valor deducido de {s}") for s in CLASS_SLUGS.values()],
-    ("score_calidad", "pseudo-PCI visual 0–100 (100 = sin daño) en modo campo: cajas que pasan las 4 capas de filtros, severidad de bache por profundidad ASTM"),
-    ("estado", "bueno/satisfactorio/regular/malo/muy_malo según score_calidad"),
+    ("score_calidad", "pseudo-PCI visual 0–100 (100 = sin daño) en modo campo: umbral de confianza calibrado contra el IDU, cajas que pasan los filtros, severidad de bache por profundidad ASTM"),
+    ("estado", "bueno/satisfactorio/regular/malo/muy_malo según score_calidad (escala de 5 rangos del pseudo-PCI)"),
+    ("estado_idu_equivalente", "el mismo score en la escala de 3 clases del IDU: bueno ≥ 90 · regular 56–89 · malo < 56"),
     ("score_calidad_tau_rdd2020", "antes: mismo score con el umbral de RDD2020 y sin filtros"), ("estado_tau_rdd2020", "estado del score anterior"),
     ("etiqueta_tau_rdd2020", "antes: etiqueta con el umbral de RDD2020 y la profundidad del firmware (distancia − 40 cm, sin depurar)"),
     ("etiqueta", "prevencion / mantenimiento / intervencion (regla en configs/campo.yaml)"), ("accion_recomendada", "acción por regla v1 según estado y daño dominante"),
@@ -52,6 +55,10 @@ COLS_VIAS = [
 def main():
     run_id = time.strftime("campo-%Y%m%d-%H%M")
     vias = pd.read_parquet(FEAT / "vias.parquet")
+    if "conjunto" in vias:  # las salidas son de la toma evaluada; la de calibración queda en calibracion_idu.*
+        vias = vias[vias["conjunto"] == "evaluacion"].copy()
+    if "calcodigo_idu" in vias:
+        vias["calcodigo_idu"] = pd.to_numeric(vias["calcodigo_idu"], errors="coerce").astype("Int64")
     vias["version_detector"], vias["run_id"] = VERSION_DETECTOR.format(imgsz=load_cfg()["inferencia"]["imgsz"]), run_id
     cols = [c for c, _ in COLS_VIAS if c in vias]
     vias = vias.sort_values(["nivel", "prueba", "tramo"], ascending=[False, True, True], key=lambda c: c.map({"tramo": 2, "prueba": 1, "sitio": 0}) if c.name == "nivel" else c)[cols]
@@ -63,6 +70,8 @@ def main():
     largo.to_csv(OUT_CAMPO / "calidad_confianza_correlacion.csv", index=False, float_format="%.4f")
     largo.to_json(OUT_CAMPO / "calidad_confianza_correlacion.json", orient="records", force_ascii=False, indent=1)
     fr = pd.read_parquet(FEAT / "fotogramas_features.parquet")
+    if "conjunto" in fr:
+        fr = fr[fr["conjunto"] == "evaluacion"]
     # detalle por foto: solo lo que usa el modo campo (clase, confianza y geometría de las cajas conservadas)
     det_cols = ["image_id", "prueba", "id_via", "tramo", "timestamp", "lat", "lon", "gps_dt_s", "t_norm", "profundidad_cm", "severidad_bache_astm",
                 "brillo", "nitidez", "borrosa", "sobreexpuesta", "n_detecciones_campo", "max_conf_campo", "pci_campo", "hash_imagen"]
@@ -73,9 +82,11 @@ def main():
     dic = dic[dic["columna"].isin(cols)]
     dic.to_csv(OUT_CAMPO / "diccionario_campo.csv", index=False)
     det_f = pd.read_parquet(FEAT / "detecciones_filtradas.parquet")
+    det_f = det_f[det_f["image_id"].isin(fr["image_id"])]
     keep_cols = ["image_id", "cls", "conf", "cx", "cy", "w", "h", "conservada", "motivo_descarte"]
     det_f[[c for c in keep_cols if c in det_f]].to_csv(OUT_CAMPO / "detecciones_filtradas.csv", index=False, float_format="%.4f")
-    pd.read_csv(FEAT / "filtros_resumen.csv").to_csv(OUT_CAMPO / "filtros_resumen.csv", index=False)
+    det_f.assign(motivo=det_f["motivo_descarte"].replace("", "conservada")).pivot_table(
+        index="cls", columns="motivo", values="conf", aggfunc="size", fill_value=0).to_csv(OUT_CAMPO / "filtros_resumen.csv")
     assert set(cols) == set(dic["columna"]), "diccionario incompleto"
     print(f"[ok] {run_id}: {len(vias)} filas en vias_clasificacion, {len(largo)} métricas, {len(fr)} fotos -> {OUT_CAMPO}")
 

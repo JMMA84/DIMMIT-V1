@@ -1,6 +1,6 @@
 [
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -12,7 +12,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -24,7 +24,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -36,7 +36,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -48,7 +48,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -60,7 +60,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -72,7 +72,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -84,7 +84,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -96,7 +96,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -108,7 +108,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -120,7 +120,7 @@
   "nota":"cajas con conf >= tau por clase"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -132,7 +132,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -144,7 +144,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -156,43 +156,43 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"frac_fotos_con_deteccion_campo",
-  "valor":0.1363636364,
+  "valor":0.2727272727,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":22,
   "nota":"cajas que pasan las 4 capas de filtros"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"n_detecciones_por_foto_campo",
-  "valor":0.1363636364,
+  "valor":0.3636363636,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":22,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"conf_media_detecciones_campo",
-  "valor":0.2634080996,
+  "valor":0.2462306122,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":22,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -204,7 +204,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -216,7 +216,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -228,7 +228,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -240,7 +240,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -252,7 +252,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -264,7 +264,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -276,19 +276,19 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"max_conf_media",
-  "valor":0.1550736596,
+  "valor":0.1552058971,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":25,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -300,19 +300,19 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"conf_media_detecciones_tau",
-  "valor":0.1293690551,
+  "valor":0.129534352,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":25,
   "nota":"cajas con conf >= tau por clase"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -324,7 +324,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -336,7 +336,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -348,43 +348,43 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"frac_fotos_con_deteccion_campo",
-  "valor":0.04,
+  "valor":0.08,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":25,
   "nota":"cajas que pasan las 4 capas de filtros"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"n_detecciones_por_foto_campo",
-  "valor":0.04,
+  "valor":0.08,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":25,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"conf_media_detecciones_campo",
-  "valor":0.2144430727,
+  "valor":0.227644071,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":25,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -396,7 +396,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -408,7 +408,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -420,7 +420,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -432,7 +432,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -444,7 +444,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -456,7 +456,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -468,7 +468,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -480,7 +480,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -492,7 +492,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -504,7 +504,7 @@
   "nota":"cajas con conf >= tau por clase"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -516,7 +516,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -528,7 +528,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -540,7 +540,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -552,7 +552,7 @@
   "nota":"cajas que pasan las 4 capas de filtros"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -564,7 +564,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -576,7 +576,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -588,7 +588,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -600,7 +600,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -612,7 +612,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -624,7 +624,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -636,7 +636,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -648,7 +648,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -660,7 +660,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -672,7 +672,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -684,7 +684,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -696,7 +696,7 @@
   "nota":"cajas con conf >= tau por clase"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -708,7 +708,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -720,7 +720,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -732,43 +732,43 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"frac_fotos_con_deteccion_campo",
-  "valor":0.0,
+  "valor":0.0769230769,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":26,
   "nota":"cajas que pasan las 4 capas de filtros"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"n_detecciones_por_foto_campo",
-  "valor":0.0,
+  "valor":0.0769230769,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":26,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
   "metrica":"conf_media_detecciones_campo",
-  "valor":null,
+  "valor":0.2050689533,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":26,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -780,7 +780,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -792,7 +792,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -804,7 +804,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -816,7 +816,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -828,7 +828,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -840,7 +840,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"calidad_imagen",
@@ -852,7 +852,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -864,7 +864,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -876,7 +876,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -888,7 +888,7 @@
   "nota":"cajas con conf >= tau por clase"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -900,7 +900,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -912,7 +912,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -924,7 +924,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -936,7 +936,7 @@
   "nota":"cajas que pasan las 4 capas de filtros"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -948,7 +948,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"confianza_modelo",
@@ -960,7 +960,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -972,7 +972,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -984,7 +984,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -996,7 +996,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1008,7 +1008,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1020,7 +1020,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1032,7 +1032,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1044,19 +1044,19 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
   "metrica":"max_conf_media",
-  "valor":0.1499017346,
+  "valor":0.1499470215,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":73,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1068,19 +1068,19 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
   "metrica":"conf_media_detecciones_tau",
-  "valor":0.1376055202,
+  "valor":0.1376656282,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":73,
   "nota":"cajas con conf >= tau por clase"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1092,7 +1092,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1104,7 +1104,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1116,43 +1116,43 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
   "metrica":"frac_fotos_con_deteccion_campo",
-  "valor":0.0547945205,
+  "valor":0.1369863014,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":73,
   "nota":"cajas que pasan las 4 capas de filtros"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
   "metrica":"n_detecciones_por_foto_campo",
-  "valor":0.0547945205,
+  "valor":0.1643835616,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":73,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
   "metrica":"conf_media_detecciones_campo",
-  "valor":0.2511668429,
+  "valor":0.2342809722,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":73,
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1164,7 +1164,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1176,7 +1176,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1188,7 +1188,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1200,7 +1200,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1212,7 +1212,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1224,7 +1224,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"calidad_imagen",
@@ -1236,7 +1236,7 @@
   "nota":"umbral de RDD2020 F∪T: {'nitidez_p05_ref': 916.5016906738281, 'brillo_p02_ref': 69.60188842773438, 'brillo_p98_ref': 156.59559875488281}"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1248,7 +1248,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1260,7 +1260,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1272,7 +1272,7 @@
   "nota":"cajas con conf >= tau por clase"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1284,7 +1284,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1296,7 +1296,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1308,7 +1308,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1320,7 +1320,7 @@
   "nota":"cajas que pasan las 4 capas de filtros"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1332,7 +1332,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"confianza_modelo",
@@ -1344,7 +1344,7 @@
   "nota":""
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1356,7 +1356,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1368,7 +1368,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1380,7 +1380,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1392,19 +1392,19 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
   "metrica":"psi_max_conf",
-  "valor":0.959788092,
+  "valor":1.0396665461,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":131,
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1416,7 +1416,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1428,7 +1428,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1440,7 +1440,7 @@
   "nota":"OK; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1452,7 +1452,7 @@
   "nota":"ALERTA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1464,7 +1464,7 @@
   "nota":"ALERTA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"lote",
   "bloque":"deriva",
@@ -1476,7 +1476,7 @@
   "nota":"0.5 = indistinguible de RDD2020; 1.0 = otro dominio"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1488,7 +1488,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1500,7 +1500,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1512,7 +1512,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1524,19 +1524,19 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
   "metrica":"psi_max_conf",
-  "valor":1.6155186234,
+  "valor":1.7022160592,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":73,
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1548,7 +1548,7 @@
   "nota":"ALERTA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1560,7 +1560,7 @@
   "nota":"ALERTA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1572,7 +1572,7 @@
   "nota":"OK; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1584,7 +1584,7 @@
   "nota":"OK; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1596,19 +1596,19 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"deriva",
   "metrica":"dominio_auroc",
-  "valor":0.9906438356,
+  "valor":0.9906484018,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":73,
   "nota":"0.5 = indistinguible de RDD2020; 1.0 = otro dominio"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1620,7 +1620,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1632,7 +1632,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1644,7 +1644,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1656,7 +1656,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1668,7 +1668,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1680,7 +1680,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1692,7 +1692,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1704,7 +1704,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1716,7 +1716,7 @@
   "nota":"FALLA; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1728,7 +1728,7 @@
   "nota":"OK; referencia F∪T RDD2020 (n=7300)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"deriva",
@@ -1740,107 +1740,11 @@
   "nota":"0.5 = indistinguible de RDD2020; 1.0 = otro dominio"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
   "metrica":"spearman_profundidad_max_cm__n_baches",
-  "valor":0.7071067812,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"pearson_profundidad_max_cm__n_baches",
-  "valor":0.6611142475,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"spearman_profundidad_max_cm__maxconf_baches",
-  "valor":0.7071067812,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"pearson_profundidad_max_cm__maxconf_baches",
-  "valor":0.6611142475,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"spearman_profundidad_media_cm__n_baches",
-  "valor":0.0,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"pearson_profundidad_media_cm__n_baches",
-  "valor":0.2223313592,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"spearman_profundidad_frac_bache__frac_fotos_baches",
-  "valor":0.0,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"pearson_profundidad_frac_bache__frac_fotos_baches",
-  "valor":-0.0478184895,
-  "ic95_inf":null,
-  "ic95_sup":null,
-  "n":5,
-  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
- },
- {
-  "run_id":"campo-20261115-2142",
-  "id_via":"LOTE",
-  "nivel":"tramo",
-  "bloque":"correlacion_sensor",
-  "metrica":"spearman_profundidad_max_cm__score_calidad",
   "valor":-0.2236067977,
   "ic95_inf":-0.875,
   "ic95_sup":-0.1081476141,
@@ -1848,19 +1752,115 @@
   "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
-  "metrica":"pearson_profundidad_max_cm__score_calidad",
-  "valor":-0.5532268652,
+  "metrica":"pearson_profundidad_max_cm__n_baches",
+  "valor":-0.1580684312,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":5,
   "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"spearman_profundidad_max_cm__maxconf_baches",
+  "valor":-0.2236067977,
+  "ic95_inf":-0.875,
+  "ic95_sup":-0.1081476141,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"pearson_profundidad_max_cm__maxconf_baches",
+  "valor":-0.1304645963,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"spearman_profundidad_media_cm__n_baches",
+  "valor":-0.6708203932,
+  "ic95_inf":-1.0,
+  "ic95_sup":-0.25,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"pearson_profundidad_media_cm__n_baches",
+  "valor":-0.7365776586,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"spearman_profundidad_frac_bache__frac_fotos_baches",
+  "valor":-0.6708203932,
+  "ic95_inf":-1.0,
+  "ic95_sup":-0.25,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"pearson_profundidad_frac_bache__frac_fotos_baches",
+  "valor":-0.6453505735,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"spearman_profundidad_max_cm__score_calidad",
+  "valor":-0.2051956704,
+  "ic95_inf":-0.875,
+  "ic95_sup":0.6666666667,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"tramo",
+  "bloque":"correlacion_sensor",
+  "metrica":"pearson_profundidad_max_cm__score_calidad",
+  "valor":-0.2910328734,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":5,
+  "nota":"por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap"
+ },
+ {
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1872,7 +1872,7 @@
   "nota":"control negativo: no debería correlacionar"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1884,31 +1884,31 @@
   "nota":"control negativo: no debería correlacionar"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
   "metrica":"spearman_profundidad_max_cm_base40__n_baches",
-  "valor":0.7071067812,
-  "ic95_inf":null,
-  "ic95_sup":null,
+  "valor":-0.2236067977,
+  "ic95_inf":-0.875,
+  "ic95_sup":-0.1081476141,
   "n":5,
   "nota":"firmware: distancia − 40 cm sin depurar (antes)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"LOTE",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
   "metrica":"pearson_profundidad_max_cm_base40__n_baches",
-  "valor":0.6611142475,
+  "valor":-0.1580684312,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":5,
   "nota":"firmware: distancia − 40 cm sin depurar (antes)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1920,7 +1920,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1932,7 +1932,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1944,7 +1944,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a083ff574a01",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1956,7 +1956,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1 (control negativo)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1968,7 +1968,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1980,7 +1980,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -1992,7 +1992,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-de196faec4d1",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2004,7 +2004,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1 (control negativo)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2016,7 +2016,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2028,7 +2028,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2040,7 +2040,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-a6946618547f",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2052,31 +2052,31 @@
   "nota":"supuesto: alineación por orden de fotos 0-1 (control negativo)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
   "metrica":"spearman_foto_profundidad_cm__maxconfcampo_D40",
-  "valor":0.028471662,
+  "valor":-0.0764372661,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":25,
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
   "metrica":"spearman_foto_profundidad_cm__ncampo_D40",
-  "valor":0.028471662,
+  "valor":-0.0719792917,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":25,
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2088,7 +2088,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-42294e6bab9e",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2100,31 +2100,31 @@
   "nota":"supuesto: alineación por orden de fotos 0-1 (control negativo)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
   "metrica":"spearman_foto_profundidad_cm__maxconfcampo_D40",
-  "valor":null,
+  "valor":-0.1569405351,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":22,
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
   "metrica":"spearman_foto_profundidad_cm__ncampo_D40",
-  "valor":null,
+  "valor":-0.1569405351,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":22,
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2136,7 +2136,7 @@
   "nota":"supuesto: alineación por orden de fotos 0-1"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"VIA-11eb58b9227a",
   "nivel":"tramo",
   "bloque":"correlacion_sensor",
@@ -2148,31 +2148,91 @@
   "nota":"supuesto: alineación por orden de fotos 0-1 (control negativo)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"lote",
+  "bloque":"calibracion_idu",
+  "metrica":"multiplicador_tau",
+  "valor":0.8,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":12,
+  "nota":"tau = m · tau_campo -> {'D00': 0.2, 'D10': 0.12, 'D20': 0.16, 'D40': 0.16}"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"lote",
+  "bloque":"calibracion_idu",
+  "metrica":"acierto_estado_idu_calibrado",
+  "valor":0.8333333333,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":12,
+  "nota":"12 tramos en 1 calzada(s) IDU; Todos los tramos etiquetados caen en calzadas con el mismo estado IDU, así que el ajuste ancla el umbral a ese estado pero no prueba que el score separe bueno\/regular\/malo. Para una calibración completa hacen falta 20-30 calzadas con estados distintos y fotos con GPS."
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"lote",
+  "bloque":"calibracion_idu",
+  "metrica":"acierto_estado_idu_sin_calibrar",
+  "valor":0.6666666667,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":12,
+  "nota":"tau de RDD2020 (m = 1)"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"lote",
+  "bloque":"calibracion_idu",
+  "metrica":"acierto_fuera_de_muestra_2026-10-05",
+  "valor":0.6666666667,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":9,
+  "nota":"calibrado con 2026-11-15 (m = 0.75); sin calibrar: 78%"
+ },
+ {
+  "run_id":"campo-20261115-2259",
+  "id_via":"LOTE",
+  "nivel":"lote",
+  "bloque":"calibracion_idu",
+  "metrica":"acierto_fuera_de_muestra_2026-11-15",
+  "valor":0.3333333333,
+  "ic95_inf":null,
+  "ic95_sup":null,
+  "n":3,
+  "nota":"calibrado con 2026-10-05 (m = 1.05); sin calibrar: 33%"
+ },
+ {
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
   "metrica":"score_calidad_desv_est",
-  "valor":12.0027427893,
+  "valor":1.7617649305,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":3,
   "nota":"3 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
   "metrica":"score_calidad_rango",
-  "valor":22.7283785819,
+  "valor":3.1619639423,
   "ic95_inf":null,
   "ic95_sup":null,
   "n":3,
   "nota":"3 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2184,7 +2244,7 @@
   "nota":"3 tomas del sitio; rango = máx − mín (antes)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2196,7 +2256,7 @@
   "nota":"3 tomas del sitio; rango = máx − mín (antes)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2208,7 +2268,7 @@
   "nota":"3 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2220,7 +2280,7 @@
   "nota":"3 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2232,7 +2292,7 @@
   "nota":"3 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2244,7 +2304,7 @@
   "nota":"3 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2256,7 +2316,7 @@
   "nota":"1 = todas las tomas con la misma etiqueta"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-1963454e",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2268,7 +2328,7 @@
   "nota":"antes"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2280,7 +2340,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2292,7 +2352,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2304,7 +2364,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín (antes)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2316,7 +2376,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín (antes)"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2328,7 +2388,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2340,7 +2400,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2352,7 +2412,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2364,7 +2424,7 @@
   "nota":"2 tomas del sitio; rango = máx − mín"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2376,7 +2436,7 @@
   "nota":"1 = todas las tomas con la misma etiqueta"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"SIT-6934c70f",
   "nivel":"sitio",
   "bloque":"repetibilidad",
@@ -2388,7 +2448,7 @@
   "nota":"antes"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2400,7 +2460,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2412,7 +2472,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2424,7 +2484,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2436,7 +2496,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2448,7 +2508,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2460,7 +2520,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2472,7 +2532,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2484,7 +2544,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2496,7 +2556,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2508,7 +2568,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2520,7 +2580,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",
@@ -2532,7 +2592,7 @@
   "nota":"revisión visual rápida de una muestra estratificada (no anotación experta); presencia a nivel foto; TP=0 FP=0 FN=0"
  },
  {
-  "run_id":"campo-20261115-2142",
+  "run_id":"campo-20261115-2259",
   "id_via":"MUESTRA",
   "nivel":"foto",
   "bloque":"validacion_visual",

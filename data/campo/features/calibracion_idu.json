@@ -1,0 +1,74 @@
+{
+  "multiplicador": 0.8,
+  "tau_campo_rdd2020": {
+    "D00": 0.25,
+    "D10": 0.15,
+    "D20": 0.2,
+    "D40": 0.2
+  },
+  "tau_campo_calibrado": {
+    "D00": 0.2,
+    "D10": 0.12,
+    "D20": 0.16,
+    "D40": 0.16
+  },
+  "rangos_idu_pci": {
+    "bueno": [
+      90,
+      100.0
+    ],
+    "regular": [
+      56,
+      90
+    ],
+    "malo": [
+      0.0,
+      56
+    ]
+  },
+  "n_tramos": 12,
+  "n_calzadas": 1,
+  "calzadas": [
+    {
+      "calcodigo": 91032823,
+      "estado_idu": "regular",
+      "civ": 17000080,
+      "superficie": "flexible",
+      "n_tramos": 12,
+      "fecha_idu": "2025-12-31"
+    }
+  ],
+  "ajuste": {
+    "acierto_estado_idu": 0.8333333333333334,
+    "distancia_media_al_rango": 1.3531572443389972,
+    "acierto_sin_calibrar": 0.6666666666666666,
+    "distancia_sin_calibrar": 2.5437777137110302
+  },
+  "validacion_por_toma": [
+    {
+      "evaluada": "2026-10-05",
+      "calibrada_con": [
+        "2026-11-15"
+      ],
+      "multiplicador": 0.75,
+      "n_tramos": 9,
+      "acierto_estado_idu": 0.6666666666666666,
+      "distancia_media_al_rango": 2.322930560810269,
+      "acierto_sin_calibrar": 0.7777777777777778,
+      "distancia_sin_calibrar": 1.6887775620646437
+    },
+    {
+      "evaluada": "2026-11-15",
+      "calibrada_con": [
+        "2026-10-05"
+      ],
+      "multiplicador": 1.05,
+      "n_tramos": 3,
+      "acierto_estado_idu": 0.3333333333333333,
+      "distancia_media_al_rango": 5.10877816865019,
+      "acierto_sin_calibrar": 0.3333333333333333,
+      "distancia_sin_calibrar": 5.10877816865019
+    }
+  ],
+  "limitacion": "Todos los tramos etiquetados caen en calzadas con el mismo estado IDU, así que el ajuste ancla el umbral a ese estado pero no prueba que el score separe bueno/regular/malo. Para una calibración completa hacen falta 20-30 calzadas con estados distintos y fotos con GPS."
+}

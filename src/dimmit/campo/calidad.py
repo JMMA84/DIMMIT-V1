@@ -4,6 +4,8 @@ Salida: data/campo/features/calidad_largo.parquet (formato largo: id_via | nivel
 valor | ic95_inf | ic95_sup | n | nota) y columnas de calidad/confianza agregadas a vias.parquet.
 Referencia de deriva: fotogramas de F ∪ T de RDD2020 (data/features/vision_frame.parquet).
 """
+import json
+
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
@@ -127,6 +129,18 @@ def build(fr, vias, cfg):
             for b in ("maxconfcampo_D40", "ncampo_D40", "maxconf_D40", "maxconf_D00"):
                 nota = "supuesto: alineación por orden de fotos 0-1" + (" (control negativo)" if b == "maxconf_D00" else "")
                 add(key, nivel_f, "correlacion_sensor", f"spearman_foto_profundidad_cm__{b}", float(spearmanr(g["profundidad_cm"], g[b])[0]), len(g), nota)
+    # --- calibración contra el IDU (src/dimmit/campo/calibracion.py) --------------------------------
+    from dimmit.campo.scores import CALIB
+
+    if CALIB.exists():
+        c = json.loads(CALIB.read_text())
+        nota = f"{c['n_tramos']} tramos en {c['n_calzadas']} calzada(s) IDU; " + (c.get("limitacion") or "")
+        add("LOTE", "lote", "calibracion_idu", "multiplicador_tau", c["multiplicador"], c["n_tramos"], f"tau = m · tau_campo -> {c['tau_campo_calibrado']}")
+        add("LOTE", "lote", "calibracion_idu", "acierto_estado_idu_calibrado", c["ajuste"]["acierto_estado_idu"], c["n_tramos"], nota)
+        add("LOTE", "lote", "calibracion_idu", "acierto_estado_idu_sin_calibrar", c["ajuste"]["acierto_sin_calibrar"], c["n_tramos"], "tau de RDD2020 (m = 1)")
+        for v in c["validacion_por_toma"]:
+            add("LOTE", "lote", "calibracion_idu", f"acierto_fuera_de_muestra_{v['evaluada']}", v["acierto_estado_idu"], v["n_tramos"],
+                f"calibrado con {', '.join(v['calibrada_con'])} (m = {v['multiplicador']:g}); sin calibrar: {v['acierto_sin_calibrar']:.0%}")
     # --- repetibilidad: tomas repetidas del mismo sitio deberían dar el mismo diagnóstico ----------
     if sitios:
         t_all = vias[vias["nivel"] == "tramo"]
@@ -170,9 +184,14 @@ def build(fr, vias, cfg):
 
 def main():
     cfg = load_cfg()
-    fr = pd.read_parquet(FEAT / "fotogramas_features.parquet")
-    vias = pd.read_parquet(FEAT / "vias.parquet")
-    fr, vias, largo = build(fr, vias, cfg)
+    fr_all = pd.read_parquet(FEAT / "fotogramas_features.parquet")
+    vias_all = pd.read_parquet(FEAT / "vias.parquet")
+    # las métricas de calidad son de la toma evaluada; los tramos de calibración (otra toma) solo calibran
+    ef = fr_all["conjunto"].eq("evaluacion") if "conjunto" in fr_all else pd.Series(True, index=fr_all.index)
+    ev = vias_all["conjunto"].eq("evaluacion") if "conjunto" in vias_all else pd.Series(True, index=vias_all.index)
+    fr, vias, largo = build(fr_all[ef].copy(), vias_all[ev].copy(), cfg)
+    fr = pd.concat([fr, fr_all[~ef]], ignore_index=True)
+    vias = pd.concat([vias, vias_all[~ev]], ignore_index=True)
     fr.to_parquet(FEAT / "fotogramas_features.parquet", index=False)
     vias.to_parquet(FEAT / "vias.parquet", index=False)
     largo.to_parquet(FEAT / "calidad_largo.parquet", index=False)
