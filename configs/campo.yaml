@@ -17,6 +17,14 @@ pruebas:
   Prueba_8: {fotos: prueba8, sensor: "BACHES TOMAS/primera tomo segundo sitio enviar.txt", sitio: 2, superficie: adoquin}
   Prueba_9: {fotos: prueba9, sensor: "BACHES TOMAS/segunda toma segundo sitio enviar.txt", sitio: 2, superficie: adoquin}
 # superficie (por defecto asfalto): la registra el equipo en campo, como en una inspección PCI
+
+# referencia oficial (src/dimmit/campo/idu.py): estado superficial de calzada del IDU en la zona de los sitios
+# (alrededor de la sede centro de la U. del Rosario, según el equipo). Sin GPS se compara por zona y superficie.
+idu:
+  referencia: "Plazoleta del Rosario"
+  lat: 4.6007396
+  lon: -74.0730663
+  radio_m: 350
 # Toma anterior (5-oct-2026, La Candelaria, cámara 2 Hz + GPS 1 Hz); el equipo indicó que no eran las fotos
 # que correspondían. Para reproducirla, reemplazar `pruebas` por:
 #   Prueba_2: {fotos: grabacion_20261005_093800_Prueba_2, sensor: "tomadedatos/Tiempo_ms,Distancia_cm,ProfundidadB1.txt"}

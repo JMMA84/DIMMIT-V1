@@ -1,8 +1,8 @@
-"""Gráfica para póster (PNG 300 dpi) de la toma vigente: por recorrido, el score visual antes y después
-del modo campo y la profundidad máxima del sensor, coloreados por la etiqueta final.
+"""Gráfica para póster (PNG 300 dpi) con los resultados de la corrida vigente: por recorrido, el score
+visual (modo campo) y la profundidad máxima del sensor, coloreados por la etiqueta final.
 
 Lee data/campo/features/vias.parquet y configs/campo.yaml (toma).
-Escribe reports/campo/poster/score_tramos_antes_despues.png
+Escribe reports/campo/poster/resultados_toma_<fecha>.png
 """
 import matplotlib
 
@@ -16,7 +16,6 @@ from dimmit.campo.scores import FEAT
 from dimmit.utils.io import ensure_dir
 
 INK, MUTED = "#15191c", "#6b7378"
-ANTES = "#9aa1a4"
 ETIQ = {"prevencion": ("Prevención", "#2a78d6"), "mantenimiento": ("Mantenimiento", "#c98500"), "intervencion": ("Intervención", "#d03b3b")}
 ESTADOS = [(0, 41, "muy malo"), (41, 56, "malo"), (56, 71, "regular"), (71, 86, "satisf."), (86, 100, "bueno")]
 BANDAS = ["#f4e6e3", "#f7ede4", "#f7f3e6", "#eef3ea", "#e7f0f7"]
@@ -43,25 +42,23 @@ def main():
     fig, (ax, bx) = plt.subplots(1, 2, figsize=(15, 9), dpi=300, sharey=True, gridspec_kw={"width_ratios": [2.1, 1], "wspace": 0.06})
     fig.patch.set_facecolor("white")
     y = np.arange(n)
-    # --- panel 1: score visual antes -> después --------------------------------------------------
+    # --- panel 1: score visual de la corrida (modo campo) ------------------------------------------
     for (lo, hi, name), col in zip(ESTADOS, BANDAS):
         ax.axvspan(lo, hi, color=col, zorder=0)
         ax.text((lo + hi) / 2, n - 0.45, name, ha="center", va="bottom", color=MUTED, fontsize=12.5)
     for i, r in t.iterrows():
-        a, d = r["score_calidad_tau_rdd2020"], r["score_calidad"]
+        d = r["score_calidad"]
         col = ETIQ[r["etiqueta"]][1]
-        ax.annotate("", xy=(d, i), xytext=(a, i), arrowprops=dict(arrowstyle="-|>", color="#c3c6bd", lw=2.2, mutation_scale=18), zorder=2)
-        ax.scatter(a, i, s=170, color=ANTES, zorder=3, edgecolor="white", linewidth=1.5, clip_on=False)
+        ax.plot([0, d], [i, i], color=col, lw=3, alpha=0.55, zorder=2, solid_capstyle="butt")
         ax.scatter(d, i, s=330, color=col, zorder=4, edgecolor="white", linewidth=2, clip_on=False)
-        ax.text(a - 2.2, i, f"{a:.0f}", ha="right", va="center", fontsize=12, color=MUTED)
-        ax.text(min(d, 100) + 2.6 if d < 93 else d - 2.6, i + 0.32, f"{d:.0f}", ha="center", va="bottom", fontsize=13, color=col, fontweight="bold")
+        ax.text(d - 2.4, i + 0.3, f"{d:.0f} · {r['estado'].replace('_', ' ')}", ha="right", va="bottom", fontsize=13, color=col, fontweight="bold")
     ax.set_yticks(y, [_row_label(r) for _, r in t.iterrows()], fontsize=14.5, color=INK)
     ax.set_xlim(0, 100)
     ax.set_ylim(-0.6, n + 0.15)
     ax.set_xticks([0, 25, 50, 75, 100])
     ax.tick_params(axis="x", colors=MUTED, labelsize=12.5)
     ax.tick_params(axis="y", length=0)
-    ax.set_xlabel("Score visual de la vía (YOLOv10)\n0 = fallada · 100 = sin daño", color=INK, fontsize=14, labelpad=10)
+    ax.set_xlabel("Score visual de la vía (YOLOv10 + filtros de campo)\n0 = fallada · 100 = sin daño", color=INK, fontsize=14, labelpad=10)
     ax.set_title("Lo que ve la cámara", loc="left", fontsize=17, fontweight="bold", color=INK, pad=12)
     # --- panel 2: profundidad del sensor ---------------------------------------------------------
     pmax = t["profundidad_max_cm"].to_numpy(float)
@@ -97,16 +94,17 @@ def main():
              fontsize=15.5, color=INK, ha="left", va="top")
     toma = cfg.get("toma", {}).get("titulo", "")
     fig.text(0.02, 0.878, f"DIMMIT V1 · {toma} · YOLOv10 (RDD2020) + sensor ultrasónico en bastón", fontsize=13, color=MUTED, ha="left", va="top")
-    handles = [plt.Line2D([], [], marker="o", ls="", ms=10, color=ANTES, label="Antes: umbral de RDD2020, sin filtros")]
-    handles += [plt.Line2D([], [], marker="o", ls="", ms=13, color=c, label=f"Modo campo · {nm}") for k, (nm, c) in ETIQ.items() if (t["etiqueta"] == k).any()]
-    fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.015, 0.075), ncol=len(handles), frameon=False, fontsize=13)
-    nota = (f"Score medio: {t['score_calidad_tau_rdd2020'].mean():.0f} → {t['score_calidad'].mean():.0f}. Modo campo = filtros de confianza, geometría y superficie, "
-            "persistencia y consenso multi-escala; en adoquín solo cuentan los baches (las 'grietas' son las juntas).\n"
+    handles = [plt.Line2D([], [], marker="o", ls="", ms=13, color=c, label=f"Etiqueta: {nm}") for k, (nm, c) in ETIQ.items() if (t["etiqueta"] == k).any()]
+    fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.015, 0.095), ncol=len(handles), frameon=False, fontsize=13)
+    run = pd.read_csv(OUT_CAMPO / "vias_clasificacion.csv", usecols=["run_id"])["run_id"].iloc[0] if (OUT_CAMPO / "vias_clasificacion.csv").exists() else ""
+    nota = (f"Corrida {run} · {int(t['n_fotogramas'].sum())} fotos. Score = pseudo-PCI (ASTM D6433) con las cajas que pasan los filtros de campo\n"
+            "(confianza, geometría, superficie, persistencia y consenso multi-escala); en adoquín solo cuentan los baches.\n"
             f"Etiqueta: estado malo, bache ≥ {et_cfg['intervencion']['profundidad_cm']:.0f} cm o bache visto con confianza ≥ {et_cfg['intervencion']['bache_conf_min']:.1f} → intervención; "
             f"estado regular o bache ≥ {et_cfg['mantenimiento']['profundidad_cm']:.0f} cm → mantenimiento.").replace("0.5", "0,5")
-    fig.text(0.02, 0.018, nota, fontsize=11, color=MUTED, ha="left", va="bottom", linespacing=1.5)
-    fig.subplots_adjust(left=0.2, right=0.97, top=0.76, bottom=0.25)
-    out = ensure_dir(OUT_CAMPO / "poster") / "score_tramos_antes_despues.png"
+    fig.text(0.02, 0.012, nota, fontsize=11, color=MUTED, ha="left", va="bottom", linespacing=1.5)
+    fig.subplots_adjust(left=0.2, right=0.97, top=0.76, bottom=0.27)
+    fecha = cfg.get("toma", {}).get("fecha", "")
+    out = ensure_dir(OUT_CAMPO / "poster") / f"resultados_toma_{fecha}.png"
     fig.savefig(out, dpi=300, facecolor="white")
     print(f"[ok] {out}")
 

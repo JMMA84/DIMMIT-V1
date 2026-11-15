@@ -4,7 +4,7 @@ DET ?= data/features/detector
 WEIGHTS ?= models/release/yolov10n_rdd2020.pt
 IMGSZ ?= 640
 
-.PHONY: campo-poster setup data labels validate-data train-cpu kaggle-bundle kaggle-train kaggle-status kaggle-pull \
+.PHONY: campo-poster campo-idu setup data labels validate-data train-cpu kaggle-bundle kaggle-train kaggle-status kaggle-pull \
         predict-all features sensors context importance fusion baselines zenodo drift describe \
         evaluate report v1 test campo-ingest campo-dataset campo-infer campo-status campo-pull campo-local campo-scores campo-report campo
 
@@ -91,8 +91,12 @@ campo-scores:    ## umbrales de campo, score, etiqueta, calidad, correlación y 
 	$(ENV) $(PY) -m dimmit.campo.salidas
 campo-report:    ## presentación HTML de la toma del 5-oct-2026 (textos fijos de esa toma; no se regenera con la vigente)
 	$(ENV) $(PY) -m dimmit.reporting.presentacion_campo
-campo-poster:    ## gráfica PNG 300 dpi para póster (reports/campo/poster/score_tramos_antes_despues.png)
+campo-idu:       ## estado superficial de calzada del IDU alrededor de los sitios (data/campo/idu/calzadas_estado.csv)
+	$(ENV) $(PY) -m dimmit.campo.idu
+campo-poster:    ## figuras PNG 300 dpi del póster: resultados, diagrama de funcionamiento y validación vs IDU
 	$(ENV) $(PY) -m dimmit.reporting.poster_campo
+	$(ENV) $(PY) -m dimmit.reporting.diagrama_flujo
+	$(ENV) $(PY) -m dimmit.reporting.validacion_idu
 campo: campo-scores campo-poster
 
 test:
