@@ -10,6 +10,10 @@ data/*
 !data/index/
 data/index/*
 !data/index/splits.csv
+!data/index/severity_cutoffs.json
+!data/features/
+data/features/*
+!data/features/vision_thresholds.json
 !data/campo/
 data/campo/*
 !data/campo/index/
@@ -17,6 +21,11 @@ data/campo/index/*
 !data/campo/index/manifiesto.csv
 !data/campo/index/tramos.parquet
 !data/campo/index/revision_visual_31.csv
+!data/campo/referencia/
+!data/campo/features/
+data/campo/features/*
+!data/campo/features/umbrales_campo.json
+!data/index/severity_cutoffs.json
 models/*
 !models/.gitkeep
 !models/release/

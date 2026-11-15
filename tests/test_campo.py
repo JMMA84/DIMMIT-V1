@@ -6,7 +6,7 @@ from dimmit.campo.gpx import interpolate, read_gpx, smooth_track
 from dimmit.campo.scores import etiqueta
 from dimmit.campo.tramos import cut_tramos, prueba_id, via_id
 from dimmit.campo.filtros import apply as apply_filters, in_road
-from dimmit.campo.ultrasonico import align_normalized, astm_severity, baseline_mode, depth_features, read_depth
+from dimmit.campo.ultrasonico import align_normalized, astm_severity, depth_features, read_depth
 
 GPX = """<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.0" xmlns="http://www.topografix.com/GPX/1/0"><trk><trkseg>
@@ -46,15 +46,22 @@ def test_ids_are_deterministic_and_distinct():
     assert prueba_id("2026-10-05", "Prueba_2") != prueba_id("2026-10-05", "Prueba_3")
 
 
-def test_ultrasonic_depth_and_alignment(tmp_path):
+def test_ultrasonic_cleaning_baseline_and_alignment(tmp_path):
+    # posicionamiento (52 cm) y apagado (0,00) se descartan; profundidad = distancia - 8 cm
     p = tmp_path / "Tiempo_ms,Distancia_cm,ProfundidadB9.txt"
-    p.write_text("Tiempo_ms,Distancia_cm,ProfundidadBache_cm\n1000,40.0,0\n1250,42.0,2\n1500,50.0,10\n1750,41.0,1\n")
-    d = read_depth(p, 40.0)
-    assert d["profundidad_cm"].tolist() == [0.0, 2.0, 10.0, 1.0] and d["t_norm"].iloc[-1] == 1.0
+    p.write_text("Tiempo_ms,Distancia_cm,ProfundidadBache_cm\n1000,52.0,12\n1250,8.0,-32\n1500,15.5,-24.5\n1750,7.6,-32.4\n2000,0.00,-40\n")
+    d = read_depth(p, 8.0, 35.0)
+    assert d["valida"].tolist() == [False, True, True, True, False]
+    assert d["motivo_descarte"].tolist() == ["fuera_de_rango", "", "", "", "lectura_nula"]
+    prof = d["profundidad_cm"].to_numpy()
+    assert np.isnan(prof[0]) and np.isnan(prof[4]) and np.allclose(prof[1:4], [0.0, 7.5, -0.4])
     f = depth_features(d, 3.0)
-    assert f["prof_max_cm"] == 10.0 and abs(f["frac_mayor_umbral"] - 0.25) < 1e-9 and f["n_lecturas"] == 4
-    al = align_normalized(d, [0.0, 2 / 3, 0.5], half_window=0.05)
-    assert al[0] == 0.0 and al[1] == 10.0 and np.isnan(al[2])
+    assert f["n_lecturas"] == 5 and f["n_validas"] == 3 and f["n_fuera_de_rango"] == 1 and f["n_nulas"] == 1
+    assert f["prof_max_cm"] == 7.5 and abs(f["frac_mayor_umbral"] - 1 / 3) < 1e-9 and f["prof_max_cm_base40"] == 12.0
+    al = align_normalized(d, [0.0, 0.5, 1.0], half_window=0.05)  # extremos solo tienen lecturas descartadas
+    assert np.isnan(al[0]) and al[1] == 7.5 and np.isnan(al[2])
+    vacia = read_depth(p, 8.0, 5.0)  # rango tan corto que nada es válido
+    assert depth_features(vacia)["n_validas"] == 0 and np.isnan(depth_features(vacia)["prof_max_cm"])
 
 
 def test_etiqueta_rules():
@@ -80,13 +87,9 @@ def test_fusion_release_loader_matches_saved_members():
     assert all(len(m["pres"][g].cols) == len(meta["miembros"][0]["pre"][g]["cols"]) for m in members for g in meta["grupos"])
 
 
-def test_baseline_mode_and_astm_severity():
-    # 30 lecturas de pavimento a 52 cm y un hueco de 9 cm: la moda es el pavimento, no el firmware
-    d = np.r_[np.full(30, 52.0) + np.linspace(-0.4, 0.4, 30), [58.0, 61.0, 60.5]]
-    base, fuente = baseline_mode(d, min_n=20, fallback=40.0)
-    assert base == 52.0 and fuente == "moda"
-    assert baseline_mode(d[:5], min_n=20, fallback=40.0) == (40.0, "fija")
-    assert astm_severity(1.0) == "L" and astm_severity(3.0) == "M" and astm_severity(9.0) == "H" and astm_severity(float("nan")) is None
+def test_astm_severity():
+    assert astm_severity(1.0) == "L" and astm_severity(3.0) == "M" and astm_severity(9.0) == "H"
+    assert astm_severity(float("nan")) is None and astm_severity(-0.5) is None  # pavimento sano
 
 
 def test_filters_band_road_persistence_and_scales():

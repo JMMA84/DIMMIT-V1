@@ -230,7 +230,7 @@ def seq_color(score):
 
 # --- construcción ----------------------------------------------------------------------------
 def build():
-    vias = pd.read_csv(OUT_CAMPO / "vias_clasificacion.csv")
+    vias = pd.read_parquet(FEAT / "vias.parquet")  # tabla interna completa; el CSV entregable va acotado
     largo = pd.read_csv(OUT_CAMPO / "calidad_confianza_correlacion.csv")
     fr = pd.read_parquet(FEAT / "fotogramas_features.parquet")
     det_dir = REPO_ROOT / json.loads((FEAT / "fuente_detecciones.json").read_text())["detector_dir"]
@@ -318,11 +318,12 @@ def build():
         f'<tr><td class="mono">{r.id_via}</td><td class="n">{fmt(r.brillo_media)}</td><td class="n">{fmt(r.nitidez_media)}</td><td class="n">{fmt(100 * r.frac_fotos_borrosa)} %</td>'
         f'<td class="n">{fmt(100 * r.frac_fotos_sobreexpuesta)} %</td><td class="n">{fmt(r.max_conf_media, 2)}</td><td class="n">{fmt(100 * r.frac_fotos_con_deteccion)} %</td><td class="n">{fmt(100 * r.frac_fotos_con_deteccion_conf25)} %</td></tr>'
         for _, r in t.sort_values(["prueba", "tramo"]).iterrows())
+    sensor_desc = "; ".join(f"{p.prueba.replace('_', ' ')}: {int(p.lecturas_totales) - int(p.lecturas_validas)} de {int(p.lecturas_totales)} lecturas descartadas" for _, p in pr.iterrows())
     comp_rows = ""
     for _, p in pr.iterrows():
         sev = p.severidad_bache_astm if isinstance(p.severidad_bache_astm, str) and p.severidad_bache_astm else "—"
         comp_rows += (f'<tr><td>{p.prueba.replace("_", " ")}</td><td class="n">{int(p.n_piel_cocodrilo)} / {int(p.n_baches)}</td><td class="n">{fmt(p.score_calidad)}</td>'
-                      f'<td class="n">{fmt(p.linea_base_cm)}</td><td class="n">{fmt(p.profundidad_max_cm, 1)}</td><td>{sev}</td>'
+                      f'<td class="n">{int(p.lecturas_validas)} de {int(p.lecturas_totales)}</td><td class="n">{fmt(p.profundidad_max_cm, 1) if p.lecturas_validas else "sin lecturas válidas"}</td><td>{sev}</td>'
                       f'<td><span class="pill et-{p.etiqueta}">{ETIQ_TXT[p.etiqueta]}</span></td></tr>')
     # ejemplo: el tramo donde el sensor subió la etiqueta aunque la cámara viera poco
     cand = t[(t["profundidad_max_cm"] >= 3) & t["estado"].isin(["bueno", "satisfactorio"])]
@@ -344,7 +345,8 @@ def build():
         "CALLE": street_map(fr, t, depth_frames), "PSI": psi_html,
         "YOLO_IMG": yolo_img, "YOLO_JSON": yolo_json, "YOLO_ID": best_all.image_id, "YOLO_N": str(int(len(yolo_keep))), "YOLO_N_TAU": str(int((yolo_boxes["conf"] >= yolo_boxes["tau"]).sum())), "PARCHES": parches_pct,
         "EX_ID": ex.id_via, "EX_N": str(int(ex.n_fotogramas)), "EX_SCORE": fmt(ex.score_calidad), "EX_ESTADO": ESTADO_TXT[ex.estado], "EX_ETIQ": ETIQ_TXT[ex.etiqueta],
-        "EX_PROF": fmt(ex.profundidad_max_cm, 1), "EX_LAT": fmt(ex.lat, 5), "EX_LON": fmt(ex.lon, 5),
+        "SENSOR_DESCARTES": sensor_desc,
+        "EX_PROF": (fmt(ex.profundidad_max_cm, 1) + " cm") if np.isfinite(ex.profundidad_max_cm) else "sin lectura válida", "EX_LAT": fmt(ex.lat, 5), "EX_LON": fmt(ex.lon, 5),
         "EX_RHO": " · ".join(f"{SHORT[c]} {fmt(100 - ex[f'sub_score_{CLASS_SLUGS[c]}'])}" for c in CLASS_KEYS),
         "EX_CONTEO": ex_conteo, "EX_RHO_VAL": ex_rho_val, "EX_CDV": ex_cdv, "EX_FOTOS": ex_fotos, "EX_N_FOTOS_CAJAS": str(len(ex_frames)),
         "EX_PRUEBA": ex.prueba.replace("_", " "), "EX_TRAMO": str(int(ex.tramo)), "EX_LONG": fmt(ex.longitud_m), "EX_DANOS": ex_danos, "EX_SEV": ex_sev,
@@ -628,7 +630,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   </div>
   <div class="cols">
    <div class="card"><div class="k">entrada lateral · GPS</div><h3>id_via + lat/lon</h3><p>id_via = hash(fecha, prueba, tramo, centroide). Mismo dato, mismo ID. Ejemplo: {{EX_ID}} en {{EX_LAT}}, {{EX_LON}}.</p></div>
-   <div class="card"><div class="k">entrada lateral · ultrasónico</div><h3>profundidad_max_cm</h3><p>No entra al score; puede subir la etiqueta: ≥ 3 cm → al menos mantenimiento, ≥ 8 cm → intervención. Ejemplo: {{EX_PROF}} cm.</p></div>
+   <div class="card"><div class="k">entrada lateral · ultrasónico</div><h3>profundidad_max_cm</h3><p>No entra al score; puede subir la etiqueta: ≥ 3 cm → al menos mantenimiento, ≥ 8 cm → intervención. Ejemplo: {{EX_PROF}}.</p></div>
    <div class="card"><div class="k">regla de etiqueta</div><h3><span class="pill et-prevencion">Prevención</span> <span class="pill et-mantenimiento">Mantenimiento</span> <span class="pill et-intervencion">Intervención</span></h3><p>bueno/satisfactorio → prevención · regular o profundidad ≥ 3 cm → mantenimiento · malo/muy malo, profundidad ≥ 8 cm o bache con confianza ≥ 0,5 → intervención. Ejemplo: {{EX_ETIQ}}.</p></div>
   </div>
   <p style="font-size:.82rem">Qué se descartó de YOLO: el embedding interno de 448 valores no mejoró el score en la evaluación (Δ MAE +0,07, IC incluye 0). Se usan solo clase, confianza y geometría de cada caja.</p>
@@ -641,8 +643,8 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   <div class="cards">
    <div class="card"><div class="k">tramo</div><h3 class="mono">{{EX_ID}}</h3><p>{{EX_N}} fotos · {{EX_LONG}} m · {{EX_LAT}}, {{EX_LON}}</p></div>
    <div class="card"><div class="k">la cámara vio</div><h3>{{EX_DANOS}}</h3><p>{{EX_CONTEO}}</p></div>
-   <div class="card"><div class="k">el sensor midió</div><h3>{{EX_PROF}} cm</h3><p>profundidad máxima · severidad ASTM {{EX_SEV}} · línea base autocalibrada</p></div>
-   <div class="card" style="border-color:var(--accent);border-width:2px"><div class="k">resultado</div><h3>{{EX_SCORE}} · {{EX_ESTADO}}</h3><p><span class="pill et-{{EX_ETIQ_CLASS}}" style="font-size:.85rem;padding:3px 12px">{{EX_ETIQ}}</span><br>acción recomendada: {{EX_ACCION}}<br><span style="font-size:.8rem;color:var(--muted)">antes (umbral RDD2020, sensor con base fija): {{EX_SCORE_ANTES}} · {{EX_ESTADO_ANTES}} · {{EX_ETIQ_ANTES}}</span></p></div>
+   <div class="card"><div class="k">el sensor midió</div><h3>{{EX_PROF}}</h3><p>profundidad máxima · severidad ASTM {{EX_SEV}} · distancia − 8 cm, lecturas depuradas</p></div>
+   <div class="card" style="border-color:var(--accent);border-width:2px"><div class="k">resultado</div><h3>{{EX_SCORE}} · {{EX_ESTADO}}</h3><p><span class="pill et-{{EX_ETIQ_CLASS}}" style="font-size:.85rem;padding:3px 12px">{{EX_ETIQ}}</span><br>acción recomendada: {{EX_ACCION}}<br><span style="font-size:.8rem;color:var(--muted)">antes (umbral RDD2020, sensor del firmware): {{EX_SCORE_ANTES}} · {{EX_ESTADO_ANTES}} · {{EX_ETIQ_ANTES}}</span></p></div>
   </div>
   <div class="gallery" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">{{EX_FOTOS}}</div>
   <p style="font-size:.82rem">Las {{EX_N_FOTOS_CAJAS}} fotos del tramo en las que alguna caja pasó los cuatro filtros, con esas cajas dibujadas (clase y confianza). El resto de las {{EX_N}} fotos no aportó cajas al score.</p>
@@ -666,7 +668,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
  <div class="sheet">
   <div class="eyebrow">Qué encontró el detector</div>
   <h2>Antes y después: umbral de RDD2020 frente al modo campo</h2>
-  <div class="legend"><span><span class="sw" style="background:var(--st-muy_malo)"></span>antes: umbral de RDD2020 (0,04–0,09), sin filtros, sensor con base fija de 40 cm</span><span><span class="sw" style="background:var(--st-bueno)"></span>modo campo: umbral de precisión 50 %, 4 filtros, sensor autocalibrado, severidad ASTM</span></div>
+  <div class="legend"><span><span class="sw" style="background:var(--st-muy_malo)"></span>antes: umbral de RDD2020 (0,04–0,09), sin filtros, sensor del firmware (distancia − 40 cm, sin depurar)</span><span><span class="sw" style="background:var(--st-bueno)"></span>modo campo: umbral de precisión 50 %, 4 filtros, sensor depurado (distancia − 8 cm), severidad ASTM</span></div>
   <div class="chartbox">{{BARRAS}}</div>
   <div class="note">Antes, los 9 tramos salían en intervención ({{N_INT_ANTES}}/9); ahora {{N_INT}}/9, concentrados en la Prueba 3, donde el sensor sí midió un hueco real. De {{N_BRUTAS}} cajas brutas, {{N_TAU}} pasaban el umbral de RDD2020 y {{N_CONSERVADAS}} pasan los cuatro filtros del modo campo. El precio: el modo campo es conservador y deja pasar daño real (ver validación).</div>
  </div>
@@ -676,7 +678,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
  <div class="sheet">
   <div class="eyebrow">Diagnóstico: ¿modelo, sensores o contexto? Las tres cosas, y se puede medir cuánto cada una</div>
   <div class="tablebox" style="max-height:none"><table class="cmp"><thead><tr><th>Evidencia</th><th>Causa</th><th>Corrección aplicada</th><th>Estado</th></tr></thead><tbody>
-   <tr><td>La Prueba 2 marcaba 10 cm de profundidad <b>constantes</b> durante 35 s; la Prueba 4, 17–25 cm. La distancia más frecuente del sensor era 50 y 61 cm, no los 40 cm del firmware.</td><td><b>Sensor: línea base mal puesta</b> (altura del montaje). Fabricó baches en 2 de 3 pruebas y disparó "intervención" en los 9 tramos.</td><td>Línea base autocalibrada = distancia más frecuente de cada serie (el pavimento sano). Severidad del bache por profundidad según ASTM D6433.</td><td><span class="pill et-prevencion">Corregido</span></td></tr>
+   <tr><td>El firmware calculaba distancia − 40 cm, con valores negativos sin sentido físico, y no separaba las lecturas de posicionamiento y apagado del bastón ({{SENSOR_DESCARTES}}).</td><td><b>Sensor: referencia desfasada y ruido de manipulación</b>. Disparó "intervención" en los 9 tramos.</td><td>Se descartan lecturas nulas y &gt; 35 cm; profundidad = distancia − 8 cm (altura real del sensor sobre pavimento plano). Severidad del bache por profundidad según ASTM D6433.</td><td><span class="pill et-prevencion">Corregido</span></td></tr>
    <tr><td>183 "grietas transversales" con ancho mediano 0,52 de la imagen y altura 0,11 (área 4× la de RDD2020): juntas, sombra del bordillo y andén. Áreas de piel de cocodrilo y bache 1,4–2× las de RDD2020.</td><td><b>Dominio / encuadre</b>: cámara a 1,3 m del suelo mirando hacia abajo, a pie, frente a dashcam sobre la vía. El pseudo-PCI usa % de área: densidades infladas → "muy malo".</td><td>Umbral de campo por clase (precisión ≥ 50 % en RDD2020), filtro de bandas y de región de vía, persistencia entre fotos consecutivas, consenso a dos escalas.</td><td><span class="pill et-mantenimiento">Mitigado</span></td></tr>
    <tr><td>La confianza en campo está en el mismo rango que en el propio test de RDD2020 (máxima media por foto {{CONF_MED}} vs {{CONF_REF}}; fotos con una caja ≥ 0,25: {{PCT_CONF25}} % vs {{PCT_REF25}} %). El detector acierta el daño principal, pero el recall es bajo: mAP50 0,28.</td><td><b>Modelo</b>: YOLOv10n de 12 épocas en CPU a 416 px. No es la confianza lo que falla; es la cobertura (grietas finas, India y Chequia).</td><td>Inferencia a 640 px. Lo demás requiere datos: fotos propias anotadas desde el vehículo y GPU.</td><td><span class="pill et-intervencion">Pendiente</span></td></tr>
    <tr><td>Los 6 parches rectangulares de asfalto de la muestra: el detector marca la mitad como piel de cocodrilo con confianza 0,29–0,36.</td><td><b>Modelo</b>: confusión parche ↔ piel de cocodrilo (textura). RDD2020 casi no tiene parches anotados.</td><td>Se reporta; no se filtra a mano (sería inventar una regla). Entra al plan de anotación propia.</td><td><span class="pill et-intervencion">Pendiente</span></td></tr>
@@ -736,8 +738,8 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
    </div>
    <div style="display:grid;gap:12px;min-width:0">
     <h3>Qué vio cada uno y qué salió</h3>
-    <div class="tablebox compact" style="max-height:none"><table class="cmp"><thead><tr><th>Prueba</th><th>Cámara: piel coc. / baches (cajas)</th><th>Cámara: score</th><th>Sensor: línea base (cm)</th><th>Sensor: prof. máx (cm)</th><th>Severidad ASTM</th><th>Etiqueta</th></tr></thead><tbody>{{COMP}}</tbody></table></div>
-    <p style="font-size:.82rem">Cómo se lee el sensor: la línea base es la distancia más frecuente de cada serie (el pavimento sano): 50, 37 y 61 cm, no los 40 cm del firmware. El Arduino no tiene reloj; cada lectura se asocia a su foto por tiempo normalizado (supuesto).</p>
+    <div class="tablebox compact" style="max-height:none"><table class="cmp"><thead><tr><th>Prueba</th><th>Cámara: piel coc. / baches (cajas)</th><th>Cámara: score</th><th>Sensor: lecturas válidas</th><th>Sensor: prof. máx (cm)</th><th>Severidad ASTM</th><th>Etiqueta</th></tr></thead><tbody>{{COMP}}</tbody></table></div>
+    <p style="font-size:.82rem">Cómo se lee el sensor (bastón manual): se descartan lecturas nulas y mayores de 35 cm (posicionamiento y apagado); profundidad = distancia − 8 cm, la altura del sensor sobre pavimento plano. &gt; 0 cm es profundidad del bache; ≈ 0 o levemente negativa, pavimento sano. El Arduino no tiene reloj; cada lectura se asocia a su foto por tiempo normalizado (supuesto).</p>
    </div>
   </div>
  </div>
@@ -803,7 +805,7 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; ga
   <div class="eyebrow">Qué aprendimos y qué sigue</div>
   <div class="cards">
    <div class="card"><div class="k">funciona</div><h3>El flujo completo, en la nube</h3><p>Drive → Kaggle → ID por tramo → score, etiqueta y GPS, con paridad exacta entre la inferencia en Kaggle y la local, y un diagnóstico que separa modelo, sensor y encuadre con números.</p></div>
-   <div class="card"><div class="k">corregido esta semana</div><h3>Sensor autocalibrado y filtros</h3><p>La línea base sale de los datos, la severidad del bache sigue la norma ASTM y cuatro capas frenan los falsos positivos. El precio es recall: el modo campo es conservador.</p></div>
+   <div class="card"><div class="k">corregido esta semana</div><h3>Sensor depurado y filtros</h3><p>Lecturas de manipulación descartadas, profundidad referida a la altura real del sensor (8 cm), la severidad del bache sigue la norma ASTM y cuatro capas frenan los falsos positivos. El precio es recall: el modo campo es conservador.</p></div>
    <div class="card"><div class="k">hay que anotar</div><h3>200–300 fotos propias</h3><p>Desde el vehículo, a la altura del dashcam. Con eso se fijan umbrales y escala del score en campo y se reentrena el detector con parches y juntas.</p></div>
    <div class="card"><div class="k">siguiente</div><h3>Más recorridos y GPU</h3><p>Decenas de cuadras en varias localidades, detector a 640 px en GPU y calibración frente al PCI del IDU.</p></div>
   </div>

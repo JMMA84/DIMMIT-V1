@@ -100,7 +100,8 @@ Toma del 5-oct-2026 en La Candelaria: fotos a ~2 Hz, GPX del teléfono y un sens
 profundidad de bache (Arduino). La etapa de campo no usa el simulador ni la rama de sensores: el
 score sale solo de visión en **modo campo** (umbral por clase con precisión ≥ 50 % en RDD2020, filtro
 de bandas y de región de vía, persistencia entre fotos y consenso multi-escala), la línea base del
-ultrasónico se autocalibra con la distancia más frecuente de cada serie y la profundidad fija la
+ultrasónico se depura (sin lecturas nulas ni > 35 cm del posicionamiento y apagado del bastón), la
+profundidad es distancia − 8 cm (altura del sensor sobre pavimento plano) y fija la
 severidad del bache (ASTM D6433) y puede subir la etiqueta (prevención / mantenimiento / intervención).
 El modo RDD2020 (umbral original, sin filtros) se conserva como columnas `*_tau_rdd2020`.
 

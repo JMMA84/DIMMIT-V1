@@ -83,7 +83,7 @@ campo-status:
 campo-pull:      ## descarga detecciones de Kaggle a reports/campo/kaggle/outputs
 	$(ENV) $(PY) -m dimmit.cloud.kaggle_job infer-pull
 campo-local:     ## detecciones en CPU local a 416, 640 y 832 px (paridad con Kaggle y consenso multi-escala)
-	for s in 416 640 832; do $(ENV) $(PY) -m dimmit.models.detector.predict --weights $(WEIGHTS) --list data/campo/index/campo.txt --out data/campo/det_local_$$s --imgsz $$s --no-embeddings; done
+	for s in 416 640 832; do $(ENV) $(PY) -m dimmit.models.detector.predict --weights $(WEIGHTS) --list data/campo/index/campo.txt --out data/campo/det_local_$$s --imgsz $$s --conf 0.05 --max-det 30 --no-embeddings; done
 campo-scores:    ## umbrales de campo, score, etiqueta, calidad, correlación y las dos salidas finales
 	$(ENV) $(PY) -m dimmit.campo.umbrales
 	$(ENV) $(PY) -m dimmit.campo.scores

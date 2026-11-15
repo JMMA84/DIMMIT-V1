@@ -3,9 +3,9 @@
 Features acotadas: de YOLO solo se usan clase, confianza y geometría de cada caja (el embedding
 de 448-d no aportó en la ablación v1). Dos lecturas del mismo tramo:
   * modo RDD2020 (`*_tau_rdd2020`): umbrales por clase elegidos en RDD2020 (0.04-0.09), sin filtros,
-    profundidad con la línea base fija del firmware (40 cm). Es el "antes".
+    profundidad del firmware (distancia − 40 cm, sin depurar). Es el "antes".
   * modo campo (principal): cajas que sobreviven las cuatro capas de `campo/filtros.py`, profundidad
-    con línea base autocalibrada y, cuando hay sensor, severidad del bache por profundidad (ASTM
+    con el sensor depurado (sin lecturas nulas ni > 35 cm; distancia − 8 cm) y, cuando hay sensor, severidad del bache por profundidad (ASTM
     D6433) en vez del tamaño aparente. Es el "después".
 Salidas (data/campo/features/): fotogramas_features.parquet, vias.parquet, detecciones_filtradas.parquet,
 filtros_resumen.csv
@@ -55,7 +55,7 @@ def load_depth(cfg):
     for prueba, tag in u["mapa"].items():
         hits = sorted(folder.glob(f"*{tag}*.txt"))
         if hits:
-            s = read_depth(hits[0], u["linea_base_cm"], auto=str(u.get("linea_base", "auto")) == "auto")
+            s = read_depth(hits[0], u["linea_base_cm"], u["rango_max_cm"], u.get("firmware_base_cm", 40.0))
             out[prueba] = (s, depth_features(s, u["umbral_bache_cm"]))
     return out
 
@@ -127,9 +127,14 @@ def _depth(g, nivel, prueba, depth, cfg, col):
     serie, feats = depth[prueba]
     if nivel == "prueba":
         p = serie[col].to_numpy(float)
+        p = p[np.isfinite(p)]
+        if not len(p):
+            return {**out, "fuente": "sin_lecturas_validas"}
         return {"max": float(p.max()), "media": float(p.mean()), "frac": float((p >= cfg["ultrasonico"]["umbral_bache_cm"]).mean()), "fuente": "ultrasonico_prueba_completa"}
     al = g[col].to_numpy(float)
     al = al[np.isfinite(al)]
+    if not len(al) and col == "profundidad_cm" and feats.get("n_validas", 1) == 0:
+        out["fuente"] = "sin_lecturas_validas"
     if len(al):
         out = {"max": float(al.max()), "media": float(al.mean()), "frac": float((al >= cfg["ultrasonico"]["umbral_bache_cm"]).mean()), "fuente": "ultrasonico_alineado_tiempo_normalizado"}
     return out
@@ -167,7 +172,7 @@ def via_table(fr, tramos, depth, cfg):
             **{f"sub_score_{CLASS_SLUGS[c]}": float(pci[f"sub_{c}"]) for c in CLASS_KEYS},
             "score_calidad": score, "estado": estado, "etiqueta": et, "accion_recomendada": rule_action(estado, dominante or "D00"),
             "profundidad_max_cm": prof["max"], "profundidad_media_cm": prof["media"], "profundidad_frac_bache": prof["frac"], "fuente_profundidad": prof["fuente"],
-            "linea_base_cm": feats.get("linea_base_cm", np.nan), "fuente_linea_base": feats.get("fuente_linea_base", ""),
+            "linea_base_cm": feats.get("linea_base_cm", np.nan), "lecturas_validas": feats.get("n_validas", 0), "lecturas_totales": feats.get("n_lecturas", 0),
             "severidad_bache_astm": astm_severity(prof["max"]) or "",
             "confianza_modelo": float(g.loc[g[f"maxconfcampo_{dominante}"] > 0, f"maxconfcampo_{dominante}"].mean()) if dominante else float("nan"),
             "max_conf": float(g["max_conf"].max()), "frac_fotos_con_deteccion": float((g["n_detecciones_campo"] > 0).mean()),
@@ -222,9 +227,8 @@ def main():
     for prueba, (serie, _) in depth.items():
         m = frames["prueba"] == prueba
         frames.loc[m, "profundidad_cm"] = align_normalized(serie, frames.loc[m, "t_norm"].to_numpy())
-        s40 = serie.assign(profundidad_cm=serie["profundidad_cm_base40"])
-        frames.loc[m, "profundidad_cm_base40"] = align_normalized(s40, frames.loc[m, "t_norm"].to_numpy())
-    # severidad ASTM del bache por foto (profundidad alineada autocalibrada); sin sensor -> tamaño aparente
+        frames.loc[m, "profundidad_cm_base40"] = align_normalized(serie, frames.loc[m, "t_norm"].to_numpy(), col="profundidad_cm_base40")
+    # severidad ASTM del bache por foto (profundidad depurada y alineada); sin sensor -> tamaño aparente
     sev = {r.image_id: astm_severity(r.profundidad_cm) for r in frames.itertuples() if np.isfinite(r.profundidad_cm)}
     # filtros anti falsos positivos (con consenso multi-escala si existen las corridas a otras escalas)
     scales = {}
@@ -248,7 +252,8 @@ def main():
     (FEAT / "fuente_detecciones.json").write_text(json.dumps({
         "detector_dir": str(det_dir.relative_to(REPO_ROOT)), "escalas_consenso": list(scales),
         "latencia": json.loads((det_dir / "latency.json").read_text()) if (det_dir / "latency.json").exists() else None,
-        "linea_base": {p: {"cm": f["linea_base_cm"], "fuente": f["fuente_linea_base"], "severidad_astm_p95": f["severidad_astm"]} for p, (_, f) in depth.items()}}, indent=2))
+        "sensor": {p: {k: f[k] for k in ("linea_base_cm", "n_lecturas", "n_validas", "n_fuera_de_rango", "n_nulas", "prof_max_cm", "severidad_astm")} for p, (_, f) in depth.items()}},
+        indent=2, default=lambda x: None if isinstance(x, float) and x != x else x))
     print(f"[ok] detecciones de {det_dir.relative_to(REPO_ROOT)}; escalas de consenso {list(scales)}; {len(fr)} fotos, {len(vias)} filas -> {FEAT}")
     print(resumen.to_string())
     print(vias[vias["nivel"] == "tramo"][["id_via", "prueba", "tramo", "score_calidad", "estado", "etiqueta", "score_calidad_tau_rdd2020", "etiqueta_tau_rdd2020",

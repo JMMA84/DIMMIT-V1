@@ -143,9 +143,11 @@ def infer(env, t0):
         gpu = False
     log(f"GPU disponible: {gpu}")
     sh([sys.executable, "-m", "dimmit.models.detector.predict", "--weights", str(weights), "--list", "campo.txt", "--out", str(OUT),
-        "--imgsz", os.environ.get("DIMMIT_IMGSZ", "416"), "--batch", "16", "--conf", "0.01", "--no-embeddings"], env=env)
+        "--imgsz", os.environ.get("DIMMIT_IMGSZ", "416"), "--batch", "16", "--conf", os.environ.get("DIMMIT_CONF", "0.01"),
+        "--max-det", os.environ.get("DIMMIT_MAXDET", "100"), "--no-embeddings"], env=env)
     (OUT / "resumen.json").write_text(json.dumps({"modo": "infer", "fotos": len(paths), "pesos": weights.name, "gpu": gpu,
-                                                  "imgsz": int(os.environ.get("DIMMIT_IMGSZ", "416")), "segundos": round(time.time() - t0, 1)}, indent=2))
+                                                  "imgsz": int(os.environ.get("DIMMIT_IMGSZ", "416")), "conf": float(os.environ.get("DIMMIT_CONF", "0.01")),
+                                                  "max_det": int(os.environ.get("DIMMIT_MAXDET", "100")), "segundos": round(time.time() - t0, 1)}, indent=2))
     log(f"inferencia lista en {time.time() - t0:.0f} s")
 
 

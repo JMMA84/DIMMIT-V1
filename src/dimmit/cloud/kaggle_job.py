@@ -9,6 +9,7 @@ Credencial: ~/.kaggle/access_token (o KAGGLE_API_TOKEN); nunca se escribe en el 
 """
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -23,7 +24,8 @@ BUNDLE_SLUG = "dimmit-bundle"
 RAW_SLUG = "rdd2020-raw"
 CAMPO_SLUG = "dimmit-campo"                 # fotos de campo (privado)
 INFER_SLUG = "dimmit-campo-inferencia"      # kernel de solo inferencia
-KAGGLE = [str(Path(sys.executable).parent / "kaggle")]
+# DIMMIT_KAGGLE_CMD permite usar otro lanzador del CLI (p. ej. un envoltorio cuando el token lo inyecta un proxy)
+KAGGLE = os.environ["DIMMIT_KAGGLE_CMD"].split() if os.environ.get("DIMMIT_KAGGLE_CMD") else [str(Path(sys.executable).parent / "kaggle")]
 
 
 def kaggle(*args, capture=False):
@@ -100,8 +102,10 @@ def push(infer=False):
     if infer:  # el kernel no recibe variables de entorno: se fijan modo y escala al inicio del script
         from dimmit.utils.io import load_yaml
 
-        imgsz = int(load_yaml("configs/campo.yaml")["inferencia"]["imgsz"])
-        code = code.replace("import glob\n", f"import os\nos.environ['DIMMIT_MODE'] = 'infer'\nos.environ['DIMMIT_IMGSZ'] = '{imgsz}'\nimport glob\n", 1)
+        inf = load_yaml("configs/campo.yaml")["inferencia"]
+        env = {"DIMMIT_MODE": "infer", "DIMMIT_IMGSZ": inf["imgsz"], "DIMMIT_CONF": inf["conf"], "DIMMIT_MAXDET": inf["max_det"]}
+        header = "import os\n" + "".join(f"os.environ[{k!r}] = {str(v)!r}\n" for k, v in env.items())
+        code = code.replace("import glob\n", header + "import glob\n", 1)
     (d / "kaggle_kernel.py").write_text(code)
     meta = {
         "id": f"{user}/{slug}",

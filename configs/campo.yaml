@@ -10,10 +10,14 @@ gps_suavizado_s: 5             # mediana móvil (ventana en segundos) para quita
 gps_incertidumbre_m: 5.0       # incertidumbre nominal de un GPS de teléfono a cielo abierto
 gps_sat_min: 12                # con menos satélites se duplica la incertidumbre
 
-# sensor ultrasónico: ProfundidadBache_cm = Distancia_cm - linea_base_cm
+# sensor ultrasónico en bastón manual (metodología del equipo de medición):
+#   1) se descartan lecturas nulas (0,00 cm) y fuera de rango (> rango_max_cm): posicionamiento y apagado
+#   2) ProfundidadBache_cm = Distancia_cm - linea_base_cm (altura real del sensor sobre pavimento plano)
+#   3) > 0 cm = profundidad del bache; ~0 o levemente negativo = pavimento sano y su rugosidad
 ultrasonico:
-  linea_base_cm: 40.0         # valor fijo de respaldo (firmware)
-  linea_base: auto            # auto = moda de la distancia de cada serie (pavimento sano); fija = linea_base_cm
+  linea_base_cm: 8.0
+  rango_max_cm: 35.0
+  firmware_base_cm: 40.0       # referencia del "antes" (el firmware restaba 40 cm)
   umbral_bache_cm: 3.0         # lectura >= umbral cuenta como bache
   mapa:                        # archivo del sensor <-> prueba (confirmado por el equipo)
     Prueba_2: ProfundidadB1
@@ -25,8 +29,10 @@ ultrasonico:
 inferencia:
   pesos: models/release/yolov10n_rdd2020.pt
   imgsz: 640                   # escala principal en campo: a 640 la confianza sube (416 = escala de entrenamiento, se usa en el consenso)
-  conf: 0.01
-  max_det: 100
+  # salidas acotadas: el umbral de campo más bajo es 0,15 y el consenso tolera 0,6x (0,09); por debajo de
+  # 0,05 YOLO solo produce ruido. 30 cajas por foto bastan (en campo ninguna foto conserva más de 3).
+  conf: 0.05
+  max_det: 30
   batch: 16
 
 # etiqueta operativa a partir de estado, profundidad medida y baches detectados

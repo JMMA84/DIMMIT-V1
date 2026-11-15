@@ -113,11 +113,12 @@ def main():
     ap.add_argument("--batch", type=int, default=16)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--no-embeddings", action="store_true")
+    ap.add_argument("--max-det", type=int, default=100)
     args = ap.parse_args()
     paths = [p for p in (REPO_ROOT / args.list).read_text().split() if p]
     if args.limit:
         paths = paths[: args.limit]
-    run(REPO_ROOT / args.weights, paths, REPO_ROOT / args.out, args.conf, imgsz=args.imgsz, batch=args.batch, embeddings=not args.no_embeddings)
+    run(REPO_ROOT / args.weights, paths, REPO_ROOT / args.out, args.conf, max_det=args.max_det, imgsz=args.imgsz, batch=args.batch, embeddings=not args.no_embeddings)
 
 
 if __name__ == "__main__":

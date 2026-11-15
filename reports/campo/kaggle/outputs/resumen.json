@@ -4,5 +4,7 @@
   "pesos": "yolov10n_rdd2020.pt",
   "gpu": false,
   "imgsz": 640,
-  "segundos": 114.7
+  "conf": 0.05,
+  "max_det": 30,
+  "segundos": 133.8
 }

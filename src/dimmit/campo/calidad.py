@@ -11,7 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import roc_auc_score
 
-from dimmit.campo import INDEX_CAMPO, load_cfg
+from dimmit.campo import CAMPO, INDEX_CAMPO, load_cfg
 from dimmit.campo.scores import FEAT
 from dimmit.evaluation.metrics import psi
 from dimmit.utils.io import CLASS_KEYS, CLASS_SLUGS, FEATURES, INDEX
@@ -19,11 +19,22 @@ from dimmit.utils.io import CLASS_KEYS, CLASS_SLUGS, FEATURES, INDEX
 Q_COLS = ["brillo", "contraste", "nitidez", "jpeg_kb"]
 
 
+REF_COMPACTA = CAMPO / "referencia" / "rdd2020_fusion_test.parquet"
+
+
 def reference_frames():
+    """F ∪ T de RDD2020 con solo las variables de calidad y deriva. Se guarda una copia compacta versionada
+    para que la etapa de campo no dependa de regenerar todo RDD2020."""
+    if not (FEATURES / "vision_frame.parquet").exists() and REF_COMPACTA.exists():
+        return pd.read_parquet(REF_COMPACTA)
     ref = pd.read_parquet(FEATURES / "vision_frame.parquet")
     splits = pd.read_csv(INDEX / "splits.csv")
     ids = splits.loc[splits["split"].isin(["fusion", "test"]), "image_id"]
-    return ref[ref["image_id"].isin(ids)].reset_index(drop=True)
+    cols = ["image_id", *Q_COLS, "max_conf", "pci_det", *[f"n_{c}" for c in CLASS_KEYS]]
+    ref = ref.loc[ref["image_id"].isin(ids), cols].reset_index(drop=True)
+    REF_COMPACTA.parent.mkdir(parents=True, exist_ok=True)
+    ref.to_parquet(REF_COMPACTA, index=False)
+    return ref
 
 
 def quality_flags(fr, ref):
@@ -95,11 +106,11 @@ def build(fr, vias, cfg):
     pairs = [("profundidad_max_cm", "n_baches"), ("profundidad_max_cm", "maxconf_baches"), ("profundidad_media_cm", "n_baches"),
              ("profundidad_frac_bache", "frac_fotos_baches"), ("profundidad_max_cm", "score_calidad"),
              ("profundidad_max_cm", "n_grieta_longitudinal"),  # control negativo
-             ("profundidad_max_cm_base40", "n_baches")]  # con la línea base fija del firmware (antes)
+             ("profundidad_max_cm_base40", "n_baches")]  # profundidad del firmware: distancia − 40 cm sin depurar (antes)
     for a, b in pairs:
         if len(t) >= 4:
             rs, lo, hi = spearmanr(t[a], t[b])[0], *boot_ci(t[a], t[b], spearmanr)
-            nota = "control negativo: no debería correlacionar" if "longitudinal" in b else ("línea base fija 40 cm (antes)" if "base40" in a else "por tramo; línea base autocalibrada; n pequeño, IC bootstrap")
+            nota = "control negativo: no debería correlacionar" if "longitudinal" in b else ("firmware: distancia − 40 cm sin depurar (antes)" if "base40" in a else "por tramo; profundidad = distancia − 8 cm con lecturas depuradas; n pequeño, IC bootstrap")
             add("LOTE", "tramo", "correlacion_sensor", f"spearman_{a}__{b}", float(rs), len(t), nota, lo, hi)
             add("LOTE", "tramo", "correlacion_sensor", f"pearson_{a}__{b}", float(pearsonr(t[a], t[b])[0]), len(t), nota)
     p = vias[(vias["nivel"] == "prueba") & vias["profundidad_max_cm"].notna()]

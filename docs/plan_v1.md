@@ -58,7 +58,7 @@ pasarán a ser mediciones de IRI de referencia (perfilómetro o IDU).
    y `resumen.json` en `reports/campo/kaggle/outputs/`. `make campo-local` corre lo mismo en CPU para la
    paridad.
 4. `make campo-local` (416/640/832 px para paridad y consenso multi-escala) y `make campo`:
-   `campo.scores` (modo campo: filtros de `campo/filtros.py`, línea base autocalibrada del ultrasónico,
+   `campo.scores` (modo campo: filtros de `campo/filtros.py`, ultrasónico depurado con profundidad = distancia − 8 cm,
    severidad de bache por profundidad ASTM D6433; modo RDD2020 como columnas `*_tau_rdd2020` para el
    antes/después; score secundario de la red de fusión en modo solo visión), `campo.calidad` (calidad
    de imagen, confianza, PSI y AUROC de dominio frente a F ∪ T, correlación sensor ↔ YOLO con IC
