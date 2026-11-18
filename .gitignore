@@ -52,6 +52,7 @@ reports/*
 !reports/output/
 !reports/evaluation/
 !reports/campo/
+!reports/presentacion/
 reports/campo/kaggle/*
 !reports/campo/kaggle/outputs/
 reports/campo/kaggle/outputs/*
