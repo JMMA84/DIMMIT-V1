@@ -284,7 +284,7 @@ def slide_progreso_1(n_commits, n_merges, n_tests, show_title=True):
     import textwrap
 
     fig, ax = canvas()
-    title(ax, "NUESTRO PROGRESO · 1 DE 2", "DEL REPOSITORIO VACÍO A RESULTADOS VALIDADOS", show_title)
+    title(ax, "NUESTRO PROGRESO · 1 DE 4", "DEL REPOSITORIO VACÍO A RESULTADOS VALIDADOS", show_title)
     top = 250 if show_title else 150
     cw, gap = 322, 22
     xs = [110 + k * (cw + gap) for k in range(5)]
@@ -308,12 +308,12 @@ def slide_progreso_1(n_commits, n_merges, n_tests, show_title=True):
 
 
 # --- diapositiva 4: de "todo en intervención" a validado ----------------------------------------------------
-def slide_progreso_2(sitio1, cal, prof, n_cajas, show_title=True):
+def slide_progreso_4(sitio1, cal, show_title=True):
     fig, ax = canvas()
-    title(ax, "NUESTRO PROGRESO · 2 DE 2", "CÓMO LLEGAMOS A RESULTADOS CONFIABLES", show_title)
+    title(ax, "NUESTRO PROGRESO · 4 DE 4", "TRES ITERACIONES HASTA RESULTADOS CONFIABLES", show_title)
     top = 240 if show_title else 150
     text(ax, 110, top, "Sitio 1 (Carrera 5): score de los 3 recorridos en cada etapa", 17.5, WHITE, "semi")
-    gx, gy, gw, gh = 190, top + 90, 900, 470
+    gx, gy, gw, gh = 190, top + 90, 840, 470
     y2p = lambda v: gy + gh - v / 100 * gh
     r = cal["rangos_idu_pci"]["regular"]
     ax.add_patch(Rectangle((gx, y2p(r[1])), gw, y2p(r[0]) - y2p(r[1]), fc=TEAL, alpha=0.18, zorder=1))
@@ -322,9 +322,9 @@ def slide_progreso_2(sitio1, cal, prof, n_cajas, show_title=True):
         ax.plot([gx, gx + gw], [y2p(v)] * 2, color=WHITE, alpha=0.12, lw=1, zorder=1)
         text(ax, gx - 14, y2p(v), str(v), 13, MUTED, "reg", ha="right", va="center")
     text(ax, gx - 66, gy + gh / 2, "score visual 0–100", 13.5, MUTED, "reg", ha="center", va="center", rotation=90)
-    etapas = ["Umbral RDD2020\nsin filtros", "Filtros de campo\nsin calibrar", "Calibrado\ncon el IDU"]
+    etapas = ["Iteración 1\numbral RDD2020", "Iteración 2\nfiltros de campo", "Iteración 3\ncalibrado con el IDU"]
     notas = ["«intervención»\nen todo", "«bueno» en todo:\ndemasiado optimista", "«regular»,\nigual que el IDU"]
-    ex = [gx + 150 + k * 300 for k in range(3)]
+    ex = [gx + 140 + k * 280 for k in range(3)]
     cols = [WHITE, TEAL_L, TEAL]
     for serie in sitio1:
         ax.plot(ex, [y2p(v) for v in serie], color=WHITE, alpha=0.35, lw=2, zorder=2)
@@ -338,23 +338,125 @@ def slide_progreso_2(sitio1, cal, prof, n_cajas, show_title=True):
             text(ax, ex[k] + 26, y2p(max(vals)) - 4, notas[k], 14, cols[k], "bold", ha="left", va="bottom", linespacing=1.25)
         else:
             text(ax, ex[k], y2p(max(vals)) - 24, notas[k], 14, cols[k], "bold", ha="center", va="bottom", linespacing=1.25)
-    kx, kw = 1200, 610
     a0, a1 = cal["ajuste"]["acierto_sin_calibrar"], cal["ajuste"]["acierto_estado_idu"]
-    pct = lambda v: f"{v:.0%}".replace("%", " %")
-    d_cal = max(s_[2] for s_ in sitio1) - min(s_[2] for s_ in sitio1)
-    d_sin = max(s_[1] for s_ in sitio1) - min(s_[1] for s_ in sitio1)
-    kpis = [(pct(a1), f"de los tramos dentro del rango\ndel IDU (sin calibrar: {pct(a0)})"),
-            (f"{d_cal:.0f} pts", f"de diferencia entre recorridos\ndel mismo sitio (antes {d_sin:.0f})"),
-            (f"{prof[0]:.0f}–{prof[1]:.0f} cm", "de profundidad medida por el\nsensor en baches que la cámara\ncasi no ve"),
-            (f"{n_cajas:,}".replace(",", "."), "cajas idénticas entre Kaggle y la\ncorrida local (|Δ| < 0,000002)")]
-    for k, (big, small) in enumerate(kpis):
-        yy = top + 40 + k * 148
-        card(ax, kx, yy, kw, 130, fc=WHITE, r=16)
-        text(ax, kx + 26, yy + 65, big, 34, NAVY, "heavy", va="center")
-        text(ax, kx + 262, yy + 65, small, 14.5, NAVY, "reg", va="center", linespacing=1.35)
+    pct = lambda v: f"{v:.0%}".replace("%", "\u00a0%")
+    d = [max(s_[k] for s_ in sitio1) - min(s_[k] for s_ in sitio1) for k in range(3)]
+    iters = [("ITERACIÓN 1", "Umbral de RDD2020", "Todo salía en «intervención»: el modelo veía daño\nen juntas, sombras y andenes.",
+              "Agregamos 4 filtros de campo"),
+             ("ITERACIÓN 2", "Filtros de campo", "Todo salía «bueno»: en Bogotá la confianza del\nmodelo es baja y los filtros borraban casi todo.",
+              "Comparamos con el inventario del IDU"),
+             ("ITERACIÓN 3", "Calibración con el IDU", "Ajustamos el umbral de confianza contra el estado\noficial de la calzada (× 0,8).",
+              f"«Regular», como el IDU · dispersión {d[1]:.0f} → {d[2]:.0f} pts")]
+    kx, kw = 1130, 680
+    for k, (tag, head, body, res) in enumerate(iters):
+        yy = top + 20 + k * 192
+        card(ax, kx, yy, kw, 172, fc=WHITE, r=16)
+        card(ax, kx + 20, yy + 18, 150, 32, fc=TEAL if k == 2 else PERI, r=8, z=3)
+        text(ax, kx + 95, yy + 34, tag, 13, WHITE if k < 2 else NAVY, "heavy", ha="center", va="center")
+        text(ax, kx + 186, yy + 34, head, 18, NAVY, "xbold", va="center")
+        text(ax, kx + 22, yy + 66, body, 14.5, NAVY, "reg", linespacing=1.4)
+        text(ax, kx + 22, yy + 142, "→ " + res, 15, PERI if k < 2 else "#2E8C91", "bold")
     card(ax, 110, 960, 1700, 70, fc=PERI_D, r=14, alpha=0.9)
-    text(ax, 140, 995, f"Límite honesto: validado en {cal['n_calzadas']} calzada ({cal['n_tramos']} tramos, 2 tomas). "
-         "Siguiente paso: 20–30 calzadas con estados distintos y fotos con GPS.", 15.5, WHITE, "med", va="center")
+    text(ax, 140, 995, f"{pct(a1)} de los tramos dentro del rango del IDU (sin calibrar: {pct(a0)}). Límite: validado en "
+         f"{cal['n_calzadas']} calzada; siguiente paso: 20–30 calzadas con estados distintos y fotos con GPS.", 15.5, WHITE, "med", va="center")
+    return fig
+
+
+# --- diapositiva 2 de progreso: herramientas --------------------------------------------------------------
+LIBS = [("Visión", "Ultralytics 8.3 (YOLOv10) · PyTorch"), ("Datos", "pandas · NumPy · PyArrow · PyYAML"),
+        ("Ciencia", "scikit-learn · SciPy"), ("Geo", "Shapely · requests (servicio del IDU)"),
+        ("Reportes", "Matplotlib · Jinja2"), ("Calidad", "pytest · 27 pruebas automáticas")]
+ARCHIVOS = [("Entrada", [(".jpg", "fotos"), (".gpx .kml", "GPS"), (".txt", "sensor (tiempo, distancia)"), (".xml", "anotaciones RDD2020"),
+                          (".geojson", "calzadas del IDU")]),
+            ("Trabajo", [(".parquet", "tablas intermedias"), (".yaml", "configuración"), (".pt", "pesos del modelo (5,7 MB)")]),
+            ("Salida", [(".csv .json", "salidas 1 y 2"), (".png .html", "póster y presentación")])]
+
+
+def slide_progreso_2(stats, show_title=True):
+    fig, ax = canvas()
+    title(ax, "NUESTRO PROGRESO · 2 DE 4", "HERRAMIENTAS: CÓDIGO, DATOS Y NUBE", show_title)
+    top = 240 if show_title else 150
+    cw, ch = 540, 650
+    xs = [110, 690, 1270]
+    for x, head in zip(xs, ("LIBRERÍAS (PYTHON)", "TIPOS DE ARCHIVO", "KAGGLE: LA NUBE")):
+        card(ax, x, top, cw, ch, fc=WHITE, r=18)
+        text(ax, x + 30, top + 28, head, 21, NAVY, "heavy")
+        ax.plot([x + 30, x + 120], [top + 70, top + 70], color=TEAL, lw=4, solid_capstyle="round", zorder=4)
+    # librerías
+    for k, (g, libs) in enumerate(LIBS):
+        yy = top + 100 + k * 88
+        text(ax, xs[0] + 30, yy, g.upper(), 13.5, PERI, "bold")
+        text(ax, xs[0] + 30, yy + 26, libs, 16.5, NAVY, "semi")
+    # archivos
+    yy = top + 100
+    for g, items in ARCHIVOS:
+        text(ax, xs[1] + 30, yy, g.upper(), 13.5, PERI, "bold")
+        yy += 30
+        for ext, desc in items:
+            card(ax, xs[1] + 30, yy, 150, 34, fc=TEAL_L, r=8, z=3)
+            text(ax, xs[1] + 105, yy + 17, ext, 14.5, NAVY, "xbold", ha="center", va="center")
+            text(ax, xs[1] + 196, yy + 17, desc, 15, NAVY, "reg", va="center")
+            yy += 40
+        yy += 10
+    # kaggle
+    pasos = ["Empaquetamos código, pesos\ny librerías (dimmit-bundle)", "Subimos las fotos como\ndataset privado (dimmit-campo)",
+             "El kernel corre YOLO\nen la nube (CPU)", "Bajamos las detecciones y las\ncomparamos con la corrida local"]
+    for k, ptxt in enumerate(pasos):
+        yy = top + 100 + k * 84
+        ax.add_patch(plt.Circle((xs[2] + 48, yy + 24), 18, color=TEAL, zorder=4))
+        text(ax, xs[2] + 48, yy + 25, str(k + 1), 14, NAVY, "heavy", ha="center", va="center")
+        text(ax, xs[2] + 80, yy + 4, ptxt, 15, NAVY, "reg", linespacing=1.3)
+        if k < 3:
+            ax.plot([xs[2] + 48] * 2, [yy + 44, yy + 82], color=TEAL, lw=2.5, zorder=3)
+    kp = [(stats["train"], "entrenamiento"), (stats["infer"], "inferencia de campo"), (stats["parity"], "paridad nube ↔ local")]
+    for k, (v_, l_) in enumerate(kp):
+        yy = top + 450 + k * 62
+        card(ax, xs[2] + 26, yy, cw - 52, 52, fc="#EEF0FA", r=10, z=3)
+        text(ax, xs[2] + 44, yy + 26, v_, 15, NAVY, "xbold", va="center")
+        text(ax, xs[2] + cw - 44, yy + 26, l_, 13.5, PERI, "semi", ha="right", va="center")
+    card(ax, 110, 960, 1700, 70, fc=PERI_D, r=14, alpha=0.9)
+    text(ax, 140, 995, "Todo se reproduce con make: campo-ingest → campo-infer → campo-pull → campo-scores → campo-poster", 15.5, WHITE, "med", va="center")
+    return fig
+
+
+# --- diapositiva 3 de progreso: cómo cambiaron los datos entre tomas ----------------------------------------
+FILAS = [("Cámara", "App de captura a 2 fotos/s\n1920 × 1080", "Celular, enviadas por WhatsApp\n1280 × 720, sin metadatos"),
+         ("Ubicación", "GPS real (1 punto/s)", "Sin GPS: sitio declarado y anclado\na la calzada del IDU"),
+         ("Volumen", "191 fotos · 9 tramos de ~10 m", "131 fotos · 5 recorridos en 2 sitios"),
+         ("Sensor", "211 lecturas · 23 % válidas\n(el firmware restaba 40 cm)", "1.177 lecturas · 100 % válidas\n(distancia − 8 cm)"),
+         ("Superficie", "Asfalto", "Asfalto y adoquín"),
+         ("Uso final", "Calibrar la cámara\n(su sensor no correspondía)", "Evaluación y resultados")]
+
+
+def slide_progreso_3(show_title=True):
+    fig, ax = canvas()
+    title(ax, "NUESTRO PROGRESO · 3 DE 4", "CÓMO CAMBIARON LOS DATOS ENTRE TOMAS", show_title)
+    top = 235 if show_title else 150
+    x0, lw_, cw = 110, 230, 545
+    xa, xb = x0 + lw_ + 20, x0 + lw_ + 40 + cw
+    text(ax, xa + 20, top, "TOMA 1 · 5 OCT", 22, TEAL_L, "heavy")
+    text(ax, xb + 20, top, "TOMA 2 · 15 NOV", 22, TEAL, "heavy")
+    rh, gap = 84, 10
+    for k, (lab, a_, b_) in enumerate(FILAS):
+        yy = top + 46 + k * (rh + gap)
+        text(ax, x0, yy + rh / 2, lab.upper(), 16, WHITE, "xbold", va="center")
+        card(ax, xa, yy, cw, rh, fc=WHITE, r=12, alpha=0.92)
+        card(ax, xb, yy, cw, rh, fc=WHITE, r=12)
+        ax.add_patch(Rectangle((xb, yy + 8), 6, rh - 16, fc=TEAL, ec="none", zorder=3))
+        text(ax, xa + 22, yy + rh / 2, a_, 15, NAVY, "reg", va="center", linespacing=1.35)
+        text(ax, xb + 26, yy + rh / 2, b_, 15, NAVY, "semi", va="center", linespacing=1.35)
+    xr = xb + cw + 30
+    card(ax, xr, top + 46, 1810 - xr, 6 * (rh + gap) - gap, fc=PERI_D, r=16)
+    text(ax, xr + 24, top + 70, "LO QUE\nCAMBIAMOS", 17, TEAL, "heavy", linespacing=1.15)
+    cambios = ["Orden de fotos por\nnombre de archivo", "Nivel «sitio» para\ntomas repetidas", "Filtro de adoquín",
+               "Ubicación declarada\n+ calzada IDU", "Nombres únicos\npara Kaggle"]
+    for k, c in enumerate(cambios):
+        yy = top + 150 + k * 82
+        ax.add_patch(plt.Circle((xr + 34, yy + 12), 6, color=TEAL, zorder=4))
+        text(ax, xr + 52, yy, c, 14.5, WHITE, "semi", linespacing=1.25)
+    card(ax, 110, 960, 1700, 70, fc=PERI_D, r=14, alpha=0.9)
+    text(ax, 140, 995, "Cada toma trajo un problema distinto; el pipeline se adaptó sin perder la anterior: ambas se procesan con el mismo código.",
+         15.5, WHITE, "med", va="center")
     return fig
 
 
@@ -380,9 +482,14 @@ def main():
     log = subprocess.run(["git", "log", "origin/main", "--format=%s"], cwd=REPO_ROOT, capture_output=True, text=True).stdout.splitlines()
     n_commits, n_merges = len(log), sum(s.startswith("Merge") for s in log)
     n_tests = 27
+    res = json.loads((REPO_ROOT / "reports/campo/kaggle/outputs/resumen.json").read_text())
+    stats = {"train": "12 épocas · 8,3 h · 9.420 fotos", "infer": f"{res['fotos']} fotos en {res['segundos']:.0f} s",
+             "parity": f"{n_cajas:,} cajas idénticas".replace(",", ".")}
     for name, fn in (("yolo_1_de_la_foto_al_mapa", lambda st: slide_yolo_1(e, st)), ("yolo_2_de_la_cuadricula_a_la_etiqueta", lambda st: slide_yolo_2(e, tau, st)),
                      ("progreso_1_linea_de_tiempo", lambda st: slide_progreso_1(n_commits, n_merges, n_tests, st)),
-                     ("progreso_2_resultados_confiables", lambda st: slide_progreso_2(sitio1, cal, prof, n_cajas, st))):
+                     ("progreso_2_herramientas", lambda st: slide_progreso_2(stats, st)),
+                     ("progreso_3_datos_entre_tomas", lambda st: slide_progreso_3(st)),
+                     ("progreso_4_iteraciones_y_calibracion", lambda st: slide_progreso_4(sitio1, cal, st))):
         for st in (True, False):
             p = save(fn(st), name + ("" if st else "_sin_titulo"))
         print(f"[ok] {p.parent / name}.png")
