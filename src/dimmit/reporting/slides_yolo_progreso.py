@@ -460,6 +460,114 @@ def slide_progreso_3(show_title=True):
     return fig
 
 
+# --- diapositiva del score: de las cajas a la etiqueta, con un tramo real ------------------------------------
+def score_ejemplo(prueba="Prueba_6"):
+    from dimmit.labels import pseudo_pci as pp
+    from dimmit.utils.io import CLASS_KEYS
+
+    cfg_lab = pp.load_cfg()
+    fr = pd.read_parquet(FEAT / "fotogramas_features.parquet")
+    det = pd.read_parquet(FEAT / "detecciones_filtradas.parquet")
+    v = pd.read_parquet(FEAT / "vias.parquet").set_index("id_via")
+    g = fr[fr["prueba"] == prueba]
+    k = det[det["conservada"] & det["image_id"].isin(g["image_id"])]
+    rho = g[[f"rhocampo_{c}" for c in CLASS_KEYS]].mean().to_numpy()
+    r = pd.DataFrame([rho], columns=[f"rho_{c}" for c in CLASS_KEYS])
+    out = pp.pci_from_rho(r, cfg_lab).iloc[0]
+    dv = np.array([out[f"dv_{c}"] for c in CLASS_KEYS])
+    row = v.loc[g["id_via"].iloc[0]]
+    return {"prueba": prueba, "n_fotos": len(g), "n_con": int((g["n_detecciones_campo"] > 0).sum()), "cajas": k.groupby("cls").size().to_dict(),
+            "rho": dict(zip(CLASS_KEYS, rho)), "dv": dict(zip(CLASS_KEYS, dv)), "cdv": 100 - float(out["pci_vis"]), "score": float(row["score_calidad"]),
+            "estado": row["estado"], "estado_idu": row["estado_idu_equivalente"], "etiqueta": row["etiqueta"], "prof": float(row["profundidad_max_cm"]),
+            "deduct": cfg_lab["deduct"], "w": cfg_lab["cdv_rest_weight"], "kappa": cfg_lab["severity_kappa"]}
+
+
+def slide_score(sc, et, show_title=True):
+    fig, ax = canvas()
+    title(ax, "EL SCORE · DE LAS CAJAS A LA ETIQUETA", "CÓMO SE CALCULA EL SCORE 0–100", show_title)
+    top = 235 if show_title else 140
+    dec = lambda x, n=1: f"{x:.{n}f}".replace(".", ",")
+    rh = sc["rho"]
+    dvp, dvb = sc["dv"]["D20"], sc["dv"]["D40"]
+    mx, rest = max(sc["dv"].values()), sum(sc["dv"].values()) - max(sc["dv"].values())
+    nk = sc["cajas"]
+    pasos = [
+        ("DENSIDAD\nPOR CAJA", "ρ = k × tamaño × s",
+         "tamaño: largo (grietas), área (piel\nde cocodrilo), 0,7 m² (bache)\ns = severidad: L 0,33 · M 1 · H 3\nbaches: L/M/H por la profundidad",
+         f"{sum(nk.values())} cajas en {sc['n_con']} de {sc['n_fotos']} fotos"),
+        ("PROMEDIO\nDEL TRAMO", "ρ tramo = Σρ / fotos",
+         "ρ ≈ % del área de vía visible\nen cada foto (~143 m²)\nse promedia por clase de daño",
+         f"piel {dec(rh['D20'], 2)} % · bache {dec(rh['D40'], 2)} %"),
+        ("VALOR\nDEDUCIDO", "DV = a + b · log(ρ)",
+         "", f"piel {dec(dvp)} · bache {dec(dvb)}"),
+        ("DEDUCIDO\nCOMBINADO", "CDV = DVmáx\n+ 0,35 (ΣDV − DVmáx)",
+         "el daño mayor cuenta completo;\nlos demás suman al 35 %\n(no se castiga dos veces)",
+         f"{dec(mx)} + 0,35 × {dec(rest)} = {dec(sc['cdv'])}"),
+        ("SCORE\nY ESTADO", "Score = 100 − CDV",
+         "ASTM: bueno ≥ 86 · satisf. ≥ 71\nregular ≥ 56 · malo ≥ 41\nIDU: bueno ≥ 90 · regular 56–89",
+         f"{dec(sc['score'])} → «{sc['estado_idu']}» (IDU)"),
+    ]
+    cw, gap, ch = 316, 30, 500
+    for k, (head, form, legend, ej) in enumerate(pasos):
+        x, y = 110 + k * (cw + gap), top
+        card(ax, x, y, cw, ch, fc=WHITE, r=18)
+        ax.add_patch(plt.Circle((x + 42, y + 46), 22, color=TEAL, zorder=4))
+        text(ax, x + 42, y + 47, str(k + 1), 17, NAVY, "heavy", ha="center", va="center")
+        text(ax, x + 78, y + 46, head, 17, NAVY, "heavy", va="center", linespacing=1.1)
+        card(ax, x + 18, y + 96, cw - 36, 92, fc="#E3F3F4", r=12, z=3)
+        text(ax, x + cw / 2, y + 142, form, 17 if "\n" not in form else 15.5, NAVY, "xbold", ha="center", va="center", linespacing=1.3)
+        if legend:
+            text(ax, x + 22, y + 208, legend, 13.5, NAVY, "reg", linespacing=1.45)
+        card(ax, x + 18, y + ch - 110, cw - 36, 92, fc=NAVY, r=12, z=3)
+        text(ax, x + 34, y + ch - 92, f"EJEMPLO · {sc['prueba'].replace('_', ' ').upper()}", 11.5, TEAL, "bold")
+        text(ax, x + 34, y + ch - 56, ej, 15 if len(ej) < 30 else 13.5, WHITE, "xbold", va="center")
+        if k < 4:
+            arrow(ax, x + cw + 4, y + ch / 2, x + cw + gap - 4, y + ch / 2, lw=3)
+    # paso 3: curvas DV(ρ) por clase con el punto del ejemplo
+    x, y = 110 + 2 * (cw + gap), top
+    sub = fig.add_axes([(x + 56) / W, 1 - (y + 345) / H, (cw - 92) / W, 135 / H])
+    rr = np.logspace(-2.3, 1.3, 200)
+    curves = [("grietas", "D00", PERI), ("piel", "D20", TEAL), ("bache", "D40", NAVY)]
+    for lab, c, col in curves:
+        d = sc["deduct"][c]
+        sub.plot(rr, np.clip(d["a"] + d["b"] * np.log10(rr), 0, d["dv_max"]), color=col, lw=2.2)
+        sub.text(rr[-1] * 1.05, min(d["a"] + d["b"] * np.log10(rr[-1]), d["dv_max"]), lab, fontsize=9.5, color=col, va="center",
+                 fontfamily=F["bold"]["family"], fontweight=F["bold"]["weight"])
+    for c, col in (("D20", TEAL), ("D40", NAVY)):
+        if sc["rho"][c] > 0:
+            sub.scatter([sc["rho"][c]], [sc["dv"][c]], s=55, color=col, edgecolor="white", zorder=5)
+    sub.set_xscale("log")
+    sub.set_ylim(0, 100)
+    sub.set_xlim(rr[0], rr[-1] * 4)
+    sub.set_xlabel("densidad ρ (%)", fontsize=9.5, color=NAVY, labelpad=1)
+    sub.set_ylabel("DV", fontsize=9.5, color=NAVY, labelpad=1)
+    sub.tick_params(labelsize=8.5, colors=NAVY, length=2)
+    for sp in ("top", "right"):
+        sub.spines[sp].set_visible(False)
+    sub.set_facecolor("white")
+    # paso 6: la etiqueta
+    y6 = top + ch + 24
+    card(ax, 110, y6, 1700, 176, fc=WHITE, r=18)
+    ax.add_patch(plt.Circle((152, y6 + 46), 22, color=TEAL, zorder=4))
+    text(ax, 152, y6 + 47, "6", 17, NAVY, "heavy", ha="center", va="center")
+    text(ax, 188, y6 + 46, "ETIQUETA (con el sensor)", 17, NAVY, "heavy", va="center")
+    reglas = [("INTERVENCIÓN", "#d03b3b", f"estado malo · bache ≥ {dec(et['intervencion']['profundidad_cm'], 0)} cm\no bache visto con conf ≥ {dec(et['intervencion']['bache_conf_min'])}"),
+              ("MANTENIMIENTO", "#c98500", f"estado regular\no bache ≥ {dec(et['mantenimiento']['profundidad_cm'], 0)} cm"),
+              ("PREVENCIÓN", "#2a78d6", "el resto")]
+    for k, (nm, col, rule) in enumerate(reglas):
+        xx = 140 + k * 330
+        card(ax, xx, y6 + 78, 200, 38, fc=col, r=10, z=3)
+        text(ax, xx + 100, y6 + 97, nm, 13.5, WHITE, "heavy", ha="center", va="center")
+        text(ax, xx + 2, y6 + 126, rule, 12.5, NAVY, "reg", linespacing=1.3)
+    card(ax, 1150, y6 + 18, 640, 140, fc=NAVY, r=12, z=3)
+    text(ax, 1172, y6 + 40, f"EJEMPLO · {sc['prueba'].replace('_', ' ').upper()}", 11.5, TEAL, "bold")
+    text(ax, 1172, y6 + 72, f"score {dec(sc['score'])} («{sc['estado_idu']}»), pero el sensor\nmide un bache de {dec(sc['prof'])} cm → {sc['etiqueta'].replace('intervencion', 'INTERVENCIÓN').replace('mantenimiento', 'MANTENIMIENTO').replace('prevencion', 'PREVENCIÓN')}",
+         14, WHITE, "xbold", linespacing=1.35)
+    text(ax, 110, 1040, "Inspirado en el PCI de ASTM D6433 · constantes en configs/labels.yaml · las cajas que entran ya pasaron el umbral calibrado con el IDU y los filtros de campo",
+         13, TEAL_L, "semi", va="center")
+    return fig
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--fuentes", default=None, help="carpeta con Boriboon-*.otf (extraídas del .pptx de la plantilla)")
@@ -486,6 +594,7 @@ def main():
     stats = {"train": "12 épocas · 8,3 h · 9.420 fotos", "infer": f"{res['fotos']} fotos en {res['segundos']:.0f} s",
              "parity": f"{n_cajas:,} cajas idénticas".replace(",", ".")}
     for name, fn in (("yolo_1_de_la_foto_al_mapa", lambda st: slide_yolo_1(e, st)), ("yolo_2_de_la_cuadricula_a_la_etiqueta", lambda st: slide_yolo_2(e, tau, st)),
+                     ("score_como_se_calcula", lambda st: slide_score(score_ejemplo(), cfg["etiqueta"], st)),
                      ("progreso_1_linea_de_tiempo", lambda st: slide_progreso_1(n_commits, n_merges, n_tests, st)),
                      ("progreso_2_herramientas", lambda st: slide_progreso_2(stats, st)),
                      ("progreso_3_datos_entre_tomas", lambda st: slide_progreso_3(st)),
