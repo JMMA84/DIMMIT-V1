@@ -4,14 +4,15 @@
 # también se puede correr solo: bash scripts/proceso_completo.sh
 #
 # Pasos: entorno -> datos de Drive -> tramos -> referencia IDU -> inferencia en Kaggle -> detección local a 3 escalas
-#        -> calibración contra el IDU, score, calidad y salidas -> pruebas -> figuras -> resumen
-# Variables: DIMMIT_KAGGLE_CMD (lanzador del CLI de Kaggle), DIMMIT_MOSTRAR_FIGURAS=1 (abre las figuras en la pantalla)
+#        -> animación de cómo YOLO ve una foto (cuadrículas, vectores, caja) -> calibración contra el IDU, score, calidad y salidas -> pruebas -> figuras -> resumen
+# Variables: DIMMIT_KAGGLE_CMD (lanzador del CLI de Kaggle), DIMMIT_MOSTRAR_FIGURAS=1 (abre figuras y animación en la pantalla),
+#            DIMMIT_FUENTES (carpeta con la tipografía Boriboon de la plantilla, opcional)
 set -o pipefail
 cd "$(dirname "$0")/.."
 export PYTHONPATH=src PYTHONUNBUFFERED=1 PYTORCH_ENABLE_MPS_FALLBACK=1 OMP_NUM_THREADS=${OMP_NUM_THREADS:-2}
 PY=.venv/bin/python
 KG=${DIMMIT_KAGGLE_CMD:-.venv/bin/kaggle}
-TOTAL=10
+TOTAL=11
 T0=$(date +%s)
 C="\033[1;36m"; G="\033[1;32m"; Y="\033[0;33m"; R="\033[1;31m"; W="\033[1;37m"; D="\033[2m"; N="\033[0m"
 LINEA="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -103,7 +104,15 @@ print(f"Paridad Kaggle ↔ local (640 px): {len(k)} vs {len(l)} cajas · diferen
 EOF
 listo
 
-paso 7 "CALIBRACIÓN CON EL IDU, SCORE, CALIDAD Y SALIDAS" "Umbrales de campo -> barrido del multiplicador del umbral contra el IDU -> score -> etiqueta -> salidas 1 y 2"
+paso 7 "CÓMO VE YOLO UNA FOTO" "Animación con los números reales del modelo: tensor, mapas de rasgos, cuadrículas 80/40/20, los 68 números de cada celda, la caja y el umbral calibrado"
+correr $PY -m dimmit.reporting.yolo_animacion --foto Prueba_6/Prueba_6_007 ${DIMMIT_FUENTES:+--fuentes "$DIMMIT_FUENTES"}
+if [ "${DIMMIT_MOSTRAR_FIGURAS:-0}" = "1" ] && [ -n "$DISPLAY" ]; then
+  echo "reproduciendo reports/grabacion/yolo_paso_a_paso.mp4 en pantalla completa…"
+  ffplay -loglevel error -autoexit -an -noborder -left 0 -top 0 -x "${DIMMIT_PANTALLA%x*}" -y "${DIMMIT_PANTALLA#*x}" reports/grabacion/yolo_paso_a_paso.mp4
+fi
+listo
+
+paso 8 "CALIBRACIÓN CON EL IDU, SCORE, CALIDAD Y SALIDAS" "Umbrales de campo -> barrido del multiplicador del umbral contra el IDU -> score -> etiqueta -> salidas 1 y 2"
 correr $PY -m dimmit.campo.umbrales
 correr $PY -m dimmit.campo.calibracion
 correr $PY -m dimmit.campo.scores
@@ -111,11 +120,11 @@ correr $PY -m dimmit.campo.calidad
 correr $PY -m dimmit.campo.salidas
 listo
 
-paso 8 "PRUEBAS AUTOMÁTICAS" "pytest: GPS, tramos, ID, sensor, filtros, superficie, etiquetas y escala del IDU"
+paso 9 "PRUEBAS AUTOMÁTICAS" "pytest: GPS, tramos, ID, sensor, filtros, superficie, etiquetas y escala del IDU"
 correr $PY -m pytest -q tests
 listo
 
-paso 9 "FIGURAS DEL PÓSTER" "Resultados de la toma, diagrama de funcionamiento y validación frente al IDU"
+paso 10 "FIGURAS DEL PÓSTER" "Resultados de la toma, diagrama de funcionamiento y validación frente al IDU"
 correr $PY -m dimmit.reporting.poster_campo
 correr $PY -m dimmit.reporting.diagrama_flujo
 correr $PY -m dimmit.reporting.validacion_idu
@@ -128,7 +137,7 @@ if [ "${DIMMIT_MOSTRAR_FIGURAS:-0}" = "1" ] && [ -n "$DISPLAY" ]; then
 fi
 listo
 
-paso 10 "RESUMEN" "Salida 1 (clasificación por vía) y calibración contra el IDU"
+paso 11 "RESUMEN" "Salida 1 (clasificación por vía) y calibración contra el IDU"
 correr $PY - <<'EOF'
 import json
 import pandas as pd

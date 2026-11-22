@@ -25,6 +25,7 @@ def main():
     ap.add_argument("--fps", type=int, default=8)
     ap.add_argument("--fuente", type=int, default=13, help="tamaño de letra de la terminal")
     ap.add_argument("--script", default="scripts/proceso_completo.sh")
+    ap.add_argument("--fuentes", default=os.environ.get("DIMMIT_FUENTES"), help="carpeta con Boriboon-*.otf para la animación (opcional)")
     args = ap.parse_args()
     for prog in ("Xvfb", "xterm", "ffmpeg"):
         if not shutil.which(prog):
@@ -34,6 +35,8 @@ def main():
     video = ensure_dir(OUT) / f"dimmit_proceso_completo_{stamp}.mp4"
     log = OUT / f"dimmit_proceso_completo_{stamp}.log"
     env = {**os.environ, "LC_ALL": "C.UTF-8", "LANG": "C.UTF-8", "DIMMIT_MOSTRAR_FIGURAS": "1", "DIMMIT_PANTALLA": args.tamano}
+    if args.fuentes:
+        env["DIMMIT_FUENTES"] = args.fuentes
     print(f"[grabación] pantalla virtual {w}x{h} a {args.fps} fps -> {video.relative_to(REPO_ROOT)}")
     with Display(visible=False, size=(w, h), color_depth=24) as disp:
         dpy = disp.new_display_var
