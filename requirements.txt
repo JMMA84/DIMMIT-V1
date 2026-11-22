@@ -18,4 +18,7 @@ jinja2
 anthropic
 kaggle
 pytest
+netron  # visor del grafo de la red (paso 7 de la grabación)
+onnx
+onnxslim
 pyvirtualdisplay  # grabación del proceso en video (make campo-grabar; requiere Xvfb, xterm y ffmpeg)

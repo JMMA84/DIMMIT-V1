@@ -4,9 +4,8 @@
 # también se puede correr solo: bash scripts/proceso_completo.sh
 #
 # Pasos: entorno -> datos de Drive -> tramos -> referencia IDU -> inferencia en Kaggle -> detección local a 3 escalas
-#        -> animación de cómo YOLO ve una foto (cuadrículas, vectores, caja) -> calibración contra el IDU, score, calidad y salidas -> pruebas -> figuras -> resumen
-# Variables: DIMMIT_KAGGLE_CMD (lanzador del CLI de Kaggle), DIMMIT_MOSTRAR_FIGURAS=1 (abre figuras y animación en la pantalla),
-#            DIMMIT_FUENTES (carpeta con la tipografía Boriboon de la plantilla, opcional)
+#        -> la red YOLO por dentro (arquitectura, pasada real, Netron, activaciones de Ultralytics) -> calibración contra el IDU, score, calidad y salidas -> pruebas -> figuras -> resumen
+# Variables: DIMMIT_KAGGLE_CMD (lanzador del CLI de Kaggle), DIMMIT_MOSTRAR_FIGURAS=1 (abre Netron, activaciones y figuras en la pantalla)
 set -o pipefail
 cd "$(dirname "$0")/.."
 export PYTHONPATH=src PYTHONUNBUFFERED=1 PYTORCH_ENABLE_MPS_FALLBACK=1 OMP_NUM_THREADS=${OMP_NUM_THREADS:-2}
@@ -104,11 +103,27 @@ print(f"Paridad Kaggle ↔ local (640 px): {len(k)} vs {len(l)} cajas · diferen
 EOF
 listo
 
-paso 7 "CÓMO VE YOLO UNA FOTO" "Animación con los números reales del modelo: tensor, mapas de rasgos, cuadrículas 80/40/20, los 68 números de cada celda, la caja y el umbral calibrado"
-correr $PY -m dimmit.reporting.yolo_animacion --foto Prueba_6/Prueba_6_007 ${DIMMIT_FUENTES:+--fuentes "$DIMMIT_FUENTES"}
+paso 7 "LA RED YOLO POR DENTRO (ULTRALYTICS + NETRON)" "Arquitectura, pasada real de una foto capa por capa, grafo en Netron y activaciones de cada etapa"
+FOTO=Prueba_6/Prueba_6_007
+correr $PY -m dimmit.reporting.red_yolo arquitectura
+correr $PY -m dimmit.reporting.red_yolo traza --foto $FOTO
+correr $PY -m dimmit.reporting.red_yolo onnx
 if [ "${DIMMIT_MOSTRAR_FIGURAS:-0}" = "1" ] && [ -n "$DISPLAY" ]; then
-  echo "reproduciendo reports/grabacion/yolo_paso_a_paso.mp4 en pantalla completa…"
-  ffplay -loglevel error -autoexit -an -noborder -left 0 -top 0 -x "${DIMMIT_PANTALLA%x*}" -y "${DIMMIT_PANTALLA#*x}" reports/grabacion/yolo_paso_a_paso.mp4
+  echo "abriendo el grafo ONNX en Netron (visor estándar de redes neuronales)…"
+  .venv/bin/netron --port 8081 --host 127.0.0.1 build/red/yolov10n_rdd2020.onnx >/dev/null 2>&1 & NETRON=$!
+  for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8081/ && break; sleep 1; done
+  correr node scripts/recorrer_red_netron.js http://127.0.0.1:8081/ "${DIMMIT_PANTALLA%x*}" "${DIMMIT_PANTALLA#*x}"
+  kill $NETRON 2>/dev/null
+fi
+correr $PY -m dimmit.reporting.red_yolo visualizar --foto $FOTO --conf 0.16
+if [ "${DIMMIT_MOSTRAR_FIGURAS:-0}" = "1" ] && [ -n "$DISPLAY" ]; then
+  D=build/red/prediccion/$(basename $FOTO)
+  for f in $(ls $D/stage*_features.png | sort -V); do
+    echo "activaciones de Ultralytics: $(basename $f) (32 canales de la etapa)"
+    display -title "$f" -resize "${DIMMIT_PANTALLA:-1600x900}" -geometry +0+0 "$f" & pid=$!; sleep 2.2; kill $pid 2>/dev/null; wait $pid 2>/dev/null
+  done
+  echo "predicción anotada por Ultralytics: build/red/prediccion/$(basename $FOTO).jpg"
+  display -title "prediccion" -resize "${DIMMIT_PANTALLA:-1600x900}" -geometry +0+0 "build/red/prediccion/$(basename $FOTO).jpg" & pid=$!; sleep 7; kill $pid 2>/dev/null; wait $pid 2>/dev/null
 fi
 listo
 
