@@ -197,6 +197,8 @@ def build():
                 vid = via_id_sin_gps(fecha, prueba, k, hashlib.sha1("".join(sorted(g["hash_imagen"])).encode()).hexdigest()[:12])
             fr.loc[g.index, "id_via"] = vid
             tramos.append(_tramo_row(g, vid, prueba, k, fecha, tz, fr["id_prueba"].iloc[0], fr["sitio"].iloc[0], fr["id_sitio"].iloc[0]))
+        modo = "GPS real" if con_gps else ("sin GPS, sitio declarado" if fr["ubicacion_fuente"].iloc[0] == "declarada" else "sin GPS")
+        print(f"[tramos] {prueba} ({conjunto}): {len(fr)} fotos, {fr['tramo'].nunique()} tramo(s), {modo}, {fr['superficie'].iloc[0]}", flush=True)
         frames.append(fr)
     frames = pd.concat(frames, ignore_index=True)
     tramos = pd.DataFrame(tramos)
