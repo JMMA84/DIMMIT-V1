@@ -1,0 +1,352 @@
+[H[2J[3J[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;37m  DIMMIT V1 · Dispositivo de Instancia y Modelado Vial para el Mantenimiento de la Infraestructura de Tránsito[0m
+[1;37m  Grabación del proceso completo: datos de campo -> YOLOv10 (Kaggle) -> calibración con el IDU -> score -> etiqueta[0m
+[2m  Universidad del Rosario · 22-11-2026 15:48:44 · commit 3039e4f · rama grabacion-proceso-completo[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 1/10 · ENTORNO[0m
+[1;37m  Máquina, versiones de las librerías y configuración de la corrida (configs/campo.yaml)[0m
+[2m  inicio 15:48:47 · transcurrido 0 min 3 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ uname -srm[0m
+Linux 6.18.44-fc-v726 x86_64
+CPU: 2 núcleos · RAM: 15 GB
+[0;33m$ .venv/bin/python -c import sys, torch, ultralytics, pandas, numpy, sklearn, shapely; print(f'Python {sys.version.split()[0]} · PyTorch {torch.__version__} · Ultralytics {ultralytics.__version__} · pandas {pandas.__version__} · NumPy {numpy.__version__} · scikit-learn {sklearn.__version__} · Shapely {shapely.__version__}')[0m
+Python 3.11.18 · PyTorch 2.15.0+cpu · Ultralytics 8.3.253 · pandas 3.1.1 · NumPy 2.4.6 · scikit-learn 1.9.1 · Shapely 2.2.0
+[0;33m$ .venv/bin/python -[0m
+Toma evaluada: Toma del 15-nov-2026 · 2 sitios, 5 recorridos
+  Prueba_5: fotos=prueba5 · sitio 1 · asfalto · sensor=BACHES TOMAS/primera toma primer sitio enviar.txt
+  Prueba_6: fotos=prueba6 · sitio 1 · asfalto · sensor=BACHES TOMAS/segunda toma primer sitio.txt
+  Prueba_7: fotos=prueba7 · sitio 1 · asfalto · sensor=BACHES TOMAS/tercera toma primer sitio enviar.txt
+  Prueba_8: fotos=prueba8 · sitio 2 · adoquin · sensor=BACHES TOMAS/primera tomo segundo sitio enviar.txt
+  Prueba_9: fotos=prueba9 · sitio 2 · adoquin · sensor=BACHES TOMAS/segunda toma segundo sitio enviar.txt
+Calibración con el IDU: sí · toma de calibración: Prueba_2, Prueba_3, Prueba_4
+Sensor: descartar > 35.0 cm y 0,00 · profundidad = distancia − 8.0 cm
+Inferencia: 640 px · conf ≥ 0.05 · máx. 30 cajas por foto
+[1;32m  ✔ paso 1/10 terminado en 37 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 2/10 · DATOS DE CAMPO (GOOGLE DRIVE)[0m
+[1;37m  Lista la carpeta compartida, baja lo que falte y verifica cada archivo con su hash SHA-1[0m
+[2m  inicio 15:49:24 · transcurrido 0 min 40 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.campo.ingest[0m
+[drive] (raíz)/: 1 archivos, 10 subcarpetas
+[drive] BACHES TOMAS/: 5 archivos, 0 subcarpetas
+[drive] grabacion_20261005_093800_Prueba_2/: 72 archivos, 0 subcarpetas
+[drive] grabacion_20261005_094134_Prueba_3/: 66 archivos, 0 subcarpetas
+[drive] grabacion_20261005_094715_Prueba_4/: 62 archivos, 0 subcarpetas
+[drive] prueba5/: 25 archivos, 0 subcarpetas
+[drive] prueba6/: 22 archivos, 0 subcarpetas
+[drive] prueba7/: 26 archivos, 0 subcarpetas
+[drive] prueba8/: 32 archivos, 0 subcarpetas
+[drive] prueba9/: 26 archivos, 1 subcarpetas
+[drive] prueba9/prueba8/: 16 archivos, 0 subcarpetas
+[drive] tomadedatos/: 3 archivos, 0 subcarpetas
+[ok] 356 archivos (191 imágenes, 103.1 MB) -> /home/user/DIMMIT-V1/data/campo/raw
+[1;32m  ✔ paso 2/10 terminado en 11 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 3/10 · FOTOGRAMAS Y TRAMOS[0m
+[1;37m  Ordena las fotos, asigna ubicación (GPS o sitio declarado), corta tramos y genera los ID únicos[0m
+[2m  inicio 15:49:35 · transcurrido 0 min 51 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.campo.tramos[0m
+[tramos] Prueba_5 (evaluacion): 25 fotos, 1 tramo(s), sin GPS, sitio declarado, asfalto
+[tramos] Prueba_6 (evaluacion): 22 fotos, 1 tramo(s), sin GPS, sitio declarado, asfalto
+[tramos] Prueba_7 (evaluacion): 26 fotos, 1 tramo(s), sin GPS, sitio declarado, asfalto
+[tramos] Prueba_8 (evaluacion): 32 fotos, 1 tramo(s), sin GPS, sitio declarado, adoquin
+[tramos] Prueba_9 (evaluacion): 26 fotos, 1 tramo(s), sin GPS, sitio declarado, adoquin
+[tramos] Prueba_2 (calibracion): 69 fotos, 2 tramo(s), GPS real, asfalto
+[tramos] Prueba_3 (calibracion): 63 fotos, 3 tramo(s), GPS real, asfalto
+[tramos] Prueba_4 (calibracion): 59 fotos, 4 tramo(s), GPS real, asfalto
+[ok] 322 fotos en 14 tramos de 8 pruebas -> /home/user/DIMMIT-V1/data/campo/index
+          id_via    conjunto   prueba  tramo  sitio ubicacion_fuente  longitud_m  n_fotogramas      lat        lon
+VIA-42294e6bab9e  evaluacion Prueba_5      0    1.0        declarada         NaN            25 4.600130 -74.071760
+VIA-11eb58b9227a  evaluacion Prueba_6      0    1.0        declarada         NaN            22 4.600130 -74.071760
+VIA-a6946618547f  evaluacion Prueba_7      0    1.0        declarada         NaN            26 4.600130 -74.071760
+VIA-a083ff574a01  evaluacion Prueba_8      0    2.0        declarada         NaN            32 4.600770 -74.071120
+VIA-de196faec4d1  evaluacion Prueba_9      0    2.0        declarada         NaN            26 4.600770 -74.071120
+VIA-6a8c7dd60e98 calibracion Prueba_2      0    NaN              gps    9.496419            51 4.600259 -74.071689
+VIA-7fe064e60e0a calibracion Prueba_2      1    NaN              gps    7.349227            18 4.600354 -74.071647
+VIA-57cac608141a calibracion Prueba_3      0    NaN              gps    9.091175            23 4.600256 -74.071664
+VIA-75f714b86843 calibracion Prueba_3      1    NaN              gps    9.842731            17 4.600347 -74.071596
+VIA-2985571a3698 calibracion Prueba_3      2    NaN              gps   10.506161            23 4.600410 -74.071552
+VIA-d502dbe6b2e6 calibracion Prueba_4      0    NaN              gps    9.815296            19 4.600248 -74.071686
+VIA-c321926ea46b calibracion Prueba_4      1    NaN              gps    9.239407            20 4.600315 -74.071628
+VIA-edee8f48f254 calibracion Prueba_4      2    NaN              gps    9.395627            11 4.600380 -74.071577
+VIA-01538ee502cc calibracion Prueba_4      3    NaN              gps    6.377751             9 4.600456 -74.071566
+[1;32m  ✔ paso 3/10 terminado en 3 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 4/10 · REFERENCIA OFICIAL DEL IDU[0m
+[1;37m  Descarga el estado superficial de las calzadas alrededor del CAI Rosario (Mapa de Referencia IDECA)[0m
+[2m  inicio 15:49:38 · transcurrido 0 min 54 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.campo.idu[0m
+[ok] 82 calzadas a ≤ 350 m de CAI Rosario (IDU, 2025-12-31) -> /home/user/DIMMIT-V1/data/campo/idu
+estado_idu  bueno  malo  regular  sin_clasificar  All
+grupo                                                
+adoquin         4     0        1              15   20
+asfalto        12     1       34               1   48
+otro            7     0        7               0   14
+All            23     1       42              16   82
+[1;32m  ✔ paso 4/10 terminado en 2 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 5/10 · INFERENCIA EN LA NUBE (KAGGLE)[0m
+[1;37m  Sube las fotos como dataset privado, corre YOLOv10 en un kernel de Kaggle y baja las detecciones[0m
+[2m  inicio 15:49:40 · transcurrido 0 min 56 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.cloud.kaggle_job campo-dataset -m grabación del proceso completo 2026-11-22 15:49[0m
+Dataset version is being created. Please check progress at https://www.kaggle.com/datasets/jeffbezotes/dimmit-campo
+ready
+esperando a que Kaggle procese el dataset...
+[kaggle] dataset: ready (15 s)
+[0;33m$ .venv/bin/python -m dimmit.cloud.kaggle_job infer-push[0m
+Kernel version 6 successfully pushed.  Please check progress at https://www.kaggle.com/code/jeffbezotes/dimmit-campo-inferencia
+[kaggle] kernel dimmit-campo-inferencia: QUEUED · 0 min 20 s
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 0 min 40 s
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 1 min 0 s
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 1 min 20 s
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 1 min 40 s
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 2 min 0 s
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 2 min 20 s
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 2 min 40 s
+[kaggle] kernel dimmit-campo-inferencia: COMPLETE · 3 min 0 s
+[0;33m$ .venv/bin/python -m dimmit.cloud.kaggle_job infer-pull[0m
+Downloading detections.parquet to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
+  0%|          | 0.00/52.3k [00:00<?, ?B/s]100%|██████████| 52.3k/52.3k [00:00<00:00, 3.07MB/s]
+Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/detections.parquet
+Downloading kernel_log.txt to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
+  0%|          | 0.00/1.10k [00:00<?, ?B/s]100%|██████████| 1.10k/1.10k [00:00<00:00, 5.02MB/s]
+Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/kernel_log.txt
+Downloading latency.json to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
+  0%|          | 0.00/220 [00:00<?, ?B/s]100%|██████████| 220/220 [00:00<00:00, 1.06MB/s]
+Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/latency.json
+Downloading resumen.json to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
+  0%|          | 0.00/157 [00:00<?, ?B/s]100%|██████████| 157/157 [00:00<00:00, 990kB/s]
+Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/resumen.json
+Kernel log downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/dimmit-campo-inferencia.log 
+[0;33m$ cat reports/campo/kaggle/outputs/resumen.json[0m
+{
+  "modo": "infer",
+  "fotos": 322,
+  "pesos": "yolov10n_rdd2020.pt",
+  "gpu": false,
+  "imgsz": 640,
+  "conf": 0.05,
+  "max_det": 30,
+  "segundos": 152.8
+}
+[1;32m  ✔ paso 5/10 terminado en 200 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 6/10 · DETECCIÓN LOCAL A 3 ESCALAS (CPU)[0m
+[1;37m  416, 640 y 832 px: la de 640 comprueba la paridad con Kaggle; 416 y 832 alimentan el consenso multi-escala[0m
+[2m  inicio 15:53:00 · transcurrido 4 min 16 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.models.detector.predict --weights models/release/yolov10n_rdd2020.pt --list data/campo/index/campo.txt --out data/campo/det_local_416 --imgsz 416 --conf 0.05 --max-det 30 --no-embeddings[0m
+  16/322 imágenes (47 ms/img)
+[ok] 964 detecciones en 322 imágenes -> /home/user/DIMMIT-V1/data/campo/det_local_416
+[0;33m$ .venv/bin/python -m dimmit.models.detector.predict --weights models/release/yolov10n_rdd2020.pt --list data/campo/index/campo.txt --out data/campo/det_local_640 --imgsz 640 --conf 0.05 --max-det 30 --no-embeddings[0m
+  16/322 imágenes (70 ms/img)
+[ok] 1238 detecciones en 322 imágenes -> /home/user/DIMMIT-V1/data/campo/det_local_640
+[0;33m$ .venv/bin/python -m dimmit.models.detector.predict --weights models/release/yolov10n_rdd2020.pt --list data/campo/index/campo.txt --out data/campo/det_local_832 --imgsz 832 --conf 0.05 --max-det 30 --no-embeddings[0m
+  16/322 imágenes (88 ms/img)
+[ok] 1360 detecciones en 322 imágenes -> /home/user/DIMMIT-V1/data/campo/det_local_832
+[0;33m$ .venv/bin/python -[0m
+Paridad Kaggle ↔ local (640 px): 1238 vs 1238 cajas · diferencia máxima de confianza 1.34e-06
+[1;32m  ✔ paso 6/10 terminado en 80 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 7/10 · CALIBRACIÓN CON EL IDU, SCORE, CALIDAD Y SALIDAS[0m
+[1;37m  Umbrales de campo -> barrido del multiplicador del umbral contra el IDU -> score -> etiqueta -> salidas 1 y 2[0m
+[2m  inicio 15:54:20 · transcurrido 5 min 36 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.campo.umbrales[0m
+[ok] tau_campo = {'D00': 0.25, 'D10': 0.15, 'D20': 0.2, 'D40': 0.2} -> /home/user/DIMMIT-V1/data/campo/features/umbrales_campo.json
+D00 @0.05 P=0.16 R=0.43 @0.10 P=0.29 R=0.28 @0.15 P=0.41 R=0.19 @0.20 P=0.48 R=0.12 @0.25 P=0.56 R=0.08 @0.30 P=0.62 R=0.05 @0.40 P=0.77 R=0.02 @0.50 P=0.86 R=0.01
+D10 @0.05 P=0.18 R=0.36 @0.10 P=0.32 R=0.15 @0.15 P=0.55 R=0.06 @0.20 P=0.65 R=0.02 @0.25 P=0.75 R=0.01 @0.30 P=0.67 R=0.00 @0.40 P=nan R=0.00 @0.50 P=nan R=0.00
+D20 @0.05 P=0.24 R=0.67 @0.10 P=0.37 R=0.56 @0.15 P=0.47 R=0.46 @0.20 P=0.56 R=0.40 @0.25 P=0.65 R=0.36 @0.30 P=0.71 R=0.31 @0.40 P=0.82 R=0.22 @0.50 P=0.88 R=0.16
+D40 @0.05 P=0.18 R=0.39 @0.10 P=0.30 R=0.24 @0.15 P=0.42 R=0.19 @0.20 P=0.50 R=0.13 @0.25 P=0.62 R=0.10 @0.30 P=0.70 R=0.08 @0.40 P=0.83 R=0.05 @0.50 P=0.88 R=0.02
+[0;33m$ .venv/bin/python -m dimmit.campo.calibracion[0m
+tramos con calzada IDU:
+          id_via    conjunto   prueba      fecha  calcodigo      civ      superficie     estado_idu  frac_fotos_en_calzada
+VIA-01538ee502cc calibracion Prueba_4 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-11eb58b9227a  evaluacion Prueba_6 2026-11-15   91032823 17000080        flexible        regular                    1.0
+VIA-2985571a3698 calibracion Prueba_3 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-42294e6bab9e  evaluacion Prueba_5 2026-11-15   91032823 17000080        flexible        regular                    1.0
+VIA-57cac608141a calibracion Prueba_3 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-6a8c7dd60e98 calibracion Prueba_2 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-75f714b86843 calibracion Prueba_3 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-7fe064e60e0a calibracion Prueba_2 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-a083ff574a01  evaluacion Prueba_8 2026-11-15   91032298  3002892 adoquin_arcilla sin_clasificar                    1.0
+VIA-a6946618547f  evaluacion Prueba_7 2026-11-15   91032823 17000080        flexible        regular                    1.0
+VIA-c321926ea46b calibracion Prueba_4 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-d502dbe6b2e6 calibracion Prueba_4 2026-10-05   91032823 17000080        flexible        regular                    1.0
+VIA-de196faec4d1  evaluacion Prueba_9 2026-11-15   91032298  3002892 adoquin_arcilla sin_clasificar                    1.0
+VIA-edee8f48f254 calibracion Prueba_4 2026-10-05   91032823 17000080        flexible        regular                    1.0
+[calibración] ░░░░░░░░░░░░░░░░░░░░  1/21  m = 0.20  score medio  44.9  dentro del rango IDU  17%
+[calibración] █░░░░░░░░░░░░░░░░░░░  2/21  m = 0.25  score medio  45.0  dentro del rango IDU  17%
+[calibración] ██░░░░░░░░░░░░░░░░░░  3/21  m = 0.30  score medio  47.4  dentro del rango IDU  17%
+[calibración] ███░░░░░░░░░░░░░░░░░  4/21  m = 0.35  score medio  50.4  dentro del rango IDU  42%
+[calibración] ████░░░░░░░░░░░░░░░░  5/21  m = 0.40  score medio  53.2  dentro del rango IDU  42%
+[calibración] █████░░░░░░░░░░░░░░░  6/21  m = 0.45  score medio  55.8  dentro del rango IDU  50%
+[calibración] ██████░░░░░░░░░░░░░░  7/21  m = 0.50  score medio  58.3  dentro del rango IDU  50%
+[calibración] ███████░░░░░░░░░░░░░  8/21  m = 0.55  score medio  60.3  dentro del rango IDU  50%
+[calibración] ████████░░░░░░░░░░░░  9/21  m = 0.60  score medio  64.6  dentro del rango IDU  50%
+[calibración] █████████░░░░░░░░░░░ 10/21  m = 0.65  score medio  67.0  dentro del rango IDU  67%
+[calibración] ██████████░░░░░░░░░░ 11/21  m = 0.70  score medio  69.1  dentro del rango IDU  75%
+[calibración] ███████████░░░░░░░░░ 12/21  m = 0.75  score medio  70.7  dentro del rango IDU  75%
+[calibración] ████████████░░░░░░░░ 13/21  m = 0.80  score medio  71.3  dentro del rango IDU  83%
+[calibración] █████████████░░░░░░░ 14/21  m = 0.85  score medio  73.0  dentro del rango IDU  75%
+[calibración] ██████████████░░░░░░ 15/21  m = 0.90  score medio  73.9  dentro del rango IDU  75%
+[calibración] ███████████████░░░░░ 16/21  m = 0.95  score medio  74.5  dentro del rango IDU  75%
+[calibración] ████████████████░░░░ 17/21  m = 1.00  score medio  76.7  dentro del rango IDU  67%
+[calibración] █████████████████░░░ 18/21  m = 1.05  score medio  78.0  dentro del rango IDU  67%
+[calibración] ██████████████████░░ 19/21  m = 1.10  score medio  88.3  dentro del rango IDU  33%
+[calibración] ███████████████████░ 20/21  m = 1.15  score medio  90.8  dentro del rango IDU  25%
+[calibración] ████████████████████ 21/21  m = 1.20  score medio  93.2  dentro del rango IDU  25%
+[ok] m = 0.8 -> tau {'D00': np.float64(0.2), 'D10': np.float64(0.12), 'D20': np.float64(0.16), 'D40': np.float64(0.16)}; acierto 67% -> 83% en 12 tramos / 1 calzadas
+  evaluada calibrada_con  multiplicador  n_tramos  acierto_estado_idu  distancia_media_al_rango  acierto_sin_calibrar  distancia_sin_calibrar
+2026-10-05  [2026-11-15]           0.75         9            0.666667                  2.322931              0.777778                1.688778
+2026-11-15  [2026-10-05]           1.05         3            0.333333                  5.108778              0.333333                5.108778
+  prueba      fecha estado_idu  score_sin_calibrar  score_calibrado estado_dimmit_calibrado
+Prueba_4 2026-10-05    regular                74.2             73.5                 regular
+Prueba_6 2026-11-15    regular                95.3             76.5                 regular
+Prueba_3 2026-10-05    regular                50.8             49.8                    malo
+Prueba_5 2026-11-15    regular                77.3             73.5                 regular
+Prueba_3 2026-10-05    regular                70.5             67.2                 regular
+Prueba_2 2026-10-05    regular                79.6             79.1                 regular
+Prueba_3 2026-10-05    regular               100.0            100.0                   bueno
+Prueba_2 2026-10-05    regular                86.4             86.4                 regular
+Prueba_7 2026-11-15    regular               100.0             73.3                 regular
+Prueba_4 2026-10-05    regular                63.7             62.6                 regular
+Prueba_4 2026-10-05    regular                60.4             56.4                 regular
+Prueba_4 2026-10-05    regular                62.4             57.7                 regular
+[0;33m$ .venv/bin/python -m dimmit.campo.scores[0m
+[ok] detecciones de reports/campo/kaggle/outputs; escalas ['416', '832']; tau = 0.8 · tau_campo {'D00': 0.2, 'D10': 0.12, 'D20': 0.16, 'D40': 0.16}; 322 fotos, 19 filas -> /home/user/DIMMIT-V1/data/campo/features
+motivo  1_confianza  2_fuera_de_via  2_superficie  3_sin_persistencia  4_sin_consenso_escala  conservada
+cls                                                                                                     
+D00              59               0             0                   3                      0           0
+D10             189               5             0                  11                      3           5
+D20             301              12            57                  13                      3          38
+D40             473               8             0                  21                      4          33
+          id_via  nivel   prueba  tramo  score_calidad        estado      etiqueta  score_calidad_tau_rdd2020 etiqueta_tau_rdd2020  profundidad_max_cm  profundidad_max_cm_base40 danos_detectados  confianza_modelo
+VIA-01538ee502cc  tramo Prueba_4      3      73.513979 satisfactorio    prevencion                  43.631539         intervencion                 NaN                        NaN   piel_cocodrilo          0.322442
+VIA-11eb58b9227a  tramo Prueba_6      0      76.450894 satisfactorio  intervencion                  50.201456         intervencion                8.89                     -23.11                           0.254797
+VIA-2985571a3698  tramo Prueba_3      2      49.762113          malo  intervencion                  27.247759         intervencion                 NaN                        NaN   piel_cocodrilo          0.255983
+VIA-42294e6bab9e  tramo Prueba_5      0      73.523459 satisfactorio  intervencion                  36.629084         intervencion               26.40                      -5.60                           0.227644
+VIA-57cac608141a  tramo Prueba_3      0      67.197858       regular mantenimiento                  20.164854         intervencion                 NaN                        NaN           baches          0.276436
+VIA-6a8c7dd60e98  tramo Prueba_2      0      79.123447 satisfactorio    prevencion                  24.006679         intervencion                 NaN                        NaN                           0.331332
+VIA-75f714b86843  tramo Prueba_3      1     100.000000         bueno    prevencion                  38.097772         intervencion                 NaN                        NaN                                NaN
+VIA-7fe064e60e0a  tramo Prueba_2      1      86.351291         bueno    prevencion                  54.208232         intervencion                 NaN                        NaN                           0.249362
+VIA-a083ff574a01  tramo Prueba_8      0     100.000000         bueno  intervencion                  24.895754         intervencion                9.54                     -22.46                                NaN
+VIA-a6946618547f  tramo Prueba_7      0      73.288930 satisfactorio  intervencion                  35.509774         intervencion               20.35                     -11.65                           0.205069
+VIA-c321926ea46b  tramo Prueba_4      1      62.594954       regular mantenimiento                  46.128430         intervencion                 NaN                        NaN   piel_cocodrilo          0.228457
+VIA-d502dbe6b2e6  tramo Prueba_4      0      56.405789       regular mantenimiento                  19.673142         intervencion                 NaN                        NaN           baches          0.237379
+VIA-de196faec4d1  tramo Prueba_9      0     100.000000         bueno  intervencion                  28.264261         intervencion               21.19                     -10.81                                NaN
+VIA-edee8f48f254  tramo Prueba_4      2      57.653310       regular mantenimiento                  43.185948         intervencion                 NaN                        NaN   piel_cocodrilo          0.303267
+    SIT-1963454e  sitio  Sitio_1     -1      75.376427 satisfactorio  intervencion                  39.099499         intervencion               26.40                      -5.60                           0.241221
+    SIT-6934c70f  sitio  Sitio_2     -1     100.000000         bueno  intervencion                  26.300857         intervencion               21.19                     -10.81                                NaN
+    PRU-0e41b56f prueba Prueba_2     -1      80.564534 satisfactorio    prevencion                  26.792638         intervencion                 NaN                        NaN                           0.304009
+    PRU-b964f224 prueba Prueba_3     -1      52.941389          malo  intervencion                  23.456535         intervencion                 NaN                        NaN                           0.255983
+    PRU-fa9806a6 prueba Prueba_4     -1      58.341618       regular mantenimiento                  28.916523         intervencion                 NaN                        NaN                           0.279096
+[0;33m$ .venv/bin/python -m dimmit.campo.calidad[0m
+  rs, lo, hi = spearmanr(t[a], t[b])[0], *boot_ci(t[a], t[b], spearmanr)
+  add("LOTE", "tramo", "correlacion_sensor", f"pearson_{a}__{b}", float(pearsonr(t[a], t[b])[0]), len(t), nota)
+  add(key, nivel_f, "correlacion_sensor", f"spearman_foto_profundidad_cm__{b}", float(spearmanr(g["profundidad_cm"], g[b])[0]), len(g), nota)
+[ok] 217 métricas -> /home/user/DIMMIT-V1/data/campo/features/calidad_largo.parquet
+nivel                                            metrica     valor  ic95_inf  ic95_sup   n
+ lote                                         psi_brillo  6.515115       NaN       NaN 131
+ lote                                      psi_contraste  6.005994       NaN       NaN 131
+ lote                                        psi_nitidez  3.910415       NaN       NaN 131
+ lote                                        psi_jpeg_kb  7.633598       NaN       NaN 131
+ lote                                       psi_max_conf  1.039667       NaN       NaN 131
+ lote                                        psi_pci_det  0.596004       NaN       NaN 131
+ lote                                          psi_n_D00  0.300069       NaN       NaN 131
+ lote                                          psi_n_D10  0.074856       NaN       NaN 131
+ lote                                          psi_n_D20  0.235831       NaN       NaN 131
+ lote                                          psi_n_D40  0.217539       NaN       NaN 131
+ lote                                      dominio_auroc  0.992023       NaN       NaN 131
+tramo              spearman_profundidad_max_cm__n_baches -0.223607    -0.875 -0.108148   5
+tramo               pearson_profundidad_max_cm__n_baches -0.158068       NaN       NaN   5
+tramo        spearman_profundidad_max_cm__maxconf_baches -0.223607    -0.875 -0.108148   5
+tramo         pearson_profundidad_max_cm__maxconf_baches -0.130465       NaN       NaN   5
+tramo            spearman_profundidad_media_cm__n_baches -0.670820    -1.000 -0.250000   5
+tramo             pearson_profundidad_media_cm__n_baches -0.736578       NaN       NaN   5
+tramo spearman_profundidad_frac_bache__frac_fotos_baches -0.670820    -1.000 -0.250000   5
+tramo  pearson_profundidad_frac_bache__frac_fotos_baches -0.645351       NaN       NaN   5
+tramo         spearman_profundidad_max_cm__score_calidad -0.205196    -0.875  0.666667   5
+tramo          pearson_profundidad_max_cm__score_calidad -0.291033       NaN       NaN   5
+tramo spearman_profundidad_max_cm__n_grieta_longitudinal       NaN       NaN       NaN   5
+tramo  pearson_profundidad_max_cm__n_grieta_longitudinal       NaN       NaN       NaN   5
+tramo       spearman_profundidad_max_cm_base40__n_baches -0.223607    -0.875 -0.108148   5
+tramo        pearson_profundidad_max_cm_base40__n_baches -0.158068       NaN       NaN   5
+[0;33m$ .venv/bin/python -m dimmit.campo.salidas[0m
+[ok] campo-20261122-1555: 7 filas en vias_clasificacion, 217 métricas, 131 fotos -> /home/user/DIMMIT-V1/reports/campo
+[1;32m  ✔ paso 7/10 terminado en 59 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 8/10 · PRUEBAS AUTOMÁTICAS[0m
+[1;37m  pytest: GPS, tramos, ID, sensor, filtros, superficie, etiquetas y escala del IDU[0m
+[2m  inicio 15:55:19 · transcurrido 6 min 35 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m pytest -q tests[0m
+...........................                                              [100%]
+=============================== warnings summary ===============================
+tests/test_pipeline.py::test_metrics_against_sklearn
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+27 passed, 1 warning in 6.39s
+[1;32m  ✔ paso 8/10 terminado en 9 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 9/10 · FIGURAS DEL PÓSTER[0m
+[1;37m  Resultados de la toma, diagrama de funcionamiento y validación frente al IDU[0m
+[2m  inicio 15:55:28 · transcurrido 6 min 44 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.reporting.poster_campo[0m
+[ok] /home/user/DIMMIT-V1/reports/campo/poster/resultados_toma_2026-11-15.png
+[0;33m$ .venv/bin/python -m dimmit.reporting.diagrama_flujo[0m
+[ok] /home/user/DIMMIT-V1/reports/campo/poster/diagrama_flujo.png
+[0;33m$ .venv/bin/python -m dimmit.reporting.validacion_idu[0m
+[ok] /home/user/DIMMIT-V1/reports/campo/poster/validacion_idu.png
+mostrando reports/campo/poster/resultados_toma_2026-11-15.png
+mostrando reports/campo/poster/validacion_idu.png
+mostrando reports/campo/poster/diagrama_flujo.png
+[1;32m  ✔ paso 9/10 terminado en 27 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 10/10 · RESUMEN[0m
+[1;37m  Salida 1 (clasificación por vía) y calibración contra el IDU[0m
+[2m  inicio 15:55:55 · transcurrido 7 min 11 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -[0m
+nivel   prueba  score_calidad estado_idu_equivalente     etiqueta  profundidad_max_cm  danos_detectados              run_id
+tramo Prueba_5           73.5                regular intervencion                26.4               NaN campo-20261122-1555
+tramo Prueba_6           76.5                regular intervencion                 8.9               NaN campo-20261122-1555
+tramo Prueba_7           73.3                regular intervencion                20.4               NaN campo-20261122-1555
+tramo Prueba_8          100.0                  bueno intervencion                 9.5               NaN campo-20261122-1555
+tramo Prueba_9          100.0                  bueno intervencion                21.2               NaN campo-20261122-1555
+sitio  Sitio_1           75.4                regular intervencion                26.4               NaN campo-20261122-1555
+sitio  Sitio_2          100.0                  bueno intervencion                21.2               NaN campo-20261122-1555
+Calibración: tau = 0.8 · tau_campo -> {'D00': 0.2, 'D10': 0.12, 'D20': 0.16, 'D40': 0.16}
+Tramos dentro del rango del IDU: 67% sin calibrar -> 83% calibrado (12 tramos, 1 calzada)
+
+[0;33m$ ls -la reports/campo/vias_clasificacion.csv reports/campo/calidad_confianza_correlacion.csv reports/campo/poster[0m
+-rw-r--r-- 1 root root 29811 Nov 22 15:55 reports/campo/calidad_confianza_correlacion.csv
+-rw-r--r-- 1 root root  4662 Nov 22 15:55 reports/campo/vias_clasificacion.csv
+reports/campo/poster:
+total 1472
+drwxr-xr-x 2 root root   4096 Nov 15 23:00 .
+drwxr-xr-x 4 root root   4096 Nov 15 23:00 ..
+-rw-r--r-- 1 root root 362410 Nov 22 15:55 diagrama_flujo.png
+-rw-r--r-- 1 root root 716802 Nov 22 15:55 resultados_toma_2026-11-15.png
+-rw-r--r-- 1 root root 413669 Nov 22 15:55 validacion_idu.png
+[1;32m  ✔ paso 10/10 terminado en 0 s[0m
+
+[1;32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;32m  PROCESO COMPLETO TERMINADO en 7 min 11 s · 22-11-2026 15:55:55[0m
+[1;32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
