@@ -90,10 +90,14 @@ def main():
     rg = rangos(cfg)
     base = cfg["filtros"]
     scores = {}
-    for m in grid:
+    for i, m in enumerate(grid, 1):
         f = {**base, "tau_campo": {k: v * m for k, v in base["tau_campo"].items()}}
         _, vias, _, _ = compute(ctx, cfg, f)
         scores[m] = vias[vias["nivel"] == "tramo"].set_index("id_via")["score_calidad"]
+        sc = scores[m].reindex(usable["id_via"])
+        dentro = np.mean([estado_por_score(x, cfg) == e for x, e in zip(sc, usable["estado_idu"])])
+        barra = "█" * int(20 * i / len(grid)) + "░" * (20 - int(20 * i / len(grid)))
+        print(f"[calibración] {barra} {i:2d}/{len(grid)}  m = {m:.2f}  score medio {sc.mean():5.1f}  dentro del rango IDU {dentro:4.0%}", flush=True)
     S = pd.DataFrame(scores).loc[usable["id_via"]]  # tramos x m
 
     def dist(sc, est):

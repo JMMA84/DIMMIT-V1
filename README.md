@@ -109,8 +109,13 @@ El modo RDD2020 (umbral original, sin filtros) se conserva como columnas `*_tau_
 make campo-ingest                       # Drive público -> data/campo/raw + manifiesto sha1 + tramos de 10 m con id_via
 make kaggle-bundle campo-dataset        # bundle con los pesos release + dataset privado dimmit-campo
 make campo-infer && make campo-pull     # kernel de solo inferencia en Kaggle -> reports/campo/kaggle/outputs
-make campo-local && make campo          # detecciones a 416/640/832 px + scores, calidad, salidas y presentación v2
+make campo-local && make campo          # detecciones a 416/640/832 px + calibración con el IDU, scores, salidas y figuras
+make campo-grabar                       # todo lo anterior, grabado en video MP4 (reports/grabacion/)
 ```
+
+`make campo-grabar` corre `scripts/proceso_completo.sh` (10 pasos con avisos de progreso) en una terminal dentro de
+una pantalla virtual (PyVirtualDisplay + Xvfb) y la graba con ffmpeg. Deja el video y el registro de texto del mismo
+proceso en `reports/grabacion/`. Requiere `Xvfb`, `xterm` y `ffmpeg` (y `display` de ImageMagick para mostrar las figuras).
 
 Salidas en `reports/campo/`: `vias_clasificacion.{csv,json}` (ID por tramo, daños, score, estado,
 etiqueta, profundidad, lat/lon), `calidad_confianza_correlacion.{csv,json}` (formato largo),

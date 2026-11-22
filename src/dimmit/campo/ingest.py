@@ -54,7 +54,10 @@ def sha1(path):
 
 def download_tree(folder_id, dest: Path, rows, prefix=""):
     ensure_dir(dest)
-    for fid, name in list_folder(folder_id):
+    items = list_folder(folder_id)
+    n_files = sum("." in n for _, n in items)
+    print(f"[drive] {prefix or '(raíz)/'}: {n_files} archivos, {len(items) - n_files} subcarpetas", flush=True)
+    for fid, name in items:
         if "." not in name:  # subcarpeta
             download_tree(fid, dest / name, rows, prefix=f"{prefix}{name}/")
             continue

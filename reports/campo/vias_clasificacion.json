@@ -56,7 +56,7 @@
   "conf_media_detecciones_campo":0.227644071,
   "hash_imagenes":"b1f91c7567ad",
   "version_detector":"yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a 640 px)",
-  "run_id":"campo-20261115-2259"
+  "run_id":"campo-20261122-1555"
  },
  {
   "id_via":"VIA-11eb58b9227a",
@@ -115,7 +115,7 @@
   "conf_media_detecciones_campo":0.2462306122,
   "hash_imagenes":"dc5ee7f95a10",
   "version_detector":"yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a 640 px)",
-  "run_id":"campo-20261115-2259"
+  "run_id":"campo-20261122-1555"
  },
  {
   "id_via":"VIA-a6946618547f",
@@ -174,7 +174,7 @@
   "conf_media_detecciones_campo":0.2050689533,
   "hash_imagenes":"59075f1f5d84",
   "version_detector":"yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a 640 px)",
-  "run_id":"campo-20261115-2259"
+  "run_id":"campo-20261122-1555"
  },
  {
   "id_via":"VIA-a083ff574a01",
@@ -233,7 +233,7 @@
   "conf_media_detecciones_campo":null,
   "hash_imagenes":"7ccd272f447c",
   "version_detector":"yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a 640 px)",
-  "run_id":"campo-20261115-2259"
+  "run_id":"campo-20261122-1555"
  },
  {
   "id_via":"VIA-de196faec4d1",
@@ -292,7 +292,7 @@
   "conf_media_detecciones_campo":null,
   "hash_imagenes":"a0bb3f817f18",
   "version_detector":"yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a 640 px)",
-  "run_id":"campo-20261115-2259"
+  "run_id":"campo-20261122-1555"
  },
  {
   "id_via":"SIT-1963454e",
@@ -351,7 +351,7 @@
   "conf_media_detecciones_campo":0.2342809722,
   "hash_imagenes":"5320636e512a",
   "version_detector":"yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a 640 px)",
-  "run_id":"campo-20261115-2259"
+  "run_id":"campo-20261122-1555"
  },
  {
   "id_via":"SIT-6934c70f",
@@ -410,6 +410,6 @@
   "conf_media_detecciones_campo":null,
   "hash_imagenes":"12fbf0eb26cc",
   "version_detector":"yolov10n_rdd2020 (entrenado 12 épocas a 416 px; inferencia en Kaggle a 640 px)",
-  "run_id":"campo-20261115-2259"
+  "run_id":"campo-20261122-1555"
  }
 ]
