@@ -21,4 +21,7 @@ pytest
 netron  # visor del grafo de la red (paso 7 de la grabación)
 onnx
 onnxslim
+captum  # Grad-CAM del video de la red (make yolo-video)
+imageio
+imageio-ffmpeg  # ffmpeg para pasar el video de OpenCV a H.264
 pyvirtualdisplay  # grabación del proceso en video (make campo-grabar; requiere Xvfb, xterm y ffmpeg)

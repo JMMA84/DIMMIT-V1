@@ -4,7 +4,7 @@ DET ?= data/features/detector
 WEIGHTS ?= models/release/yolov10n_rdd2020.pt
 IMGSZ ?= 640
 
-.PHONY: campo-poster campo-idu campo-grabar setup data labels validate-data train-cpu kaggle-bundle kaggle-train kaggle-status kaggle-pull \
+.PHONY: campo-poster campo-idu campo-grabar yolo-video setup data labels validate-data train-cpu kaggle-bundle kaggle-train kaggle-status kaggle-pull \
         predict-all features sensors context importance fusion baselines zenodo drift describe \
         evaluate report v1 test campo-ingest campo-dataset campo-infer campo-status campo-pull campo-local campo-scores campo-report campo
 
@@ -101,6 +101,9 @@ campo-poster:    ## figuras PNG 300 dpi del póster: resultados, diagrama de fun
 campo: campo-scores campo-poster
 campo-grabar:    ## graba en video (MP4) el proceso completo en una pantalla virtual -> reports/grabacion/
 	$(ENV) $(PY) -m dimmit.grabacion
+
+yolo-video:      ## video de la red por dentro con tensores reales (hooks, OpenCV, Matplotlib, Captum) -> reports/grabacion/
+	$(ENV) $(PY) -m dimmit.reporting.video_yolo
 
 test:
 	$(ENV) $(PY) -m pytest -q

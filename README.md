@@ -123,6 +123,13 @@ las 3 cuadrículas 80×80/40×40/20×20 de la cabeza y la salida 300×6), el per
 recorrido en Netron (`scripts/recorrer_red_netron.js`, Playwright) y los mapas de activación de cada etapa más la foto
 anotada que guarda Ultralytics con `visualize=True`.
 
+`make yolo-video` genera `reports/grabacion/yolo_por_dentro_Prueba_6_007.mp4` (~2 min) a partir de una pasada real de
+una foto: hooks de PyTorch en las 23 capas y la cabeza, la ventana 3×3 de la primera convolución con sus pesos reales
+(recalculada a mano y comparada con el hook), los mapas de activación (Matplotlib), las 3 cuadrículas con la
+probabilidad de cada celda, el vector de 68 números de la celda ganadora decodificado a caja (DFL + ancla), el TopK
+300 con el umbral calibrado con el IDU, Grad-CAM (Captum) y la comprobación contra `YOLO.predict()`. Los fotogramas
+se dibujan con OpenCV y se unen con `cv2.VideoWriter`.
+
 Salidas en `reports/campo/`: `vias_clasificacion.{csv,json}` (ID por tramo, daños, score, estado,
 etiqueta, profundidad, lat/lon), `calidad_confianza_correlacion.{csv,json}` (formato largo),
 `fotogramas_detalle.csv`, `diccionario_campo.csv`, `dimmit_presentacion.html` y
