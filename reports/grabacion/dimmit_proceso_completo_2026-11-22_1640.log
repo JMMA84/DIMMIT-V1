@@ -1,13 +1,13 @@
 [H[2J[3J[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [1;37m  DIMMIT V1 · Dispositivo de Instancia y Modelado Vial para el Mantenimiento de la Infraestructura de Tránsito[0m
 [1;37m  Grabación del proceso completo: datos de campo -> YOLOv10 (Kaggle) -> calibración con el IDU -> score -> etiqueta[0m
-[2m  Universidad del Rosario · 22-11-2026 15:48:44 · commit 3039e4f · rama grabacion-proceso-completo[0m
+[2m  Universidad del Rosario · 22-11-2026 16:40:27 · commit 5d0fec2 · rama grabacion-yolo-animado[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 1/10 · ENTORNO[0m
+[1;36m  PASO 1/11 · ENTORNO[0m
 [1;37m  Máquina, versiones de las librerías y configuración de la corrida (configs/campo.yaml)[0m
-[2m  inicio 15:48:47 · transcurrido 0 min 3 s[0m
+[2m  inicio 16:40:30 · transcurrido 0 min 3 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ uname -srm[0m
 Linux 6.18.44-fc-v726 x86_64
@@ -24,12 +24,12 @@ Toma evaluada: Toma del 15-nov-2026 · 2 sitios, 5 recorridos
 Calibración con el IDU: sí · toma de calibración: Prueba_2, Prueba_3, Prueba_4
 Sensor: descartar > 35.0 cm y 0,00 · profundidad = distancia − 8.0 cm
 Inferencia: 640 px · conf ≥ 0.05 · máx. 30 cajas por foto
-[1;32m  ✔ paso 1/10 terminado en 37 s[0m
+[1;32m  ✔ paso 1/11 terminado en 2 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 2/10 · DATOS DE CAMPO (GOOGLE DRIVE)[0m
+[1;36m  PASO 2/11 · DATOS DE CAMPO (GOOGLE DRIVE)[0m
 [1;37m  Lista la carpeta compartida, baja lo que falte y verifica cada archivo con su hash SHA-1[0m
-[2m  inicio 15:49:24 · transcurrido 0 min 40 s[0m
+[2m  inicio 16:40:32 · transcurrido 0 min 5 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -m dimmit.campo.ingest[0m
 [drive] (raíz)/: 1 archivos, 10 subcarpetas
@@ -45,12 +45,12 @@ Inferencia: 640 px · conf ≥ 0.05 · máx. 30 cajas por foto
 [drive] prueba9/prueba8/: 16 archivos, 0 subcarpetas
 [drive] tomadedatos/: 3 archivos, 0 subcarpetas
 [ok] 356 archivos (191 imágenes, 103.1 MB) -> /home/user/DIMMIT-V1/data/campo/raw
-[1;32m  ✔ paso 2/10 terminado en 11 s[0m
+[1;32m  ✔ paso 2/11 terminado en 8 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 3/10 · FOTOGRAMAS Y TRAMOS[0m
+[1;36m  PASO 3/11 · FOTOGRAMAS Y TRAMOS[0m
 [1;37m  Ordena las fotos, asigna ubicación (GPS o sitio declarado), corta tramos y genera los ID únicos[0m
-[2m  inicio 15:49:35 · transcurrido 0 min 51 s[0m
+[2m  inicio 16:40:40 · transcurrido 0 min 13 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -m dimmit.campo.tramos[0m
 [tramos] Prueba_5 (evaluacion): 25 fotos, 1 tramo(s), sin GPS, sitio declarado, asfalto
@@ -77,12 +77,12 @@ VIA-d502dbe6b2e6 calibracion Prueba_4      0    NaN              gps    9.815296
 VIA-c321926ea46b calibracion Prueba_4      1    NaN              gps    9.239407            20 4.600315 -74.071628
 VIA-edee8f48f254 calibracion Prueba_4      2    NaN              gps    9.395627            11 4.600380 -74.071577
 VIA-01538ee502cc calibracion Prueba_4      3    NaN              gps    6.377751             9 4.600456 -74.071566
-[1;32m  ✔ paso 3/10 terminado en 3 s[0m
+[1;32m  ✔ paso 3/11 terminado en 0 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 4/10 · REFERENCIA OFICIAL DEL IDU[0m
+[1;36m  PASO 4/11 · REFERENCIA OFICIAL DEL IDU[0m
 [1;37m  Descarga el estado superficial de las calzadas alrededor del CAI Rosario (Mapa de Referencia IDECA)[0m
-[2m  inicio 15:49:38 · transcurrido 0 min 54 s[0m
+[2m  inicio 16:40:40 · transcurrido 0 min 13 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -m dimmit.campo.idu[0m
 [ok] 82 calzadas a ≤ 350 m de CAI Rosario (IDU, 2025-12-31) -> /home/user/DIMMIT-V1/data/campo/idu
@@ -92,21 +92,21 @@ adoquin         4     0        1              15   20
 asfalto        12     1       34               1   48
 otro            7     0        7               0   14
 All            23     1       42              16   82
-[1;32m  ✔ paso 4/10 terminado en 2 s[0m
+[1;32m  ✔ paso 4/11 terminado en 2 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 5/10 · INFERENCIA EN LA NUBE (KAGGLE)[0m
+[1;36m  PASO 5/11 · INFERENCIA EN LA NUBE (KAGGLE)[0m
 [1;37m  Sube las fotos como dataset privado, corre YOLOv10 en un kernel de Kaggle y baja las detecciones[0m
-[2m  inicio 15:49:40 · transcurrido 0 min 56 s[0m
+[2m  inicio 16:40:42 · transcurrido 0 min 15 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[0;33m$ .venv/bin/python -m dimmit.cloud.kaggle_job campo-dataset -m grabación del proceso completo 2026-11-22 15:49[0m
+[0;33m$ .venv/bin/python -m dimmit.cloud.kaggle_job campo-dataset -m grabación del proceso completo 2026-11-22 16:40[0m
 Dataset version is being created. Please check progress at https://www.kaggle.com/datasets/jeffbezotes/dimmit-campo
 ready
 esperando a que Kaggle procese el dataset...
 [kaggle] dataset: ready (15 s)
 [0;33m$ .venv/bin/python -m dimmit.cloud.kaggle_job infer-push[0m
-Kernel version 6 successfully pushed.  Please check progress at https://www.kaggle.com/code/jeffbezotes/dimmit-campo-inferencia
-[kaggle] kernel dimmit-campo-inferencia: QUEUED · 0 min 20 s
+Kernel version 8 successfully pushed.  Please check progress at https://www.kaggle.com/code/jeffbezotes/dimmit-campo-inferencia
+[kaggle] kernel dimmit-campo-inferencia: RUNNING · 0 min 20 s
 [kaggle] kernel dimmit-campo-inferencia: RUNNING · 0 min 40 s
 [kaggle] kernel dimmit-campo-inferencia: RUNNING · 1 min 0 s
 [kaggle] kernel dimmit-campo-inferencia: RUNNING · 1 min 20 s
@@ -117,16 +117,16 @@ Kernel version 6 successfully pushed.  Please check progress at https://www.kagg
 [kaggle] kernel dimmit-campo-inferencia: COMPLETE · 3 min 0 s
 [0;33m$ .venv/bin/python -m dimmit.cloud.kaggle_job infer-pull[0m
 Downloading detections.parquet to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
-  0%|          | 0.00/52.3k [00:00<?, ?B/s]100%|██████████| 52.3k/52.3k [00:00<00:00, 3.07MB/s]
+  0%|          | 0.00/52.3k [00:00<?, ?B/s]100%|██████████| 52.3k/52.3k [00:00<00:00, 3.83MB/s]
 Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/detections.parquet
 Downloading kernel_log.txt to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
-  0%|          | 0.00/1.10k [00:00<?, ?B/s]100%|██████████| 1.10k/1.10k [00:00<00:00, 5.02MB/s]
+  0%|          | 0.00/1.10k [00:00<?, ?B/s]100%|██████████| 1.10k/1.10k [00:00<00:00, 5.46MB/s]
 Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/kernel_log.txt
 Downloading latency.json to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
-  0%|          | 0.00/220 [00:00<?, ?B/s]100%|██████████| 220/220 [00:00<00:00, 1.06MB/s]
+  0%|          | 0.00/218 [00:00<?, ?B/s]100%|██████████| 218/218 [00:00<00:00, 1.67MB/s]
 Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/latency.json
 Downloading resumen.json to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs
-  0%|          | 0.00/157 [00:00<?, ?B/s]100%|██████████| 157/157 [00:00<00:00, 990kB/s]
+  0%|          | 0.00/157 [00:00<?, ?B/s]100%|██████████| 157/157 [00:00<00:00, 1.06MB/s]
 Output file downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/outputs/resumen.json
 Kernel log downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/dimmit-campo-inferencia.log 
 [0;33m$ cat reports/campo/kaggle/outputs/resumen.json[0m
@@ -138,32 +138,205 @@ Kernel log downloaded to /home/user/DIMMIT-V1/reports/campo/kaggle/dimmit-campo-
   "imgsz": 640,
   "conf": 0.05,
   "max_det": 30,
-  "segundos": 152.8
+  "segundos": 140.7
 }
-[1;32m  ✔ paso 5/10 terminado en 200 s[0m
+[1;32m  ✔ paso 5/11 terminado en 200 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 6/10 · DETECCIÓN LOCAL A 3 ESCALAS (CPU)[0m
+[1;36m  PASO 6/11 · DETECCIÓN LOCAL A 3 ESCALAS (CPU)[0m
 [1;37m  416, 640 y 832 px: la de 640 comprueba la paridad con Kaggle; 416 y 832 alimentan el consenso multi-escala[0m
-[2m  inicio 15:53:00 · transcurrido 4 min 16 s[0m
+[2m  inicio 16:44:02 · transcurrido 3 min 35 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -m dimmit.models.detector.predict --weights models/release/yolov10n_rdd2020.pt --list data/campo/index/campo.txt --out data/campo/det_local_416 --imgsz 416 --conf 0.05 --max-det 30 --no-embeddings[0m
-  16/322 imágenes (47 ms/img)
+  16/322 imágenes (40 ms/img)
 [ok] 964 detecciones en 322 imágenes -> /home/user/DIMMIT-V1/data/campo/det_local_416
 [0;33m$ .venv/bin/python -m dimmit.models.detector.predict --weights models/release/yolov10n_rdd2020.pt --list data/campo/index/campo.txt --out data/campo/det_local_640 --imgsz 640 --conf 0.05 --max-det 30 --no-embeddings[0m
-  16/322 imágenes (70 ms/img)
+  16/322 imágenes (63 ms/img)
 [ok] 1238 detecciones en 322 imágenes -> /home/user/DIMMIT-V1/data/campo/det_local_640
 [0;33m$ .venv/bin/python -m dimmit.models.detector.predict --weights models/release/yolov10n_rdd2020.pt --list data/campo/index/campo.txt --out data/campo/det_local_832 --imgsz 832 --conf 0.05 --max-det 30 --no-embeddings[0m
-  16/322 imágenes (88 ms/img)
+  16/322 imágenes (90 ms/img)
 [ok] 1360 detecciones en 322 imágenes -> /home/user/DIMMIT-V1/data/campo/det_local_832
 [0;33m$ .venv/bin/python -[0m
 Paridad Kaggle ↔ local (640 px): 1238 vs 1238 cajas · diferencia máxima de confianza 1.34e-06
-[1;32m  ✔ paso 6/10 terminado en 80 s[0m
+[1;32m  ✔ paso 6/11 terminado en 66 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 7/10 · CALIBRACIÓN CON EL IDU, SCORE, CALIDAD Y SALIDAS[0m
+[1;36m  PASO 7/11 · LA RED YOLO POR DENTRO (ULTRALYTICS + NETRON)[0m
+[1;37m  Arquitectura, pasada real de una foto capa por capa, grafo en Netron y activaciones de cada etapa[0m
+[2m  inicio 16:45:08 · transcurrido 4 min 41 s[0m
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;33m$ .venv/bin/python -m dimmit.reporting.red_yolo arquitectura[0m
+Pesos: models/release/yolov10n_rdd2020.pt · clases: {0: 'D00_grieta_longitudinal', 1: 'D10_grieta_transversal', 2: 'D20_grieta_cocodrilo', 3: 'D40_bache'}
+                   from  n    params  module                                       arguments                     
+  0                  -1  1       464  ultralytics.nn.modules.conv.Conv             [3, 16, 3, 2]                 
+  1                  -1  1      4672  ultralytics.nn.modules.conv.Conv             [16, 32, 3, 2]                
+  2                  -1  1      7360  ultralytics.nn.modules.block.C2f             [32, 32, 1, True]             
+  3                  -1  1     18560  ultralytics.nn.modules.conv.Conv             [32, 64, 3, 2]                
+  4                  -1  2     49664  ultralytics.nn.modules.block.C2f             [64, 64, 2, True]             
+  5                  -1  1      9856  ultralytics.nn.modules.block.SCDown          [64, 128, 3, 2]               
+  6                  -1  2    197632  ultralytics.nn.modules.block.C2f             [128, 128, 2, True]           
+  7                  -1  1     36096  ultralytics.nn.modules.block.SCDown          [128, 256, 3, 2]              
+  8                  -1  1    460288  ultralytics.nn.modules.block.C2f             [256, 256, 1, True]           
+  9                  -1  1    164608  ultralytics.nn.modules.block.SPPF            [256, 256, 5]                 
+ 10                  -1  1    249728  ultralytics.nn.modules.block.PSA             [256, 256]                    
+ 11                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 12             [-1, 6]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 13                  -1  1    148224  ultralytics.nn.modules.block.C2f             [384, 128, 1]                 
+ 14                  -1  1         0  torch.nn.modules.upsampling.Upsample         [None, 2, 'nearest']          
+ 15             [-1, 4]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 16                  -1  1     37248  ultralytics.nn.modules.block.C2f             [192, 64, 1]                  
+ 17                  -1  1     36992  ultralytics.nn.modules.conv.Conv             [64, 64, 3, 2]                
+ 18            [-1, 13]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 19                  -1  1    123648  ultralytics.nn.modules.block.C2f             [192, 128, 1]                 
+ 20                  -1  1     18048  ultralytics.nn.modules.block.SCDown          [128, 128, 3, 2]              
+ 21            [-1, 10]  1         0  ultralytics.nn.modules.conv.Concat           [1]                           
+ 22                  -1  1    282624  ultralytics.nn.modules.block.C2fCIB          [384, 256, 1, True, True]     
+ 23        [16, 19, 22]  1    862888  ultralytics.nn.modules.head.v10Detect        [4, [64, 128, 256]]           
+YOLOv10n summary: 223 layers, 2,708,600 parameters, 2,708,584 gradients, 8.4 GFLOPs
+[0;33m$ .venv/bin/python -m dimmit.reporting.red_yolo traza --foto Prueba_6/Prueba_6_007[0m
+foto Prueba_6/Prueba_6_007: 1280×720 px -> letterbox 640×640 -> tensor (1, 3, 640, 640) con valores de 0 a 1
+Pasada hacia adelante (forward) de la foto, capa por capa:
+  capa  0 · Conv      · entra desde -1           -> salida (1, 16, 320, 320)
+  capa  1 · Conv      · entra desde -1           -> salida (1, 32, 160, 160)
+  capa  2 · C2f       · entra desde -1           -> salida (1, 32, 160, 160)
+  capa  3 · Conv      · entra desde -1           -> salida (1, 64, 80, 80)
+  capa  4 · C2f       · entra desde -1           -> salida (1, 64, 80, 80)
+  capa  5 · SCDown    · entra desde -1           -> salida (1, 128, 40, 40)
+  capa  6 · C2f       · entra desde -1           -> salida (1, 128, 40, 40)
+  capa  7 · SCDown    · entra desde -1           -> salida (1, 256, 20, 20)
+  capa  8 · C2f       · entra desde -1           -> salida (1, 256, 20, 20)
+  capa  9 · SPPF      · entra desde -1           -> salida (1, 256, 20, 20)
+  capa 10 · PSA       · entra desde -1           -> salida (1, 256, 20, 20)
+  capa 11 · Upsample  · entra desde -1           -> salida (1, 256, 40, 40)
+  capa 12 · Concat    · entra desde [-1, 6]      -> salida (1, 384, 40, 40)
+  capa 13 · C2f       · entra desde -1           -> salida (1, 128, 40, 40)
+  capa 14 · Upsample  · entra desde -1           -> salida (1, 128, 80, 80)
+  capa 15 · Concat    · entra desde [-1, 4]      -> salida (1, 192, 80, 80)
+  capa 16 · C2f       · entra desde -1           -> salida (1, 64, 80, 80)
+  capa 17 · Conv      · entra desde -1           -> salida (1, 64, 40, 40)
+  capa 18 · Concat    · entra desde [-1, 13]     -> salida (1, 192, 40, 40)
+  capa 19 · C2f       · entra desde -1           -> salida (1, 128, 40, 40)
+  capa 20 · SCDown    · entra desde -1           -> salida (1, 128, 20, 20)
+  capa 21 · Concat    · entra desde [-1, 10]     -> salida (1, 384, 20, 20)
+  capa 22 · C2fCIB    · entra desde -1           -> salida (1, 256, 20, 20)
+  capa 23 · v10Detect (cabeza): una cuadrícula por escala, 68 números por celda (64 de caja + 4 de clase)
+    P3: tensor (1, 68, 80, 80) -> cuadrícula 80×80 = 6400 celdas (stride 8 px)
+    P4: tensor (1, 68, 40, 40) -> cuadrícula 40×40 = 1600 celdas (stride 16 px)
+    P5: tensor (1, 68, 20, 20) -> cuadrícula 20×20 = 400 celdas (stride 32 px)
+    total: 8400 celdas candidatas -> la cabeza uno a uno elige las 300 mejores (sin NMS)
+  salida final (1, 300, 6): [x1, y1, x2, y2, confianza, clase]; las 5 primeras filas:
+    x1= 216.0 y1= 371.7 x2= 380.8 y2= 498.9 conf=0.307 clase=2 (D20_grieta_cocodrilo)
+    x1= 213.8 y1= 448.6 x2= 336.0 y2= 500.4 conf=0.071 clase=3 (D40_bache)
+    x1= 219.1 y1= 379.3 x2= 338.8 y2= 499.2 conf=0.056 clase=2 (D20_grieta_cocodrilo)
+    x1= 237.9 y1= 452.5 x2= 334.1 y2= 498.0 conf=0.046 clase=3 (D40_bache)
+    x1= 263.2 y1= 447.9 x2= 333.3 y2= 499.4 conf=0.042 clase=3 (D40_bache)
+Perfilador de Ultralytics (cada capa se mide 10 veces):
+ time (ms)     GFLOPs     params  module
+      7.34       0.10        464  ultralytics.nn.modules.conv.Conv
+      2.21       0.24       4672  ultralytics.nn.modules.conv.Conv
+      5.58       0.39       7360  ultralytics.nn.modules.block.C2f
+      2.09       0.24      18560  ultralytics.nn.modules.conv.Conv
+      5.58       0.64      49664  ultralytics.nn.modules.block.C2f
+      1.99       0.12       9856  ultralytics.nn.modules.block.SCDown
+      4.29       0.64     197632  ultralytics.nn.modules.block.C2f
+      1.25       0.11      36096  ultralytics.nn.modules.block.SCDown
+      2.57       0.37     460288  ultralytics.nn.modules.block.C2f
+      4.69       0.13     164608  ultralytics.nn.modules.block.SPPF
+      3.13       0.26     249728  ultralytics.nn.modules.block.PSA
+      1.30       0.00          0  torch.nn.modules.upsampling.Upsample
+      0.12       0.00          0  ultralytics.nn.modules.conv.Concat
+      3.35       0.48     148224  ultralytics.nn.modules.block.C2f
+      0.31       0.00          0  torch.nn.modules.upsampling.Upsample
+      0.32       0.00          0  ultralytics.nn.modules.conv.Concat
+      4.49       0.48      37248  ultralytics.nn.modules.block.C2f
+      1.14       0.12      36992  ultralytics.nn.modules.conv.Conv
+      0.04       0.00          0  ultralytics.nn.modules.conv.Concat
+      3.10       0.40     123648  ultralytics.nn.modules.block.C2f
+      0.76       0.06      18048  ultralytics.nn.modules.block.SCDown
+      0.02       0.00          0  ultralytics.nn.modules.conv.Concat
+      3.00       0.23     282624  ultralytics.nn.modules.block.C2fCIB
+     31.75       3.46     862888  ultralytics.nn.modules.head.v10Detect
+     90.43          -          -  Total
+[0;33m$ .venv/bin/python -m dimmit.reporting.red_yolo onnx[0m
+Ultralytics 8.3.253 🚀 Python-3.11.18 torch-2.15.0+cpu CPU (Intel Xeon Processor @ 2.10GHz)
+YOLOv10n summary (fused): 102 layers, 2,265,948 parameters, 0 gradients, 6.5 GFLOPs
+[34m[1mPyTorch:[0m starting from '/home/user/DIMMIT-V1/models/release/yolov10n_rdd2020.pt' with input shape (1, 3, 640, 640) BCHW and output shape(s) (1, 300, 6) (5.5 MB)
+[34m[1mONNX:[0m starting export with onnx 1.23.2 opset 17...
+  return opset9.index(g, self, index)
+[34m[1mONNX:[0m slimming with onnxslim 0.1.99...
+[34m[1mONNX:[0m export success ✅ 1.1s, saved as '/home/user/DIMMIT-V1/models/release/yolov10n_rdd2020.onnx' (8.9 MB)
+Export complete (1.4s)
+Results saved to [1m/home/user/DIMMIT-V1/models/release[0m
+Predict:         yolo predict task=detect model=/home/user/DIMMIT-V1/models/release/yolov10n_rdd2020.onnx imgsz=640  
+Validate:        yolo val task=detect model=/home/user/DIMMIT-V1/models/release/yolov10n_rdd2020.onnx imgsz=640 data=/kaggle/working/dimmit/data/processed/data.yaml  
+Visualize:       https://netron.app
+[ok] build/red/yolov10n_rdd2020.onnx (9.3 MB) -> se abre en Netron
+abriendo el grafo ONNX en Netron (visor estándar de redes neuronales)…
+[0;33m$ node scripts/recorrer_red_netron.js http://127.0.0.1:8081/ 1600 900[0m
+[netron] entrada images 1×3×640×640 y primeras convoluciones
+[netron] propiedades de la primera Conv: kernel 3×3, stride 2, pesos 16×3×3×3
+[netron] recorriendo el grafo completo: backbone -> neck -> cabeza v10Detect -> TopK
+[netron] propiedades de TopK
+[netron] propiedades de output0
+[0;33m$ .venv/bin/python -m dimmit.reporting.red_yolo visualizar --foto Prueba_6/Prueba_6_007 --conf 0.16[0m
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage0_Conv_features.png... (16/16)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage1_Conv_features.png... (32/32)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage2_C2f_features.png... (32/32)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage3_Conv_features.png... (32/64)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage4_C2f_features.png... (32/64)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage5_SCDown_features.png... (32/128)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage6_C2f_features.png... (32/128)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage7_SCDown_features.png... (32/256)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage8_C2f_features.png... (32/256)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage9_SPPF_features.png... (32/256)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage10_PSA_features.png... (32/256)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage11_Upsample_features.png... (32/256)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage12_Concat_features.png... (32/384)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage13_C2f_features.png... (32/128)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage14_Upsample_features.png... (32/128)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage15_Concat_features.png... (32/192)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage16_C2f_features.png... (32/64)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage17_Conv_features.png... (32/64)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage18_Concat_features.png... (32/192)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage19_C2f_features.png... (32/128)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage20_SCDown_features.png... (32/128)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage21_Concat_features.png... (32/384)
+Saving /home/user/DIMMIT-V1/build/red/prediccion/Prueba_6_007/stage22_C2fCIB_features.png... (32/256)
+image 1/1 /home/user/DIMMIT-V1/data/campo/fotos/Prueba_6/Prueba_6_007.jpg: 384x640 1 D20_grieta_cocodrilo, 11357.9ms
+Speed: 1.9ms preprocess, 11357.9ms inference, 0.3ms postprocess per image at shape (1, 3, 384, 640)
+Results saved to [1m/home/user/DIMMIT-V1/build/red/prediccion[0m
+[ok] detección: D20_grieta_cocodrilo · confianza 0.309
+[ok] mapas de activación y foto anotada en /home/user/DIMMIT-V1/build/red/prediccion
+activaciones de Ultralytics: stage0_Conv_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage1_Conv_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage2_C2f_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage3_Conv_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage4_C2f_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage5_SCDown_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage6_C2f_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage7_SCDown_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage8_C2f_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage9_SPPF_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage10_PSA_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage11_Upsample_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage12_Concat_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage13_C2f_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage14_Upsample_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage15_Concat_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage16_C2f_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage17_Conv_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage18_Concat_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage19_C2f_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage20_SCDown_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage21_Concat_features.png (32 canales de la etapa)
+activaciones de Ultralytics: stage22_C2fCIB_features.png (32 canales de la etapa)
+predicción anotada por Ultralytics: build/red/prediccion/Prueba_6_007.jpg
+[1;32m  ✔ paso 7/11 terminado en 161 s[0m
+
+[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;36m  PASO 8/11 · CALIBRACIÓN CON EL IDU, SCORE, CALIDAD Y SALIDAS[0m
 [1;37m  Umbrales de campo -> barrido del multiplicador del umbral contra el IDU -> score -> etiqueta -> salidas 1 y 2[0m
-[2m  inicio 15:54:20 · transcurrido 5 min 36 s[0m
+build/red/prediccion/Prueba_6_007  inicio 16:47:49 · transcurrido 7 min 22 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -m dimmit.campo.umbrales[0m
 [ok] tau_campo = {'D00': 0.25, 'D10': 0.15, 'D20': 0.2, 'D40': 0.2} -> /home/user/DIMMIT-V1/data/campo/features/umbrales_campo.json
@@ -286,26 +459,26 @@ tramo  pearson_profundidad_max_cm__n_grieta_longitudinal       NaN       NaN    
 tramo       spearman_profundidad_max_cm_base40__n_baches -0.223607    -0.875 -0.108148   5
 tramo        pearson_profundidad_max_cm_base40__n_baches -0.158068       NaN       NaN   5
 [0;33m$ .venv/bin/python -m dimmit.campo.salidas[0m
-[ok] campo-20261122-1555: 7 filas en vias_clasificacion, 217 métricas, 131 fotos -> /home/user/DIMMIT-V1/reports/campo
-[1;32m  ✔ paso 7/10 terminado en 59 s[0m
+[ok] campo-20261122-1648: 7 filas en vias_clasificacion, 217 métricas, 131 fotos -> /home/user/DIMMIT-V1/reports/campo
+[1;32m  ✔ paso 8/11 terminado en 55 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 8/10 · PRUEBAS AUTOMÁTICAS[0m
+[1;36m  PASO 9/11 · PRUEBAS AUTOMÁTICAS[0m
 [1;37m  pytest: GPS, tramos, ID, sensor, filtros, superficie, etiquetas y escala del IDU[0m
-[2m  inicio 15:55:19 · transcurrido 6 min 35 s[0m
+build/red/prediccion/Prueba_6_007  inicio 16:48:44 · transcurrido 8 min 17 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -m pytest -q tests[0m
 ...........................                                              [100%]
 =============================== warnings summary ===============================
 tests/test_pipeline.py::test_metrics_against_sklearn
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-27 passed, 1 warning in 6.39s
-[1;32m  ✔ paso 8/10 terminado en 9 s[0m
+27 passed, 1 warning in 5.48s
+[1;32m  ✔ paso 9/11 terminado en 7 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 9/10 · FIGURAS DEL PÓSTER[0m
+[1;36m  PASO 10/11 · FIGURAS DEL PÓSTER[0m
 [1;37m  Resultados de la toma, diagrama de funcionamiento y validación frente al IDU[0m
-[2m  inicio 15:55:28 · transcurrido 6 min 44 s[0m
+build/red/prediccion/Prueba_6_007  inicio 16:48:51 · transcurrido 8 min 24 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -m dimmit.reporting.poster_campo[0m
 [ok] /home/user/DIMMIT-V1/reports/campo/poster/resultados_toma_2026-11-15.png
@@ -316,37 +489,37 @@ tests/test_pipeline.py::test_metrics_against_sklearn
 mostrando reports/campo/poster/resultados_toma_2026-11-15.png
 mostrando reports/campo/poster/validacion_idu.png
 mostrando reports/campo/poster/diagrama_flujo.png
-[1;32m  ✔ paso 9/10 terminado en 27 s[0m
+[1;32m  ✔ paso 10/11 terminado en 24 s[0m
 
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;36m  PASO 10/10 · RESUMEN[0m
+[1;36m  PASO 11/11 · RESUMEN[0m
 [1;37m  Salida 1 (clasificación por vía) y calibración contra el IDU[0m
-[2m  inicio 15:55:55 · transcurrido 7 min 11 s[0m
+build/red/prediccion/Prueba_6_007  inicio 16:49:15 · transcurrido 8 min 48 s[0m
 [1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;33m$ .venv/bin/python -[0m
 nivel   prueba  score_calidad estado_idu_equivalente     etiqueta  profundidad_max_cm  danos_detectados              run_id
-tramo Prueba_5           73.5                regular intervencion                26.4               NaN campo-20261122-1555
-tramo Prueba_6           76.5                regular intervencion                 8.9               NaN campo-20261122-1555
-tramo Prueba_7           73.3                regular intervencion                20.4               NaN campo-20261122-1555
-tramo Prueba_8          100.0                  bueno intervencion                 9.5               NaN campo-20261122-1555
-tramo Prueba_9          100.0                  bueno intervencion                21.2               NaN campo-20261122-1555
-sitio  Sitio_1           75.4                regular intervencion                26.4               NaN campo-20261122-1555
-sitio  Sitio_2          100.0                  bueno intervencion                21.2               NaN campo-20261122-1555
+tramo Prueba_5           73.5                regular intervencion                26.4               NaN campo-20261122-1648
+tramo Prueba_6           76.5                regular intervencion                 8.9               NaN campo-20261122-1648
+tramo Prueba_7           73.3                regular intervencion                20.4               NaN campo-20261122-1648
+tramo Prueba_8          100.0                  bueno intervencion                 9.5               NaN campo-20261122-1648
+tramo Prueba_9          100.0                  bueno intervencion                21.2               NaN campo-20261122-1648
+sitio  Sitio_1           75.4                regular intervencion                26.4               NaN campo-20261122-1648
+sitio  Sitio_2          100.0                  bueno intervencion                21.2               NaN campo-20261122-1648
 Calibración: tau = 0.8 · tau_campo -> {'D00': 0.2, 'D10': 0.12, 'D20': 0.16, 'D40': 0.16}
 Tramos dentro del rango del IDU: 67% sin calibrar -> 83% calibrado (12 tramos, 1 calzada)
 
 [0;33m$ ls -la reports/campo/vias_clasificacion.csv reports/campo/calidad_confianza_correlacion.csv reports/campo/poster[0m
--rw-r--r-- 1 root root 29811 Nov 22 15:55 reports/campo/calidad_confianza_correlacion.csv
--rw-r--r-- 1 root root  4662 Nov 22 15:55 reports/campo/vias_clasificacion.csv
+-rw-r--r-- 1 root root 29811 Nov 22 16:48 reports/campo/calidad_confianza_correlacion.csv
+-rw-r--r-- 1 root root  4662 Nov 22 16:48 reports/campo/vias_clasificacion.csv
 reports/campo/poster:
 total 1472
-drwxr-xr-x 2 root root   4096 Nov 15 23:00 .
-drwxr-xr-x 4 root root   4096 Nov 15 23:00 ..
--rw-r--r-- 1 root root 362410 Nov 22 15:55 diagrama_flujo.png
--rw-r--r-- 1 root root 716802 Nov 22 15:55 resultados_toma_2026-11-15.png
--rw-r--r-- 1 root root 413669 Nov 22 15:55 validacion_idu.png
-[1;32m  ✔ paso 10/10 terminado en 0 s[0m
+drwxr-xr-x 2 root root   4096 Nov 22 16:24 .
+drwxr-xr-x 4 root root   4096 Nov 22 16:24 ..
+-rw-r--r-- 1 root root 362410 Nov 22 16:48 diagrama_flujo.png
+-rw-r--r-- 1 root root 717946 Nov 22 16:48 resultados_toma_2026-11-15.png
+-rw-r--r-- 1 root root 413669 Nov 22 16:48 validacion_idu.png
+[1;32m  ✔ paso 11/11 terminado en 1 s[0m
 
 [1;32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[1;32m  PROCESO COMPLETO TERMINADO en 7 min 11 s · 22-11-2026 15:55:55[0m
+[1;32m  PROCESO COMPLETO TERMINADO en 8 min 49 s · 22-11-2026 16:49:16[0m
 [1;32m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m

@@ -113,9 +113,15 @@ make campo-local && make campo          # detecciones a 416/640/832 px + calibra
 make campo-grabar                       # todo lo anterior, grabado en video MP4 (reports/grabacion/)
 ```
 
-`make campo-grabar` corre `scripts/proceso_completo.sh` (10 pasos con avisos de progreso) en una terminal dentro de
+`make campo-grabar` corre `scripts/proceso_completo.sh` (11 pasos con avisos de progreso) en una terminal dentro de
 una pantalla virtual (PyVirtualDisplay + Xvfb) y la graba con ffmpeg. Deja el video y el registro de texto del mismo
 proceso en `reports/grabacion/`. Requiere `Xvfb`, `xterm` y `ffmpeg` (y `display` de ImageMagick para mostrar las figuras).
+
+El paso 7 muestra la red YOLOv10n por dentro con herramientas estándar (`python -m dimmit.reporting.red_yolo`):
+la tabla de capas de Ultralytics, una pasada real de una foto capa por capa (hooks de PyTorch: forma de cada salida,
+las 3 cuadrículas 80×80/40×40/20×20 de la cabeza y la salida 300×6), el perfilador de Ultralytics, el grafo ONNX
+recorrido en Netron (`scripts/recorrer_red_netron.js`, Playwright) y los mapas de activación de cada etapa más la foto
+anotada que guarda Ultralytics con `visualize=True`.
 
 Salidas en `reports/campo/`: `vias_clasificacion.{csv,json}` (ID por tramo, daños, score, estado,
 etiqueta, profundidad, lat/lon), `calidad_confianza_correlacion.{csv,json}` (formato largo),
